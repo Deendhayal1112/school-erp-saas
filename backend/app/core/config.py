@@ -73,7 +73,14 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # ==========================================
-    # 5. Celery Settings
+    # 5. Middleware Feature Flags
+    # ==========================================
+    ENABLE_AUDIT_LOG: bool = True
+    ENABLE_SECURITY_HEADERS: bool = True
+    ENABLE_AUTHORIZATION_MIDDLEWARE: bool = True
+
+    # ==========================================
+    # 6. Celery Settings
     # ==========================================
     CELERY_BROKER_URL: str | None = None
     CELERY_RESULT_BACKEND: str | None = None

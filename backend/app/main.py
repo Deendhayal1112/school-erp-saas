@@ -67,10 +67,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Placeholders for future custom middlewares:
-# 1. TenantMiddleware (Resolves Active Schema/Subdomain per request)
-# 2. RequestIDMiddleware (Traces unique request IDs across thread pools)
-# 3. GzipMiddleware / TrustedHostMiddleware
+# Security Headers Middleware — injects OWASP headers into every response.
+# Registered first → executes last (outermost wrapper).
+from app.middleware.authorization import (
+    AuthorizationAuditMiddleware,
+    RequestContextMiddleware,
+    SecurityHeadersMiddleware,
+)
+
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(AuthorizationAuditMiddleware)
+app.add_middleware(RequestContextMiddleware)
 
 
 # ==========================================
