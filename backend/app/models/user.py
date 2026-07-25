@@ -11,6 +11,7 @@ from app.models.base import BaseEntity
 if TYPE_CHECKING:
     from app.models.password_history import PasswordHistory
     from app.models.password_reset_token import PasswordResetToken
+    from app.models.email_verification_token import EmailVerificationToken
     from app.models.role import Role
     from app.models.school import School
 
@@ -96,3 +97,9 @@ class User(BaseEntity):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    email_verification_tokens: Mapped[list["EmailVerificationToken"]] = relationship(
+        "EmailVerificationToken",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+

@@ -309,6 +309,58 @@ async def expired_reset_token_handler(request: Request, exc: ExpiredResetTokenEx
     )
 
 
+from app.modules.auth.email.exceptions import (
+    InvalidVerificationTokenException,
+    ExpiredVerificationTokenException,
+    EmailRateLimitException,
+    AccountAlreadyVerifiedException,
+)
+
+
+@app.exception_handler(InvalidVerificationTokenException)
+async def invalid_verification_token_handler(request: Request, exc: InvalidVerificationTokenException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="InvalidVerificationToken",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(ExpiredVerificationTokenException)
+async def expired_verification_token_handler(request: Request, exc: ExpiredVerificationTokenException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="ExpiredVerificationToken",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(EmailRateLimitException)
+async def email_rate_limit_handler(request: Request, exc: EmailRateLimitException):
+    return JSONResponse(
+        status_code=429,
+        content=ErrorResponse(
+            error="EmailRateLimit",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(AccountAlreadyVerifiedException)
+async def account_already_verified_handler(request: Request, exc: AccountAlreadyVerifiedException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="AccountAlreadyVerified",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Fallback handler for unhandled exceptions to return standard JSON structure."""

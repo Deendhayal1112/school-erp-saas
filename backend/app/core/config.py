@@ -114,6 +114,16 @@ class Settings(BaseSettings):
     SMTP_FROM: str | None = None
 
     # ==========================================
+    # Email Verification & Account Recovery
+    # ==========================================
+    EMAIL_PROVIDER: str = "console"           # console, smtp, mock
+    EMAIL_VERIFICATION_EXPIRE_MINUTES: int = 1440  # 24 hours
+    EMAIL_SENDER: str = "noreply@schoolerpsaas.com"
+    BASE_URL: str = "http://localhost:3000"   # Base URL for verification/reset links
+    EMAIL_RATE_LIMIT_SECONDS: int = 60        # Rate limit between resend requests
+
+
+    # ==========================================
     # 7. CORS Settings
     # ==========================================
     CORS_ORIGINS: list[str] = ["*"]

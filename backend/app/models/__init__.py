@@ -6,6 +6,7 @@ from app.models.school import School
 from app.models.user import User
 from app.models.password_history import PasswordHistory
 from app.models.password_reset_token import PasswordResetToken
+from app.models.email_verification_token import EmailVerificationToken
 
 __all__ = [
     "BaseEntity",
@@ -16,4 +17,5 @@ __all__ = [
     "User",
     "PasswordHistory",
     "PasswordResetToken",
+    "EmailVerificationToken",
 ]

@@ -22,6 +22,8 @@ from app.models.role_permission import RolePermission
 from app.models.user import User
 from app.models.password_history import PasswordHistory
 from app.models.password_reset_token import PasswordResetToken
+from app.models.email_verification_token import EmailVerificationToken
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
