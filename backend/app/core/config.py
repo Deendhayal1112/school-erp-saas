@@ -28,20 +28,29 @@ class Settings(BaseSettings):
     # ==========================================
     # 2. Database Settings
     # ==========================================
-    DB_HOST: str
+    DB_HOST: str = "localhost"
     DB_PORT: int = 5432
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_NAME: str
+    DB_USER: str = "postgres"
+    DB_PASSWORD: str = "password"
+    DB_NAME: str = "school_erp"
+    DATABASE_URL: str | None = None
 
     @property
     def async_database_url(self) -> str:
         """Asynchronous database connection string for SQLAlchemy & asyncpg."""
+        if self.DATABASE_URL:
+            if self.DATABASE_URL.startswith("postgresql://"):
+                return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+            return self.DATABASE_URL
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     @property
     def sync_database_url(self) -> str:
         """Synchronous database connection string (e.g., for Alembic migrations)."""
+        if self.DATABASE_URL:
+            if self.DATABASE_URL.startswith("postgresql+asyncpg://"):
+                return self.DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://", 1)
+            return self.DATABASE_URL
         return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     # ==========================================
