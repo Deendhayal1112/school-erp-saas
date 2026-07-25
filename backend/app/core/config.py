@@ -60,6 +60,12 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRES_IN: str = "7d"  # Used to parse tokens (e.g., "7d", "1d", "30m")
 
+    # Core Security Settings loaded from environment variables
+    SECRET_KEY: str = "supersecretkeyplaceholderchangeinproduction"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
     # ==========================================
     # 4. Redis Settings
     # ==========================================
@@ -131,6 +137,10 @@ class Settings(BaseSettings):
             if self.JWT_SECRET == "supersecretjwtkeychangeinproduction":
                 raise ValueError(
                     "Security Breach Risk: JWT_SECRET must be customized in production/staging!"
+                )
+            if self.SECRET_KEY == "supersecretkeyplaceholderchangeinproduction":
+                raise ValueError(
+                    "Security Breach Risk: SECRET_KEY must be customized in production/staging!"
                 )
             if self.DB_PASSWORD == "password":
                 raise ValueError(
