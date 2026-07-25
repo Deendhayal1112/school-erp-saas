@@ -77,7 +77,7 @@ def _make_invalid_signature_token() -> str:
         "exp": datetime.now(UTC) + timedelta(minutes=30),
         "iat": datetime.now(UTC),
     }
-    return jwt.encode(payload, "WRONG_SECRET_KEY_XXXXXXXX", algorithm=settings.ALGORITHM)
+    return jwt.encode(payload, "WRONG_SECRET_KEY_EXCEEDING_32_BYTES_FOR_HMAC", algorithm=settings.ALGORITHM)
 
 
 # ===========================================================================
