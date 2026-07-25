@@ -372,6 +372,24 @@ async def seed():
                 "module": "student_progression",
                 "desc": "Allows converting students to alumni",
             },
+            {
+                "code": "student.dashboard.read",
+                "name": "Read Student Dashboard",
+                "module": "student_dashboard",
+                "desc": "Allows viewing student dashboard metrics and charts",
+            },
+            {
+                "code": "student.report.read",
+                "name": "Read Student Reports",
+                "module": "student_dashboard",
+                "desc": "Allows reading student reports",
+            },
+            {
+                "code": "student.report.export",
+                "name": "Export Student Reports",
+                "module": "student_dashboard",
+                "desc": "Allows exporting student reports in CSV, Excel, and PDF formats",
+            },
         ]
 
         permissions_map = {}
