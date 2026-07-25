@@ -11,6 +11,7 @@ from app.modules.student.enums import Gender, StudentStatus
 if TYPE_CHECKING:
     from app.models.school import School
     from app.modules.guardian.models import StudentGuardian
+    from app.modules.student_documents.models import StudentDocument
 
 
 class Student(BaseEntity):
@@ -80,7 +81,12 @@ class Student(BaseEntity):
     # exams: Mapped[list["Exam"]] = relationship("Exam", back_populates="student")
     # fees: Mapped[list["Fee"]] = relationship("Fee", back_populates="student")
     # medical_records: Mapped[list["MedicalRecord"]] = relationship("MedicalRecord", back_populates="student")
-    # documents: Mapped[list["Document"]] = relationship("Document", back_populates="student")
+    documents: Mapped[list["StudentDocument"]] = relationship(
+        "StudentDocument",
+        back_populates="student",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
 
     @property
     def full_name(self) -> str:

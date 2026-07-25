@@ -252,6 +252,36 @@ async def seed():
                 "module": "admissions",
                 "desc": "Allows enrolling approved students into class rosters",
             },
+            {
+                "code": "student.document.upload",
+                "name": "Upload Student Document",
+                "module": "student_documents",
+                "desc": "Allows uploading files to student profiles",
+            },
+            {
+                "code": "student.document.read",
+                "name": "Read Student Document",
+                "module": "student_documents",
+                "desc": "Allows viewing student documents",
+            },
+            {
+                "code": "student.document.update",
+                "name": "Update Student Document",
+                "module": "student_documents",
+                "desc": "Allows updating student documents",
+            },
+            {
+                "code": "student.document.delete",
+                "name": "Delete Student Document",
+                "module": "student_documents",
+                "desc": "Allows soft-deleting student documents",
+            },
+            {
+                "code": "student.document.verify",
+                "name": "Verify Student Document",
+                "module": "student_documents",
+                "desc": "Allows verifying student documents status",
+            },
         ]
 
         permissions_map = {}

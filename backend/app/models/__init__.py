@@ -11,6 +11,7 @@ from app.models.user import User
 from app.modules.admission.models import Admission, AdmissionSequence, AdmissionTimeline
 from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.student.models import Student
+from app.modules.student_documents.models import StudentDocument
 
 __all__ = [
     "BaseEntity",
@@ -29,4 +30,5 @@ __all__ = [
     "Admission",
     "AdmissionSequence",
     "AdmissionTimeline",
+    "StudentDocument",
 ]
