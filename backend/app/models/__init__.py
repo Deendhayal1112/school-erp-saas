@@ -13,6 +13,7 @@ from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.student.models import Student
 from app.modules.student_documents.models import StudentDocument
 from app.modules.student_medical.models import StudentMedicalRecord, Allergy, Vaccination
+from app.modules.student_assignment.models import StudentAcademicAssignment
 
 __all__ = [
     "BaseEntity",
@@ -35,4 +36,5 @@ __all__ = [
     "StudentMedicalRecord",
     "Allergy",
     "Vaccination",
+    "StudentAcademicAssignment",
 ]

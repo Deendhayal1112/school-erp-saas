@@ -306,6 +306,36 @@ async def seed():
                 "module": "student_medical",
                 "desc": "Allows deleting student medical records",
             },
+            {
+                "code": "student.assignment.create",
+                "name": "Create Student Academic Assignment",
+                "module": "student_assignment",
+                "desc": "Allows creating student academic assignments",
+            },
+            {
+                "code": "student.assignment.read",
+                "name": "Read Student Academic Assignment",
+                "module": "student_assignment",
+                "desc": "Allows reading student academic assignments",
+            },
+            {
+                "code": "student.assignment.update",
+                "name": "Update Student Academic Assignment",
+                "module": "student_assignment",
+                "desc": "Allows updating student academic assignments",
+            },
+            {
+                "code": "student.assignment.delete",
+                "name": "Delete Student Academic Assignment",
+                "module": "student_assignment",
+                "desc": "Allows soft-deleting student academic assignments",
+            },
+            {
+                "code": "student.assignment.transfer",
+                "name": "Transfer Student",
+                "module": "student_assignment",
+                "desc": "Allows transferring students between classes and sections",
+            },
         ]
 
         permissions_map = {}

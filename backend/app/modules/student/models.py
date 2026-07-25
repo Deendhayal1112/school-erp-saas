@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from app.modules.guardian.models import StudentGuardian
     from app.modules.student_documents.models import StudentDocument
     from app.modules.student_medical.models import StudentMedicalRecord
+    from app.modules.student_assignment.models import StudentAcademicAssignment
 
 
 class Student(BaseEntity):
@@ -90,6 +91,12 @@ class Student(BaseEntity):
     )
     documents: Mapped[list["StudentDocument"]] = relationship(
         "StudentDocument",
+        back_populates="student",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    academic_assignments: Mapped[list["StudentAcademicAssignment"]] = relationship(
+        "StudentAcademicAssignment",
         back_populates="student",
         cascade="all, delete-orphan",
         lazy="selectin",
