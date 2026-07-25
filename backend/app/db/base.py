@@ -9,9 +9,3 @@ class Base(DeclarativeBase):
     """
     pass
 
-
-# Import all application models here to ensure they are registered
-# on Base.metadata for Alembic autogeneration detection.
-from app.models.base import BaseEntity
-from app.models.school import School
-from app.models.role import Role

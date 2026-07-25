@@ -15,6 +15,8 @@ sys.path.insert(0, str(backend_root))
 
 from app.core.config import settings
 from app.db.base import Base
+from app.models.school import School
+from app.models.role import Role
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
