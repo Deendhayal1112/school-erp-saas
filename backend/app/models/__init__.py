@@ -8,6 +8,7 @@ from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.school import School
 from app.models.user import User
+from app.modules.student.models import Student
 
 __all__ = [
     "BaseEntity",
@@ -20,4 +21,5 @@ __all__ = [
     "School",
     "User",
     "AuditLog",
+    "Student",
 ]

@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 backend_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_root))
 
+import app.models  # noqa: F401 — side-effect import: registers all ORM models on Base.metadata for Alembic autogenerate
 from app.core.config import settings
 from app.db.base import Base
 
