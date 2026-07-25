@@ -183,7 +183,22 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
         # Inject static security headers
         for header, value in _SECURITY_HEADERS.items():
-            response.headers[header] = value
+            if header == "Content-Security-Policy" and (
+                request.url.path.startswith("/docs") or
+                request.url.path.startswith("/redoc") or
+                request.url.path.startswith("/openapi.json")
+            ):
+                response.headers[header] = (
+                    "default-src 'self'; "
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net; "
+                    "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
+                    "img-src 'self' data: fastly.jsdelivr.net cdn.jsdelivr.net; "
+                    "font-src 'self'; "
+                    "connect-src 'self'; "
+                    "frame-ancestors 'none';"
+                )
+            else:
+                response.headers[header] = value
 
         # HSTS only in production (HTTPS guaranteed)
         if settings.ENV == "production":
