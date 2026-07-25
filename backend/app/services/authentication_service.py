@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 
 from app.core import jwt, tokens
 from app.core.config import settings
@@ -38,7 +38,7 @@ class AuthenticationService(BaseService):
 
         # 1. Enforce temporary lockout policy if active
         if user.locked_until:
-            if user.locked_until > datetime.now(timezone.utc):
+            if user.locked_until > datetime.now(UTC):
                 raise AccountLockedException(
                     "This account is temporarily locked due to multiple failed login attempts. "
                     f"Please try again after {user.locked_until.isoformat()}.",
@@ -55,13 +55,13 @@ class AuthenticationService(BaseService):
         if not verify_password(password, user.password_hash):
             user.failed_login_count += 1
             if user.failed_login_count >= settings.ACCOUNT_LOCKOUT_THRESHOLD:
-                user.locked_until = datetime.now(timezone.utc) + timedelta(
+                user.locked_until = datetime.now(UTC) + timedelta(
                     minutes=settings.ACCOUNT_LOCKOUT_MINUTES
                 )
             await self.user_repo.update(user)
             await self.user_repo.session.commit()
 
-            if user.locked_until and user.locked_until > datetime.now(timezone.utc):
+            if user.locked_until and user.locked_until > datetime.now(UTC):
                 raise AccountLockedException(
                     "This account is temporarily locked due to multiple failed login attempts. "
                     f"Please try again after {user.locked_until.isoformat()}.",
@@ -118,7 +118,7 @@ class AuthenticationService(BaseService):
         # Re-verify token issuance time against user password change event
         iat_timestamp = payload.get("iat")
         if iat_timestamp and user.password_changed_at:
-            token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=timezone.utc)
+            token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
             if token_iat_dt < user.password_changed_at:
                 raise RefreshTokenException("Token has been invalidated by a password change.")
 
@@ -157,5 +157,5 @@ class AuthenticationService(BaseService):
 
     async def update_last_login(self, user_id: uuid.UUID) -> None:
         """Updates the user's last login timestamp in the database."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         await self.user_repo.update_last_login(user_id, now)

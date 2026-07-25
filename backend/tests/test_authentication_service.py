@@ -1,5 +1,6 @@
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+
 import pytest
 from sqlalchemy import select
 

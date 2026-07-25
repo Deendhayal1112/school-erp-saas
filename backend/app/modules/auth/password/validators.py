@@ -4,6 +4,7 @@ Password Policy and Entropy Validators.
 
 import math
 from collections import Counter
+
 from app.core import constants
 from app.modules.auth.password.exceptions import PasswordValidationError
 
@@ -28,7 +29,7 @@ def calculate_shannon_entropy(password: str) -> float:
     return entropy
 
 def validate_password_policy(
-    password: str, 
+    password: str,
     min_length: int = constants.PASSWORD_MIN_LENGTH,
     max_length: int = constants.PASSWORD_MAX_LENGTH,
     require_uppercase: bool = constants.PASSWORD_REQUIRE_UPPERCASE,

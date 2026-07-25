@@ -8,13 +8,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.database import get_db
 from app.dependencies.current_user import get_current_active_user
 from app.models.user import User
-from app.schemas.response import SuccessResponse
 from app.modules.auth.password.schemas import (
     ChangePasswordRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
 )
 from app.modules.auth.password.service import PasswordService
+from app.schemas.response import SuccessResponse
 
 router = APIRouter(prefix="/auth", tags=["Password Management"])
 

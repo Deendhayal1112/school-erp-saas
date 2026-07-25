@@ -6,9 +6,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db
-from app.schemas.response import SuccessResponse
-from app.modules.auth.email.schemas import VerifyEmailRequest, ResendVerificationRequest
+from app.modules.auth.email.schemas import ResendVerificationRequest, VerifyEmailRequest
 from app.modules.auth.email.service import EmailVerificationService
+from app.schemas.response import SuccessResponse
 
 router = APIRouter(prefix="/auth", tags=["Email Verification"])
 

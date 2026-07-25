@@ -1,5 +1,6 @@
 import pytest
 from sqlalchemy import select
+
 from app.db.session import AsyncSessionLocal
 from app.models.role import Role
 

@@ -5,25 +5,24 @@ Password Management Service.
 import hashlib
 import secrets
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core import jwt
 from app.core.config import settings
 from app.core.password import hash_password, verify_password
-from app.models.user import User
 from app.models.password_history import PasswordHistory
 from app.models.password_reset_token import PasswordResetToken
-from app.repositories.user_repository import UserRepository
+from app.models.user import User
 from app.modules.auth.password.exceptions import (
-    InvalidCurrentPasswordException,
-    PasswordReuseException,
-    InvalidResetTokenException,
     ExpiredResetTokenException,
-    PasswordValidationError,
+    InvalidCurrentPasswordException,
+    InvalidResetTokenException,
+    PasswordReuseException,
 )
 from app.modules.auth.password.validators import validate_password_policy
+from app.repositories.user_repository import UserRepository
 
 
 class PasswordService:
@@ -60,8 +59,8 @@ class PasswordService:
         old_hash = user.password_hash
         hashed_pwd = hash_password(new_password)
         user.password_hash = hashed_pwd
-        user.password_changed_at = datetime.now(timezone.utc)
-        
+        user.password_changed_at = datetime.now(UTC)
+
         # 5. Invalidate active sessions (by updating password_changed_at,
         # which invalidates tokens issued prior to it)
 
@@ -85,7 +84,7 @@ class PasswordService:
             return raw_token
 
         # Create reset token record
-        expires_at = datetime.now(timezone.utc) + timedelta(
+        expires_at = datetime.now(UTC) + timedelta(
             minutes=settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES
         )
         reset_token = PasswordResetToken(
@@ -110,7 +109,7 @@ class PasswordService:
             select(PasswordResetToken)
             .where(
                 PasswordResetToken.token_hash == token_hash,
-                PasswordResetToken.used == False
+                PasswordResetToken.used.is_(False)
             )
         )
         result = await self.session.execute(stmt)
@@ -119,7 +118,7 @@ class PasswordService:
         if not token_record:
             raise InvalidResetTokenException("Invalid or already used reset token.")
 
-        if token_record.expires_at < datetime.now(timezone.utc):
+        if token_record.expires_at < datetime.now(UTC):
             token_record.used = True
             self.session.add(token_record)
             await self.session.commit()
@@ -139,7 +138,7 @@ class PasswordService:
         # Update user password
         old_hash = user.password_hash
         user.password_hash = hash_password(new_password)
-        user.password_changed_at = datetime.now(timezone.utc)
+        user.password_changed_at = datetime.now(UTC)
         user.failed_login_count = 0
         user.locked_until = None
 

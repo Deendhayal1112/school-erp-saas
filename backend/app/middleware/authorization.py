@@ -39,10 +39,9 @@ from __future__ import annotations
 import logging
 import time
 import uuid
-from typing import Optional
+from datetime import UTC
 
 from fastapi import Request
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
 from starlette.types import ASGIApp
@@ -104,7 +103,7 @@ def _extract_client_ip(request: Request) -> str:
     return "unknown"
 
 
-def _extract_bearer_token(request: Request) -> Optional[str]:
+def _extract_bearer_token(request: Request) -> str | None:
     """Parses the Authorization header and returns the raw token string, or None."""
     header = request.headers.get("Authorization", "")
     if header.startswith("Bearer ") and len(header) > 7:
@@ -267,10 +266,10 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
         self,
         request: Request,
         token: str,
-        ctx: Optional[RequestContext],
-        client_ip: Optional[str],
-        request_id: Optional[str],
-        correlation_id: Optional[str],
+        ctx: RequestContext | None,
+        client_ip: str | None,
+        request_id: str | None,
+        correlation_id: str | None,
         path: str,
         method: str,
     ) -> None:
@@ -314,10 +313,10 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
 
         # Lazily load user + relationships from DB
         try:
-            from app.db.database import get_db
-            from app.repositories.user_repository import UserRepository
             from app.auth.permissions import _extract_permission_codes
             from app.auth.roles import get_user_role
+            from app.db.database import get_db
+            from app.repositories.user_repository import UserRepository
 
             # Obtain an async session without depending on FastAPI's Depends()
             async for db in get_db():
@@ -327,10 +326,10 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
                     return
 
                 # Invalidate if password changed since token issuance
-                from datetime import datetime, timezone
+                from datetime import datetime
                 iat_timestamp = payload.get("iat")
                 if iat_timestamp and user.password_changed_at:
-                    token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=timezone.utc)
+                    token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
                     if token_iat_dt < user.password_changed_at:
                         audit_log.log_token_validation_failure(
                             ip_address=client_ip,

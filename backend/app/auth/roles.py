@@ -36,7 +36,7 @@ ROLE_HIERARCHY: list[str] = [
 ]
 
 
-def _get_role_code(user: "User") -> str | None:
+def _get_role_code(user: User) -> str | None:
     """Safely extracts the uppercase role code from the user ORM graph."""
     if not user.role:
         return None
@@ -46,13 +46,13 @@ def _get_role_code(user: "User") -> str | None:
 # ===========================================================================
 # Single-role Checks
 # ===========================================================================
-def has_role(user: "User", role_code: str) -> bool:
+def has_role(user: User, role_code: str) -> bool:
     """Returns True if the user's role code matches the given code (case-insensitive)."""
     code = _get_role_code(user)
     return code is not None and code == role_code.upper()
 
 
-def has_any_role(user: "User", *role_codes: str) -> bool:
+def has_any_role(user: User, *role_codes: str) -> bool:
     """Returns True if the user's role code matches any of the given codes."""
     code = _get_role_code(user)
     if code is None:
@@ -63,37 +63,37 @@ def has_any_role(user: "User", *role_codes: str) -> bool:
 # ===========================================================================
 # Named Role Helpers
 # ===========================================================================
-def is_super_admin(user: "User") -> bool:
+def is_super_admin(user: User) -> bool:
     """Returns True if the user holds the SUPER_ADMIN role."""
     return has_role(user, ROLE_SUPER_ADMIN)
 
 
-def is_school_admin(user: "User") -> bool:
+def is_school_admin(user: User) -> bool:
     """Returns True if the user holds the SCHOOL_ADMIN role."""
     return has_role(user, ROLE_SCHOOL_ADMIN)
 
 
-def is_principal(user: "User") -> bool:
+def is_principal(user: User) -> bool:
     """Returns True if the user holds the PRINCIPAL role."""
     return has_role(user, ROLE_PRINCIPAL)
 
 
-def is_teacher(user: "User") -> bool:
+def is_teacher(user: User) -> bool:
     """Returns True if the user holds the TEACHER role."""
     return has_role(user, ROLE_TEACHER)
 
 
-def is_accountant(user: "User") -> bool:
+def is_accountant(user: User) -> bool:
     """Returns True if the user holds the ACCOUNTANT role."""
     return has_role(user, ROLE_ACCOUNTANT)
 
 
-def is_student(user: "User") -> bool:
+def is_student(user: User) -> bool:
     """Returns True if the user holds the STUDENT role."""
     return has_role(user, ROLE_STUDENT)
 
 
-def is_parent(user: "User") -> bool:
+def is_parent(user: User) -> bool:
     """Returns True if the user holds the PARENT role."""
     return has_role(user, ROLE_PARENT)
 
@@ -101,7 +101,7 @@ def is_parent(user: "User") -> bool:
 # ===========================================================================
 # Hierarchy Checks
 # ===========================================================================
-def has_minimum_role(user: "User", minimum_role_code: str) -> bool:
+def has_minimum_role(user: User, minimum_role_code: str) -> bool:
     """
     Returns True if the user's role is at or above the minimum role
     in the defined ROLE_HIERARCHY (index 0 = highest).
@@ -121,7 +121,7 @@ def has_minimum_role(user: "User", minimum_role_code: str) -> bool:
         return False
 
 
-def get_role_level(user: "User") -> int:
+def get_role_level(user: User) -> int:
     """
     Returns the user's role hierarchy level (0 = highest authority).
     Returns len(ROLE_HIERARCHY) if the role is not in the hierarchy.
@@ -135,7 +135,7 @@ def get_role_level(user: "User") -> int:
         return len(ROLE_HIERARCHY)
 
 
-def outranks(user: "User", other_user: "User") -> bool:
+def outranks(user: User, other_user: User) -> bool:
     """
     Returns True if user has a higher authority role than other_user.
     Lower hierarchy index = higher authority.
@@ -143,6 +143,6 @@ def outranks(user: "User", other_user: "User") -> bool:
     return get_role_level(user) < get_role_level(other_user)
 
 
-def get_user_role(user: "User") -> str | None:
+def get_user_role(user: User) -> str | None:
     """Returns the role code of the user, or None if no role is assigned."""
     return _get_role_code(user)

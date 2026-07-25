@@ -18,12 +18,10 @@ import uuid
 from unittest.mock import MagicMock
 
 import pytest
-import httpx
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
+from app.auth import authorization as authz
 from app.auth import (
-    RequirePermission,
-    RequireRole,
     has_all_permissions,
     has_any_permission,
     has_permission,
@@ -63,7 +61,6 @@ from app.auth.roles import (
     has_minimum_role,
     outranks,
 )
-from app.auth import authorization as authz
 from app.main import app
 
 

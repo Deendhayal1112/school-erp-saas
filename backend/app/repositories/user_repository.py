@@ -1,7 +1,8 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from sqlalchemy.future import select
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import joinedload
 
 from app.exceptions import EntityNotFoundError
 from app.models.role import Role
@@ -113,7 +114,7 @@ class UserRepository(BaseRepository[User]):
         if not user:
             raise EntityNotFoundError(f"User with ID {user_id} not found.")
         user.is_deleted = True
-        user.deleted_at = datetime.now(timezone.utc)
+        user.deleted_at = datetime.now(UTC)
         await self.update(user)
 
     async def restore_user(self, user_id: uuid.UUID) -> None:

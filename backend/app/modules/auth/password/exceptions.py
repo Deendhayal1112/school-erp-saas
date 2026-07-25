@@ -4,6 +4,7 @@ Password Management Exceptions.
 
 from app.exceptions import AuthenticationFailedException
 
+
 class PasswordException(Exception):
     """Base exception for all password-related business logic failures."""
     pass

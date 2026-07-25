@@ -1,4 +1,6 @@
 import uuid
+from datetime import UTC
+
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -41,8 +43,8 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     # Invalidate token if password changed since token issuance
     iat_timestamp = payload.get("iat")
     if iat_timestamp and user.password_changed_at:
-        from datetime import datetime, timezone
-        token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=timezone.utc)
+        from datetime import datetime
+        token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
         if token_iat_dt < user.password_changed_at:
             raise InvalidBearerTokenException("Token has been invalidated by a password change")
 

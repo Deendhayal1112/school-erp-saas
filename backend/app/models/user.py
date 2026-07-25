@@ -9,9 +9,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseEntity
 
 if TYPE_CHECKING:
+    from app.models.email_verification_token import EmailVerificationToken
     from app.models.password_history import PasswordHistory
     from app.models.password_reset_token import PasswordResetToken
-    from app.models.email_verification_token import EmailVerificationToken
     from app.models.role import Role
     from app.models.school import School
 

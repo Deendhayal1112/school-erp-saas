@@ -1,13 +1,12 @@
 import asyncio
 import sys
-from pathlib import Path
 from logging.config import fileConfig
+from pathlib import Path
 
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-from alembic import context
 
 # Add backend root to sys.path to allow absolute imports of the app package
 backend_root = Path(__file__).resolve().parent.parent
@@ -15,15 +14,6 @@ sys.path.insert(0, str(backend_root))
 
 from app.core.config import settings
 from app.db.base import Base
-from app.models.school import School
-from app.models.role import Role
-from app.models.permission import Permission
-from app.models.role_permission import RolePermission
-from app.models.user import User
-from app.models.password_history import PasswordHistory
-from app.models.password_reset_token import PasswordResetToken
-from app.models.email_verification_token import EmailVerificationToken
-
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

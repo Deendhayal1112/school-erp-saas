@@ -2,36 +2,33 @@
 Password Management Integration Tests — Phase 3 Step 10.
 """
 
-import asyncio
-import uuid
 import hashlib
-from datetime import datetime, timezone, timedelta
-import pytest
-from sqlalchemy import select
-from httpx import AsyncClient, ASGITransport
+import uuid
+from datetime import UTC, datetime, timedelta
 
-from app.core import tokens
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy import select
+
 from app.core.config import settings
-from app.core.password import hash_password, verify_password
+from app.core.password import hash_password
 from app.db.session import AsyncSessionLocal
 from app.exceptions import InvalidCredentialsException
 from app.main import app
+from app.models.password_reset_token import PasswordResetToken
 from app.models.role import Role
 from app.models.school import School
 from app.models.user import User
-from app.models.password_history import PasswordHistory
-from app.models.password_reset_token import PasswordResetToken
-from app.repositories.user_repository import UserRepository
-from app.services.authentication_service import AuthenticationService
 from app.modules.auth.password.exceptions import (
     AccountLockedException,
+    ExpiredResetTokenException,
     InvalidCurrentPasswordException,
     PasswordReuseException,
-    InvalidResetTokenException,
-    ExpiredResetTokenException,
     PasswordValidationError,
 )
 from app.modules.auth.password.service import PasswordService
+from app.repositories.user_repository import UserRepository
+from app.services.authentication_service import AuthenticationService
 
 
 @pytest.fixture
@@ -214,7 +211,7 @@ async def test_reset_password_expired_token(test_user):
         stmt = select(PasswordResetToken).where(PasswordResetToken.token_hash == token_hash)
         res = await session.execute(stmt)
         token_record = res.scalar_one()
-        token_record.expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+        token_record.expires_at = datetime.now(UTC) - timedelta(minutes=1)
         session.add(token_record)
         await session.commit()
 
@@ -246,7 +243,7 @@ async def test_failed_login_lockout_and_automatic_unlock(test_user):
         stmt = select(User).where(User.id == test_user["id"])
         res = await session.execute(stmt)
         user = res.scalar_one()
-        user.locked_until = datetime.now(timezone.utc) - timedelta(seconds=1)
+        user.locked_until = datetime.now(UTC) - timedelta(seconds=1)
         session.add(user)
         await session.commit()
 

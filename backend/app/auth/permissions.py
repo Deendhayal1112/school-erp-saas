@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 
-def _extract_permission_codes(user: "User") -> frozenset[str]:
+def _extract_permission_codes(user: User) -> frozenset[str]:
     """
     Traverses the ORM relationship graph and extracts all lowercase permission codes
     assigned to a user via their role.
@@ -30,7 +30,7 @@ def _extract_permission_codes(user: "User") -> frozenset[str]:
     return frozenset(codes)
 
 
-def has_permission(user: "User", permission_code: str) -> bool:
+def has_permission(user: User, permission_code: str) -> bool:
     """
     Returns True if the user holds the specified permission code.
 
@@ -45,7 +45,7 @@ def has_permission(user: "User", permission_code: str) -> bool:
     return permission_code.lower() in codes
 
 
-def has_any_permission(user: "User", *permission_codes: str) -> bool:
+def has_any_permission(user: User, *permission_codes: str) -> bool:
     """
     Returns True if the user holds at least one of the specified permission codes.
     """
@@ -58,7 +58,7 @@ def has_any_permission(user: "User", *permission_codes: str) -> bool:
     return any(p.lower() in codes for p in permission_codes)
 
 
-def has_all_permissions(user: "User", *permission_codes: str) -> bool:
+def has_all_permissions(user: User, *permission_codes: str) -> bool:
     """
     Returns True if the user holds ALL of the specified permission codes.
     """
@@ -71,7 +71,7 @@ def has_all_permissions(user: "User", *permission_codes: str) -> bool:
     return all(p.lower() in codes for p in permission_codes)
 
 
-def permission_exists(user: "User", permission_code: str) -> bool:
+def permission_exists(user: User, permission_code: str) -> bool:
     """
     Returns True if the permission code is at all represented in the user's role.
     Unlike has_permission(), this does NOT apply Super Admin bypass.
@@ -81,6 +81,6 @@ def permission_exists(user: "User", permission_code: str) -> bool:
     return permission_code.lower() in codes
 
 
-def get_user_permissions(user: "User") -> list[str]:
+def get_user_permissions(user: User) -> list[str]:
     """Returns the sorted list of permission codes held by the user's role."""
     return sorted(_extract_permission_codes(user))

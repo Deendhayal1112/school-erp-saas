@@ -18,16 +18,19 @@ Tests:
 import logging
 import uuid
 from datetime import UTC, datetime, timedelta
-from unittest.mock import MagicMock
 
 import jwt
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
 from app.core.config import settings
 from app.main import app
 from app.middleware.audit import AuditEvent, _build_entry
-from app.middleware.request_context import RequestContext, get_request_context, set_request_context
+from app.middleware.request_context import (
+    RequestContext,
+    get_request_context,
+    set_request_context,
+)
 
 AUTH_BASE = "/api/v1/auth"
 SEEDED_EMAIL = "superadmin@schoolerpsaas.com"

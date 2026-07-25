@@ -1,5 +1,7 @@
 import re
+
 from pydantic import BaseModel, Field, field_validator, model_validator
+
 from app.core.password import validate_password_strength
 
 

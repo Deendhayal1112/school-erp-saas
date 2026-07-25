@@ -13,16 +13,11 @@ Usage examples:
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import Depends
 
 from app.auth import authorization as authz
-from app.auth.exceptions import (
-    ForbiddenException,
-    PermissionDeniedException,
-    RoleDeniedException,
-)
 from app.dependencies.current_user import get_current_active_user
 from app.models.user import User
 

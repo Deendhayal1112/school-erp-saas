@@ -1,7 +1,7 @@
 import asyncio
-import os
 import sys
 from pathlib import Path
+
 from sqlalchemy import select
 
 # Append backend directory to sys.path to enable absolute imports of the app package
@@ -9,10 +9,10 @@ backend_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_root))
 
 from app.db.session import AsyncSessionLocal
-from app.models.school import School
-from app.models.role import Role
 from app.models.permission import Permission
+from app.models.role import Role
 from app.models.role_permission import RolePermission
+from app.models.school import School
 from app.models.user import User
 
 
@@ -136,7 +136,7 @@ async def seed():
             role_obj = roles_map[r_code]
             for p_code in p_codes:
                 perm_obj = permissions_map[p_code]
-                
+
                 # Check if junction row exists
                 mapping_stmt = select(RolePermission).where(
                     RolePermission.role_id == role_obj.id,

@@ -2,30 +2,28 @@
 Email Verification & Account Recovery Integration Tests — Phase 3 Step 11.
 """
 
-import uuid
-import secrets
 import hashlib
-from datetime import datetime, timezone, timedelta
-import pytest
-from sqlalchemy import select
-from httpx import AsyncClient, ASGITransport
+import secrets
+import uuid
+from datetime import UTC, datetime, timedelta
 
-from app.core.config import settings
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy import select
+
 from app.core.password import hash_password
 from app.db.session import AsyncSessionLocal
 from app.main import app
+from app.models.email_verification_token import EmailVerificationToken
 from app.models.role import Role
 from app.models.school import School
 from app.models.user import User
-from app.models.email_verification_token import EmailVerificationToken
-from app.repositories.user_repository import UserRepository
 from app.modules.auth.email.exceptions import (
-    InvalidVerificationTokenException,
-    ExpiredVerificationTokenException,
     EmailRateLimitException,
-    AccountAlreadyVerifiedException,
+    ExpiredVerificationTokenException,
+    InvalidVerificationTokenException,
 )
-from app.modules.auth.email.providers import MockEmailProvider, ConsoleProvider
+from app.modules.auth.email.providers import ConsoleProvider, MockEmailProvider
 from app.modules.auth.email.service import EmailVerificationService
 
 
@@ -89,7 +87,7 @@ async def test_send_verification_email_success(test_user):
     """Verifies that requesting a verification email generates token and dispatches email via provider."""
     async with AsyncSessionLocal() as session:
         service = EmailVerificationService(session)
-        
+
         # Inject mock provider
         mock_provider = MockEmailProvider()
         service.provider = mock_provider
@@ -105,7 +103,7 @@ async def test_send_verification_email_success(test_user):
         tokens = res.scalars().all()
         assert len(tokens) == 1
         assert tokens[0].used is False
-        assert tokens[0].expires_at > datetime.now(timezone.utc)
+        assert tokens[0].expires_at > datetime.now(UTC)
 
         # 3. Check mock provider received the email dispatch
         assert len(mock_provider.sent_emails) == 1
@@ -126,7 +124,7 @@ async def test_verify_email_success_activates_account(test_user):
         # 1. Generate token
         raw_token = secrets.token_urlsafe(32)
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=60)
+        expires_at = datetime.now(UTC) + timedelta(minutes=60)
         token_record = EmailVerificationToken(
             user_id=test_user["id"],
             token_hash=token_hash,
@@ -177,7 +175,7 @@ async def test_verify_email_expired_token(test_user):
         # 1. Generate expired token
         raw_token = secrets.token_urlsafe(32)
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
-        expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+        expires_at = datetime.now(UTC) - timedelta(minutes=1)
         token_record = EmailVerificationToken(
             user_id=test_user["id"],
             token_hash=token_hash,
@@ -201,7 +199,7 @@ async def test_replay_attack_prevention(test_user):
         # 1. Generate token
         raw_token = secrets.token_urlsafe(32)
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=60)
+        expires_at = datetime.now(UTC) + timedelta(minutes=60)
         token_record = EmailVerificationToken(
             user_id=test_user["id"],
             token_hash=token_hash,

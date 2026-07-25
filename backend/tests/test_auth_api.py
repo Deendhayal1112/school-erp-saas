@@ -13,8 +13,7 @@ import uuid
 from datetime import timedelta
 
 import pytest
-import httpx
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
 from app.core import tokens
 from app.main import app

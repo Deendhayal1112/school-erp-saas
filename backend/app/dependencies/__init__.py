@@ -17,17 +17,17 @@ from app.dependencies.current_user import (
 )
 
 __all__ = [
-    "MissingTokenException",
-    "InvalidBearerTokenException",
     "AuthenticationRequiredException",
-    "UserNotFoundException",
     "InactiveAccountException",
     "InactiveSchoolException",
+    "InvalidBearerTokenException",
+    "MissingTokenException",
     "TokenExpiredException",
-    "extract_bearer_token",
-    "validate_bearer_format",
+    "UserNotFoundException",
     "decode_authenticated_user",
-    "get_current_user",
+    "extract_bearer_token",
     "get_current_active_user",
+    "get_current_user",
     "get_optional_current_user",
+    "validate_bearer_format",
 ]

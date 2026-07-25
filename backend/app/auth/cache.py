@@ -28,7 +28,7 @@ import uuid
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.user import User
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +82,7 @@ async def _get_redis():
     _redis_initialized = True
     try:
         import redis.asyncio as aioredis
+
         from app.core.config import settings
         client = aioredis.from_url(settings.REDIS_URL, decode_responses=True, socket_connect_timeout=2)
         await client.ping()
@@ -169,7 +170,6 @@ async def invalidate_user_cache(user_id: uuid.UUID) -> None:
     Removes all RBAC cache entries for a given user.
     Call after role changes, permission updates, or account deactivation.
     """
-    prefix = f"rbac:"
     perms_key = f"rbac:perms:{user_id}"
     role_key = f"rbac:role:{user_id}"
 

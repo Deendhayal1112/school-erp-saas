@@ -1,10 +1,11 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 from sqlalchemy import select
 
 from app.db.session import AsyncSessionLocal
-from app.exceptions import DuplicateEntityError, EntityNotFoundError
+from app.exceptions import DuplicateEntityError
 from app.models.role import Role
 from app.models.school import School
 from app.models.user import User
@@ -85,7 +86,7 @@ async def test_user_repository_flows():
             assert updated_user.first_name == "ModifiedRepositoryName"
 
             # 8. Verify Update Last Login
-            login_time = datetime.now(timezone.utc)
+            login_time = datetime.now(UTC)
             await repo.update_last_login(created_user.id, login_time)
             await session.commit()
 

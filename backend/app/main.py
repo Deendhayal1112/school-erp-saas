@@ -94,9 +94,15 @@ from app.exceptions import (
     InactiveUserException,
     InvalidCredentialsException,
     RefreshTokenException,
+)
+from app.exceptions import (
     TokenExpiredException as ServiceTokenExpiredException,
 )
-from app.schemas.response import ErrorResponse, ValidationErrorDetail, ValidationErrorResponse
+from app.schemas.response import (
+    ErrorResponse,
+    ValidationErrorDetail,
+    ValidationErrorResponse,
+)
 
 
 @app.exception_handler(HTTPException)
@@ -235,11 +241,11 @@ async def unauthorized_handler(request: Request, exc: UnauthorizedException):
 
 from app.modules.auth.password.exceptions import (
     AccountLockedException,
-    InvalidCurrentPasswordException,
-    PasswordValidationError,
-    PasswordReuseException,
-    InvalidResetTokenException,
     ExpiredResetTokenException,
+    InvalidCurrentPasswordException,
+    InvalidResetTokenException,
+    PasswordReuseException,
+    PasswordValidationError,
 )
 
 
@@ -310,10 +316,10 @@ async def expired_reset_token_handler(request: Request, exc: ExpiredResetTokenEx
 
 
 from app.modules.auth.email.exceptions import (
-    InvalidVerificationTokenException,
-    ExpiredVerificationTokenException,
-    EmailRateLimitException,
     AccountAlreadyVerifiedException,
+    EmailRateLimitException,
+    ExpiredVerificationTokenException,
+    InvalidVerificationTokenException,
 )
 
 

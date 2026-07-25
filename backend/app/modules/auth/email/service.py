@@ -3,22 +3,22 @@ Email Verification and Recovery Service.
 """
 
 import hashlib
+import logging
 import secrets
 import uuid
-import logging
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.models.user import User
 from app.models.email_verification_token import EmailVerificationToken
-from app.repositories.user_repository import UserRepository
+from app.models.user import User
 from app.modules.auth.email.exceptions import (
-    InvalidVerificationTokenException,
-    ExpiredVerificationTokenException,
-    EmailRateLimitException,
     AccountAlreadyVerifiedException,
+    EmailRateLimitException,
+    ExpiredVerificationTokenException,
+    InvalidVerificationTokenException,
 )
 from app.modules.auth.email.providers import get_email_provider
 from app.modules.auth.email.templates import (
@@ -28,6 +28,7 @@ from app.modules.auth.email.templates import (
     WELCOME_TEXT,
     render_template,
 )
+from app.repositories.user_repository import UserRepository
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ class EmailVerificationService:
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
 
         # 3. Store hashed token record
-        expires_at = datetime.now(timezone.utc) + timedelta(
+        expires_at = datetime.now(UTC) + timedelta(
             minutes=settings.EMAIL_VERIFICATION_EXPIRE_MINUTES
         )
         token_record = EmailVerificationToken(
@@ -117,7 +118,7 @@ class EmailVerificationService:
             raise InvalidVerificationTokenException("Invalid or already used verification token.")
 
         # Check expiration
-        if token_record.expires_at < datetime.now(timezone.utc):
+        if token_record.expires_at < datetime.now(UTC):
             token_record.used = True
             self.session.add(token_record)
             await self.session.commit()
@@ -183,7 +184,7 @@ class EmailVerificationService:
         last_token = res.scalar_one_or_none()
 
         if last_token:
-            elapsed = (datetime.now(timezone.utc) - last_token.created_at).total_seconds()
+            elapsed = (datetime.now(UTC) - last_token.created_at).total_seconds()
             if elapsed < settings.EMAIL_RATE_LIMIT_SECONDS:
                 remaining = int(settings.EMAIL_RATE_LIMIT_SECONDS - elapsed)
                 raise EmailRateLimitException(

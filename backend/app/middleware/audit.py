@@ -24,7 +24,6 @@ import logging
 import uuid
 from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
 from app.core.config import settings
 
@@ -56,16 +55,16 @@ class AuditEvent(StrEnum):
 def _build_entry(
     event: AuditEvent,
     *,
-    request_id: Optional[str] = None,
-    correlation_id: Optional[str] = None,
-    user_id: Optional[uuid.UUID | str] = None,
-    school_id: Optional[uuid.UUID | str] = None,
-    role: Optional[str] = None,
-    ip_address: Optional[str] = None,
-    path: Optional[str] = None,
-    method: Optional[str] = None,
-    detail: Optional[str] = None,
-    extra: Optional[dict] = None,
+    request_id: str | None = None,
+    correlation_id: str | None = None,
+    user_id: uuid.UUID | str | None = None,
+    school_id: uuid.UUID | str | None = None,
+    role: str | None = None,
+    ip_address: str | None = None,
+    path: str | None = None,
+    method: str | None = None,
+    detail: str | None = None,
+    extra: dict | None = None,
 ) -> dict:
     """Assembles a structured audit log record dictionary."""
     entry: dict = {
@@ -99,10 +98,10 @@ def _emit(level: int, entry: dict) -> None:
 # ===========================================================================
 def log_login_success(
     user_id: uuid.UUID,
-    school_id: Optional[uuid.UUID],
-    role: Optional[str],
-    ip_address: Optional[str],
-    request_id: Optional[str] = None,
+    school_id: uuid.UUID | None,
+    role: str | None,
+    ip_address: str | None,
+    request_id: str | None = None,
 ) -> None:
     _emit(logging.INFO, _build_entry(
         AuditEvent.LOGIN_SUCCESS,
@@ -115,10 +114,10 @@ def log_login_success(
 
 
 def log_login_failure(
-    ip_address: Optional[str],
-    path: Optional[str] = None,
-    detail: Optional[str] = None,
-    request_id: Optional[str] = None,
+    ip_address: str | None,
+    path: str | None = None,
+    detail: str | None = None,
+    request_id: str | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.LOGIN_FAILURE,
@@ -131,8 +130,8 @@ def log_login_failure(
 
 def log_logout(
     user_id: uuid.UUID,
-    ip_address: Optional[str],
-    request_id: Optional[str] = None,
+    ip_address: str | None,
+    request_id: str | None = None,
 ) -> None:
     _emit(logging.INFO, _build_entry(
         AuditEvent.LOGOUT,
@@ -143,12 +142,12 @@ def log_logout(
 
 
 def log_token_validation_failure(
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
-    detail: Optional[str],
-    request_id: Optional[str] = None,
-    correlation_id: Optional[str] = None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
+    detail: str | None,
+    request_id: str | None = None,
+    correlation_id: str | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.TOKEN_VALIDATION_FAILURE,
@@ -162,10 +161,10 @@ def log_token_validation_failure(
 
 
 def log_token_expired(
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
-    request_id: Optional[str] = None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
+    request_id: str | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.TOKEN_EXPIRED,
@@ -178,12 +177,12 @@ def log_token_expired(
 
 
 def log_authentication_failure(
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
-    detail: Optional[str],
-    request_id: Optional[str] = None,
-    correlation_id: Optional[str] = None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
+    detail: str | None,
+    request_id: str | None = None,
+    correlation_id: str | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.AUTHENTICATION_FAILURE,
@@ -198,13 +197,13 @@ def log_authentication_failure(
 
 def log_authorization_success(
     user_id: uuid.UUID,
-    school_id: Optional[uuid.UUID],
-    role: Optional[str],
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
-    request_id: Optional[str] = None,
-    correlation_id: Optional[str] = None,
+    school_id: uuid.UUID | None,
+    role: str | None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
+    request_id: str | None = None,
+    correlation_id: str | None = None,
 ) -> None:
     _emit(logging.INFO, _build_entry(
         AuditEvent.AUTHORIZATION_SUCCESS,
@@ -220,15 +219,15 @@ def log_authorization_success(
 
 
 def log_permission_denied(
-    user_id: Optional[uuid.UUID],
-    role: Optional[str],
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
+    user_id: uuid.UUID | None,
+    role: str | None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
     permission: str,
-    request_id: Optional[str] = None,
-    school_id: Optional[uuid.UUID] = None,
-    correlation_id: Optional[str] = None,
+    request_id: str | None = None,
+    school_id: uuid.UUID | None = None,
+    correlation_id: str | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.PERMISSION_DENIED,
@@ -245,14 +244,14 @@ def log_permission_denied(
 
 
 def log_role_denied(
-    user_id: Optional[uuid.UUID],
-    role: Optional[str],
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
+    user_id: uuid.UUID | None,
+    role: str | None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
     required_role: str,
-    request_id: Optional[str] = None,
-    school_id: Optional[uuid.UUID] = None,
+    request_id: str | None = None,
+    school_id: uuid.UUID | None = None,
 ) -> None:
     _emit(logging.WARNING, _build_entry(
         AuditEvent.ROLE_DENIED,
@@ -268,11 +267,11 @@ def log_role_denied(
 
 
 def log_request_received(
-    ip_address: Optional[str],
-    path: Optional[str],
-    method: Optional[str],
-    request_id: Optional[str] = None,
-    correlation_id: Optional[str] = None,
+    ip_address: str | None,
+    path: str | None,
+    method: str | None,
+    request_id: str | None = None,
+    correlation_id: str | None = None,
 ) -> None:
     _emit(logging.DEBUG, _build_entry(
         AuditEvent.REQUEST_RECEIVED,
@@ -285,11 +284,11 @@ def log_request_received(
 
 
 def log_request_completed(
-    path: Optional[str],
-    method: Optional[str],
+    path: str | None,
+    method: str | None,
     status_code: int,
     elapsed_ms: float,
-    request_id: Optional[str] = None,
+    request_id: str | None = None,
 ) -> None:
     _emit(logging.INFO, _build_entry(
         AuditEvent.REQUEST_COMPLETED,

@@ -12,7 +12,6 @@ Design principles:
 
 from __future__ import annotations
 
-import uuid
 from typing import TYPE_CHECKING
 
 from app.auth import cache as rbac_cache
@@ -31,7 +30,7 @@ if TYPE_CHECKING:
 # ===========================================================================
 # Cached Permission Resolution
 # ===========================================================================
-async def resolve_permissions(user: "User") -> frozenset[str]:
+async def resolve_permissions(user: User) -> frozenset[str]:
     """
     Returns the full set of permission codes for the user.
     Results are cached per-user; first call loads from ORM graph.
@@ -45,7 +44,7 @@ async def resolve_permissions(user: "User") -> frozenset[str]:
     return permissions
 
 
-async def resolve_role(user: "User") -> str | None:
+async def resolve_role(user: User) -> str | None:
     """
     Returns the role code for the user.
     Results are cached per-user; first call loads from ORM graph.
@@ -63,7 +62,7 @@ async def resolve_role(user: "User") -> str | None:
 # ===========================================================================
 # Authorization Checks (raise on failure)
 # ===========================================================================
-async def require_permission(user: "User", permission_code: str) -> None:
+async def require_permission(user: User, permission_code: str) -> None:
     """
     Asserts the user holds the required permission code.
     Raises PermissionDeniedException if the check fails.
@@ -72,7 +71,7 @@ async def require_permission(user: "User", permission_code: str) -> None:
         raise PermissionDeniedException(permission_code)
 
 
-async def require_any_permission(user: "User", *permission_codes: str) -> None:
+async def require_any_permission(user: User, *permission_codes: str) -> None:
     """
     Asserts the user holds at least one of the specified permissions.
     Raises PermissionDeniedException with the first missing code if none match.
@@ -81,7 +80,7 @@ async def require_any_permission(user: "User", *permission_codes: str) -> None:
         raise PermissionDeniedException(", ".join(permission_codes))
 
 
-async def require_all_permissions(user: "User", *permission_codes: str) -> None:
+async def require_all_permissions(user: User, *permission_codes: str) -> None:
     """
     Asserts the user holds ALL of the specified permissions.
     Raises PermissionDeniedException for the first missing permission code.
@@ -93,7 +92,7 @@ async def require_all_permissions(user: "User", *permission_codes: str) -> None:
                 raise PermissionDeniedException(code)
 
 
-async def require_role(user: "User", role_code: str) -> None:
+async def require_role(user: User, role_code: str) -> None:
     """
     Asserts the user holds the exact specified role.
     Raises RoleDeniedException if the check fails.
@@ -105,7 +104,7 @@ async def require_role(user: "User", role_code: str) -> None:
         raise RoleDeniedException(role_code)
 
 
-async def require_any_role(user: "User", *role_codes: str) -> None:
+async def require_any_role(user: User, *role_codes: str) -> None:
     """
     Asserts the user holds at least one of the specified roles.
     Raises RoleDeniedException if no match.
@@ -116,7 +115,7 @@ async def require_any_role(user: "User", *role_codes: str) -> None:
         raise RoleDeniedException(", ".join(role_codes))
 
 
-async def require_minimum_role(user: "User", minimum_role_code: str) -> None:
+async def require_minimum_role(user: User, minimum_role_code: str) -> None:
     """
     Asserts the user's role is at or above the minimum level in the role hierarchy.
     Raises RoleDeniedException if the user's role is below the required level.

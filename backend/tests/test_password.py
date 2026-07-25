@@ -1,5 +1,6 @@
 import pytest
-from app.core.password import hash_password, verify_password, validate_password_strength
+
+from app.core.password import hash_password, validate_password_strength, verify_password
 
 
 def test_hash_password():

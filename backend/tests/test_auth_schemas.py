@@ -1,15 +1,16 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 from pydantic import ValidationError
+
 from app.schemas.auth import (
-    LoginRequest,
-    LoginResponse,
     ChangePasswordRequest,
+    CurrentUserResponse,
     ForgotPasswordRequest,
+    LoginRequest,
     ResetPasswordRequest,
     TokenRefreshResponse,
-    CurrentUserResponse,
 )
 
 
@@ -95,8 +96,8 @@ def test_current_user_response():
     """Verify CurrentUserResponse maps user metadata and strictly excludes secure password fields."""
     user_id = uuid.uuid4()
     school_id = uuid.uuid4()
-    now = datetime.now(timezone.utc)
-    
+    now = datetime.now(UTC)
+
     res = CurrentUserResponse(
         id=user_id,
         school_id=school_id,
