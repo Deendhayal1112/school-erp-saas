@@ -74,7 +74,7 @@ def test_wrong_secret_key():
         "type": "access"
     }
     # Encode with a custom key
-    token = jwt.encode_token(payload, secret_key="custom-unrecognized-secret-key")
+    token = jwt.encode_token(payload, secret_key="custom-unrecognized-secret-key-longer-than-32-chars")
     # Decode with defaults (uses settings.SECRET_KEY)
     with pytest.raises(jwt.InvalidSignatureError):
         jwt.decode_token(token)
