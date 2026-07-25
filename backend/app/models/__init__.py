@@ -12,6 +12,7 @@ from app.modules.admission.models import Admission, AdmissionSequence, Admission
 from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.student.models import Student
 from app.modules.student_documents.models import StudentDocument
+from app.modules.student_medical.models import StudentMedicalRecord, Allergy, Vaccination
 
 __all__ = [
     "BaseEntity",
@@ -31,4 +32,7 @@ __all__ = [
     "AdmissionSequence",
     "AdmissionTimeline",
     "StudentDocument",
+    "StudentMedicalRecord",
+    "Allergy",
+    "Vaccination",
 ]

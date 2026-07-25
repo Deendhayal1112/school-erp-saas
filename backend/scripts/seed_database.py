@@ -282,6 +282,30 @@ async def seed():
                 "module": "student_documents",
                 "desc": "Allows verifying student documents status",
             },
+            {
+                "code": "student.medical.create",
+                "name": "Create Student Medical Profile",
+                "module": "student_medical",
+                "desc": "Allows creating student medical records",
+            },
+            {
+                "code": "student.medical.read",
+                "name": "Read Student Medical Profile",
+                "module": "student_medical",
+                "desc": "Allows reading student medical records",
+            },
+            {
+                "code": "student.medical.update",
+                "name": "Update Student Medical Profile",
+                "module": "student_medical",
+                "desc": "Allows updating student medical records",
+            },
+            {
+                "code": "student.medical.delete",
+                "name": "Delete Student Medical Profile",
+                "module": "student_medical",
+                "desc": "Allows deleting student medical records",
+            },
         ]
 
         permissions_map = {}
