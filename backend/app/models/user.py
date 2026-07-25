@@ -9,6 +9,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseEntity
 
 if TYPE_CHECKING:
+    from app.models.password_history import PasswordHistory
+    from app.models.password_reset_token import PasswordResetToken
     from app.models.role import Role
     from app.models.school import School
 
@@ -50,6 +52,13 @@ class User(BaseEntity):
     phone_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # ==========================================
+    # Account Security Fields
+    # ==========================================
+    failed_login_count: Mapped[int] = mapped_column(default=0, nullable=False)
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    password_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    # ==========================================
     # Foreign Key Constraints
     # ==========================================
     # Cascade user deletion if a School tenant is removed
@@ -75,4 +84,15 @@ class User(BaseEntity):
     role: Mapped["Role"] = relationship(
         "Role",
         back_populates="users",
+    )
+    password_history: Mapped[list["PasswordHistory"]] = relationship(
+        "PasswordHistory",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        order_by="PasswordHistory.created_at.desc()",
+    )
+    password_reset_tokens: Mapped[list["PasswordResetToken"]] = relationship(
+        "PasswordResetToken",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )

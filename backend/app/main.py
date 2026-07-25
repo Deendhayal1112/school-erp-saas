@@ -233,6 +233,82 @@ async def unauthorized_handler(request: Request, exc: UnauthorizedException):
     )
 
 
+from app.modules.auth.password.exceptions import (
+    AccountLockedException,
+    InvalidCurrentPasswordException,
+    PasswordValidationError,
+    PasswordReuseException,
+    InvalidResetTokenException,
+    ExpiredResetTokenException,
+)
+
+
+@app.exception_handler(AccountLockedException)
+async def account_locked_handler(request: Request, exc: AccountLockedException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(
+            error="AccountLocked",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(InvalidCurrentPasswordException)
+async def invalid_current_password_handler(request: Request, exc: InvalidCurrentPasswordException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="InvalidCurrentPassword",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(PasswordReuseException)
+async def password_reuse_handler(request: Request, exc: PasswordReuseException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="PasswordReuse",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(PasswordValidationError)
+async def password_validation_handler(request: Request, exc: PasswordValidationError):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="PasswordValidationError",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(InvalidResetTokenException)
+async def invalid_reset_token_handler(request: Request, exc: InvalidResetTokenException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="InvalidResetToken",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(ExpiredResetTokenException)
+async def expired_reset_token_handler(request: Request, exc: ExpiredResetTokenException):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error="ExpiredResetToken",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Fallback handler for unhandled exceptions to return standard JSON structure."""

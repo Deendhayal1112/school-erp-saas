@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from app.core import jwt, tokens
 from app.core.config import settings
@@ -12,6 +12,7 @@ from app.exceptions import (
     RefreshTokenException,
     TokenExpiredException,
 )
+from app.modules.auth.password.exceptions import AccountLockedException
 from app.repositories.user_repository import UserRepository
 from app.services.base_service import BaseService
 
@@ -29,13 +30,51 @@ class AuthenticationService(BaseService):
         """
         Authenticates a user by email and password.
         Updates user last login on success and issues access/refresh tokens.
+        Tracks failed logins and locks accounts temporarily under policy threshold breaches.
         """
         user = await self.user_repo.get_by_email(email)
         if not user:
             raise InvalidCredentialsException("Incorrect email or password.")
 
+        # 1. Enforce temporary lockout policy if active
+        if user.locked_until:
+            if user.locked_until > datetime.now(timezone.utc):
+                raise AccountLockedException(
+                    "This account is temporarily locked due to multiple failed login attempts. "
+                    f"Please try again after {user.locked_until.isoformat()}.",
+                    unlock_time=user.locked_until
+                )
+            else:
+                # Lockout duration has expired, reset counters automatically
+                user.failed_login_count = 0
+                user.locked_until = None
+                await self.user_repo.update(user)
+                await self.user_repo.session.commit()
+
+        # 2. Verify password correctness
         if not verify_password(password, user.password_hash):
+            user.failed_login_count += 1
+            if user.failed_login_count >= settings.ACCOUNT_LOCKOUT_THRESHOLD:
+                user.locked_until = datetime.now(timezone.utc) + timedelta(
+                    minutes=settings.ACCOUNT_LOCKOUT_MINUTES
+                )
+            await self.user_repo.update(user)
+            await self.user_repo.session.commit()
+
+            if user.locked_until and user.locked_until > datetime.now(timezone.utc):
+                raise AccountLockedException(
+                    "This account is temporarily locked due to multiple failed login attempts. "
+                    f"Please try again after {user.locked_until.isoformat()}.",
+                    unlock_time=user.locked_until
+                )
             raise InvalidCredentialsException("Incorrect email or password.")
+
+        # 3. Reset failed login counters on successful credential verification
+        if user.failed_login_count > 0 or user.locked_until:
+            user.failed_login_count = 0
+            user.locked_until = None
+            await self.user_repo.update(user)
+            await self.user_repo.session.commit()
 
         # Enforce account and tenant status rules
         self.validate_user_status(user)
@@ -58,6 +97,7 @@ class AuthenticationService(BaseService):
         """
         Validates a refresh token and generates a new pair of access/refresh tokens.
         Checks user status before generating tokens.
+        Rejects tokens issued prior to the user's last password change event.
         """
         try:
             payload = jwt.decode_token(refresh_token)
@@ -74,6 +114,13 @@ class AuthenticationService(BaseService):
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise InvalidCredentialsException("User not found.")
+
+        # Re-verify token issuance time against user password change event
+        iat_timestamp = payload.get("iat")
+        if iat_timestamp and user.password_changed_at:
+            token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=timezone.utc)
+            if token_iat_dt < user.password_changed_at:
+                raise RefreshTokenException("Token has been invalidated by a password change.")
 
         # Re-verify account state and school tenant active status
         self.validate_user_status(user)

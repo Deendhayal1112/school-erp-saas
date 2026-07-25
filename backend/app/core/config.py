@@ -80,6 +80,15 @@ class Settings(BaseSettings):
     ENABLE_AUTHORIZATION_MIDDLEWARE: bool = True
 
     # ==========================================
+    # Password Management Settings
+    # ==========================================
+    PASSWORD_HISTORY_LENGTH: int = 5          # How many previous passwords to remember
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 30  # Reset link TTL
+    PASSWORD_EXPIRE_DAYS: int = 0             # 0 = never expires
+    ACCOUNT_LOCKOUT_THRESHOLD: int = 5        # Failed attempts before lockout
+    ACCOUNT_LOCKOUT_MINUTES: int = 15         # Lockout duration
+
+    # ==========================================
     # 6. Celery Settings
     # ==========================================
     CELERY_BROKER_URL: str | None = None

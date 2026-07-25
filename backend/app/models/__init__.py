@@ -4,6 +4,8 @@ from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.school import School
 from app.models.user import User
+from app.models.password_history import PasswordHistory
+from app.models.password_reset_token import PasswordResetToken
 
 __all__ = [
     "BaseEntity",
@@ -12,4 +14,6 @@ __all__ = [
     "RolePermission",
     "School",
     "User",
+    "PasswordHistory",
+    "PasswordResetToken",
 ]

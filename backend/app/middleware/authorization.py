@@ -311,6 +311,22 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
                 if not user or user.is_deleted:
                     return
 
+                # Invalidate if password changed since token issuance
+                from datetime import datetime, timezone
+                iat_timestamp = payload.get("iat")
+                if iat_timestamp and user.password_changed_at:
+                    token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=timezone.utc)
+                    if token_iat_dt < user.password_changed_at:
+                        audit_log.log_token_validation_failure(
+                            ip_address=client_ip,
+                            path=path,
+                            method=method,
+                            detail="Token has been invalidated by a password change",
+                            request_id=request_id,
+                            correlation_id=correlation_id,
+                        )
+                        return
+
                 school_id = user.school_id if hasattr(user, "school_id") else None
                 role_code = get_user_role(user)
                 permissions = _extract_permission_codes(user)
