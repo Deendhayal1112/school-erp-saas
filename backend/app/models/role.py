@@ -1,6 +1,11 @@
+from typing import List, TYPE_CHECKING
 from sqlalchemy import Boolean, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseEntity
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.role_permission import RolePermission
 
 
 class Role(BaseEntity):
@@ -17,3 +22,14 @@ class Role(BaseEntity):
     
     # System flag to prevent modification or deletion of crucial system roles
     is_system: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    # ORM Relationships
+    users: Mapped[List["User"]] = relationship(
+        "User",
+        back_populates="role",
+    )
+    role_permissions: Mapped[List["RolePermission"]] = relationship(
+        "RolePermission",
+        back_populates="role",
+        cascade="all, delete-orphan",
+    )

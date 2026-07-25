@@ -2,8 +2,13 @@ import uuid
 from datetime import date, datetime
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseEntity
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.school import School
+    from app.models.role import Role
 
 
 class User(BaseEntity):
@@ -58,4 +63,14 @@ class User(BaseEntity):
         ForeignKey("roles.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
+    )
+
+    # ORM Relationships
+    school: Mapped["School"] = relationship(
+        "School",
+        back_populates="users",
+    )
+    role: Mapped["Role"] = relationship(
+        "Role",
+        back_populates="users",
     )

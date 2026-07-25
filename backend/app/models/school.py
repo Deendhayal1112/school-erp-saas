@@ -1,6 +1,10 @@
+from typing import List, TYPE_CHECKING
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseEntity
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class School(BaseEntity):
@@ -30,3 +34,11 @@ class School(BaseEntity):
     timezone: Mapped[str] = mapped_column(String(50), default="UTC", nullable=False)
     logo_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="active", nullable=False)
+
+    # ORM Relationships
+    users: Mapped[List["User"]] = relationship(
+        "User",
+        back_populates="school",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )
