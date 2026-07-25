@@ -390,6 +390,54 @@ async def seed():
                 "module": "student_dashboard",
                 "desc": "Allows exporting student reports in CSV, Excel, and PDF formats",
             },
+            {
+                "code": "academic_year.create",
+                "name": "Create Academic Year",
+                "module": "academic_year",
+                "desc": "Allows creating academic years",
+            },
+            {
+                "code": "academic_year.read",
+                "name": "Read Academic Year",
+                "module": "academic_year",
+                "desc": "Allows reading academic years data",
+            },
+            {
+                "code": "academic_year.update",
+                "name": "Update Academic Year",
+                "module": "academic_year",
+                "desc": "Allows updating academic years",
+            },
+            {
+                "code": "academic_year.delete",
+                "name": "Delete Academic Year",
+                "module": "academic_year",
+                "desc": "Allows deleting academic years",
+            },
+            {
+                "code": "academic_year.activate",
+                "name": "Activate Academic Year",
+                "module": "academic_year",
+                "desc": "Allows activating and deactivating academic years",
+            },
+            {
+                "code": "academic_year.lock",
+                "name": "Lock Academic Year",
+                "module": "academic_year",
+                "desc": "Allows locking and unlocking academic years",
+            },
+            {
+                "code": "academic_year.archive",
+                "name": "Archive Academic Year",
+                "module": "academic_year",
+                "desc": "Allows archiving academic years",
+            },
+            {
+                "code": "academic_year.default",
+                "name": "Set Default Academic Year",
+                "module": "academic_year",
+                "desc": "Allows setting default academic year flag",
+            },
         ]
 
         permissions_map = {}

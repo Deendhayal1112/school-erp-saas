@@ -15,6 +15,7 @@ from app.modules.student_documents.models import StudentDocument
 from app.modules.student_medical.models import StudentMedicalRecord, Allergy, Vaccination
 from app.modules.student_assignment.models import StudentAcademicAssignment
 from app.modules.student_progression.models import StudentProgression
+from app.modules.academic_year.models import AcademicYear
 
 __all__ = [
     "BaseEntity",
@@ -39,4 +40,5 @@ __all__ = [
     "Vaccination",
     "StudentAcademicAssignment",
     "StudentProgression",
+    "AcademicYear",
 ]
