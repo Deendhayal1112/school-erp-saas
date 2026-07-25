@@ -54,3 +54,4 @@ class TokenExpiredException(AuthenticationFailedException):
 class RefreshTokenException(AuthenticationFailedException):
     """Raised on invalid or malformed refresh token signature payloads."""
     pass
+
