@@ -10,6 +10,8 @@ from app.schemas.auth.token import (
     TokenPayloadSchema,
     TokenRefreshRequest,
     TokenRefreshResponse,
+    RefreshTokenRequest,
+    RefreshTokenResponse,
 )
 from app.schemas.auth.user import CurrentUserResponse
 
@@ -24,5 +26,7 @@ __all__ = [
     "TokenPayloadSchema",
     "TokenRefreshRequest",
     "TokenRefreshResponse",
+    "RefreshTokenRequest",
+    "RefreshTokenResponse",
     "CurrentUserResponse",
 ]

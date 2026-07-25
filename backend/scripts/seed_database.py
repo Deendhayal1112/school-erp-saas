@@ -170,7 +170,7 @@ async def seed():
                 username="superadmin",
                 email="superadmin@schoolerpsaas.com",
                 phone="+919876543210",
-                password_hash="$2b$12$D3/H6Oasdf123asdfasdfExampleHashValuePlaceholder...",
+                password_hash="$2b$12$cJgtCdXgJCo7PNXzZnuI/.pH7oYozMya1Y.SBnms/Xjg9/1ojDh2K",
                 status="active",
                 email_verified=True,
                 phone_verified=True,
@@ -179,7 +179,11 @@ async def seed():
             )
             session.add(super_admin_user)
         else:
-            print("Super Admin User already exists.")
+            print("Super Admin User already exists. Updating password hash...")
+            super_admin_user.password_hash = "$2b$12$cJgtCdXgJCo7PNXzZnuI/.pH7oYozMya1Y.SBnms/Xjg9/1ojDh2K"
+            super_admin_user.status = "active"
+            super_admin_user.is_active = True
+            session.add(super_admin_user)
 
         # Commit all transactions
         await session.commit()

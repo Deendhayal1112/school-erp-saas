@@ -74,19 +74,142 @@ app.add_middleware(
 
 
 # ==========================================
-# 2. Register Exception Handlers (Placeholders)
+# 2. Register Exception Handlers
 # ==========================================
+from fastapi import HTTPException
+from fastapi.exceptions import RequestValidationError
+
+from app.exceptions import (
+    DeletedUserException,
+    DuplicateEntityError,
+    EntityNotFoundError,
+    InactiveSchoolException,
+    InactiveUserException,
+    InvalidCredentialsException,
+    RefreshTokenException,
+    TokenExpiredException as ServiceTokenExpiredException,
+)
+from app.schemas.response import ErrorResponse, ValidationErrorDetail, ValidationErrorResponse
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Converts FastAPI HTTPException errors to standard JSON envelope format."""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=ErrorResponse(
+            error=_http_error_code(exc.status_code),
+            message=exc.detail,
+        ).model_dump(),
+        headers=getattr(exc, "headers", None),
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Converts Pydantic v2 validation errors to standard JSON envelope format."""
+    details = [
+        ValidationErrorDetail(loc=[str(l) for l in e["loc"]], msg=e["msg"], type=e["type"])
+        for e in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=422,
+        content=ValidationErrorResponse(details=details).model_dump(),
+    )
+
+
+@app.exception_handler(InvalidCredentialsException)
+async def invalid_credentials_handler(request: Request, exc: InvalidCredentialsException):
+    return JSONResponse(
+        status_code=401,
+        content=ErrorResponse(error="InvalidCredentials", message=str(exc)).model_dump(),
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+
+@app.exception_handler(ServiceTokenExpiredException)
+async def token_expired_handler(request: Request, exc: ServiceTokenExpiredException):
+    return JSONResponse(
+        status_code=401,
+        content=ErrorResponse(error="TokenExpired", message=str(exc)).model_dump(),
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+
+@app.exception_handler(RefreshTokenException)
+async def refresh_token_handler(request: Request, exc: RefreshTokenException):
+    return JSONResponse(
+        status_code=401,
+        content=ErrorResponse(error="InvalidRefreshToken", message=str(exc)).model_dump(),
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+
+@app.exception_handler(InactiveUserException)
+async def inactive_user_handler(request: Request, exc: InactiveUserException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="InactiveAccount", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(DeletedUserException)
+async def deleted_user_handler(request: Request, exc: DeletedUserException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="AccountDeleted", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(InactiveSchoolException)
+async def inactive_school_handler(request: Request, exc: InactiveSchoolException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="InactiveSchool", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(EntityNotFoundError)
+async def entity_not_found_handler(request: Request, exc: EntityNotFoundError):
+    return JSONResponse(
+        status_code=404,
+        content=ErrorResponse(error="NotFound", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(DuplicateEntityError)
+async def duplicate_entity_handler(request: Request, exc: DuplicateEntityError):
+    return JSONResponse(
+        status_code=409,
+        content=ErrorResponse(error="Conflict", message=str(exc)).model_dump(),
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Fallback handler for unhandled exceptions to return standard JSON structure."""
     logger.exception(f"Unhandled error encountered: {exc} | Path: {request.url.path}")
     return JSONResponse(
         status_code=500,
-        content={
-            "error": "InternalServerError",
-            "message": "An unexpected error occurred. Please contact system support.",
-        },
+        content=ErrorResponse(
+            error="InternalServerError",
+            message="An unexpected error occurred. Please contact system support.",
+        ).model_dump(),
     )
+
+
+def _http_error_code(status_code: int) -> str:
+    """Maps HTTP status codes to machine-readable error classification strings."""
+    codes = {
+        400: "BadRequest",
+        401: "Unauthorized",
+        403: "Forbidden",
+        404: "NotFound",
+        409: "Conflict",
+        422: "UnprocessableEntity",
+        500: "InternalServerError",
+    }
+    return codes.get(status_code, "HttpError")
 
 
 # ==========================================

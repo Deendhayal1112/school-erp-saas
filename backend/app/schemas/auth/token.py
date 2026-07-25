@@ -31,3 +31,16 @@ class TokenRefreshResponse(BaseModel):
     refresh_token: str = Field(..., description="New signed JSON Web Refresh Token.")
     token_type: str = Field("bearer", description="Token transport authorization scheme.")
     expires_in: int = Field(..., description="New Access Token lifetime in seconds.")
+
+
+class RefreshTokenRequest(BaseModel):
+    """Request schema for token refresh actions."""
+    refresh_token: str = Field(..., description="Active signed refresh JWT token.")
+
+
+class RefreshTokenResponse(BaseModel):
+    """Response schema for token refresh actions, returning a renewed access token."""
+    access_token: str = Field(..., description="New signed JSON Web Access Token.")
+    refresh_token: str = Field(..., description="New signed JSON Web Refresh Token.")
+    token_type: str = Field("bearer", description="Token transport authorization scheme.")
+    expires_in: int = Field(..., description="New Access Token lifetime in seconds.")
