@@ -1,5 +1,6 @@
 import json
-from typing import List, Literal, Union
+from typing import Literal
+
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -99,11 +100,11 @@ class Settings(BaseSettings):
     # ==========================================
     # 7. CORS Settings
     # ==========================================
-    CORS_ORIGINS: List[str] = ["*"]
+    CORS_ORIGINS: list[str] = ["*"]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+    def assemble_cors_origins(cls, v: str | list[str]) -> list[str]:
         """Assembles list of origins from comma-separated string or JSON array."""
         if isinstance(v, str):
             if not v.strip():

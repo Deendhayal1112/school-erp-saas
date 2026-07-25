@@ -1,4 +1,5 @@
 import bcrypt
+
 from app.core import constants
 
 

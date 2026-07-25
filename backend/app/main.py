@@ -1,6 +1,7 @@
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
 import logging
+from contextlib import asynccontextmanager
+from datetime import UTC, datetime
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -122,5 +123,5 @@ async def health_check():
         "service": settings.PROJECT_NAME,
         "version": "1.0.0",
         "environment": settings.ENV,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }

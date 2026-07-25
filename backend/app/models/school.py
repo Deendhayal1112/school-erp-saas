@@ -1,6 +1,8 @@
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.models.base import BaseEntity
 
 if TYPE_CHECKING:
@@ -17,26 +19,26 @@ class School(BaseEntity):
     # Core identification
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     code: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
-    
+
     # Contact information
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     website: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    
+
     # Address details
     address: Mapped[str | None] = mapped_column(String(255), nullable=True)
     city: Mapped[str | None] = mapped_column(String(100), nullable=True)
     state: Mapped[str | None] = mapped_column(String(100), nullable=True)
     country: Mapped[str | None] = mapped_column(String(100), nullable=True)
     postal_code: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    
+
     # Settings & configuration
     timezone: Mapped[str] = mapped_column(String(50), default="UTC", nullable=False)
     logo_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="active", nullable=False)
 
     # ORM Relationships
-    users: Mapped[List["User"]] = relationship(
+    users: Mapped[list["User"]] = relationship(
         "User",
         back_populates="school",
         lazy="selectin",

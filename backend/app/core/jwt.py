@@ -1,5 +1,5 @@
-from datetime import datetime
 import jwt
+
 from app.core.config import settings
 
 
@@ -39,7 +39,7 @@ class InvalidTokenError(JWTError):
 # ==========================================
 # Core JWT Operations
 # ==========================================
-def encode_token(payload: dict, secret_key: str = None, algorithm: str = None) -> str:
+def encode_token(payload: dict, secret_key: str | None = None, algorithm: str | None = None) -> str:
     """
     Encodes a dict payload into a signed JWT string.
     Uses centralized Settings configurations by default.
@@ -49,10 +49,10 @@ def encode_token(payload: dict, secret_key: str = None, algorithm: str = None) -
     try:
         return jwt.encode(payload, key, algorithm=alg)
     except Exception as e:
-        raise MalformedTokenError(f"Failed to encode token: {str(e)}")
+        raise MalformedTokenError(f"Failed to encode token: {e!s}")
 
 
-def decode_token(token: str, secret_key: str = None, algorithm: str = None) -> dict:
+def decode_token(token: str, secret_key: str | None = None, algorithm: str | None = None) -> dict:
     """
     Decodes a JWT string and validates its cryptographic signature and expiration.
     Also asserts the presence of required claims ('sub', 'exp', 'type').

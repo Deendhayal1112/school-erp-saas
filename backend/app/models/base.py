@@ -1,17 +1,19 @@
 import uuid
 from datetime import datetime
+
 from sqlalchemy import Boolean, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db.base import Base
 
 
 class BaseEntity(Base):
     """
-    Abstract Base Entity class that serves as the foundation for all 
+    Abstract Base Entity class that serves as the foundation for all
     database models in the enterprise School ERP SaaS application.
-    
-    Provides standardized primary keys, audit tracing, status controls, 
+
+    Provides standardized primary keys, audit tracing, status controls,
     and soft-delete capabilities.
     """
     __abstract__ = True  # Prevents SQLAlchemy from creating a physical table for this class
