@@ -38,6 +38,8 @@ class RequestContext:
     school_id: uuid.UUID | None = None
     role: str | None = None
     permissions: frozenset[str] = field(default_factory=frozenset)
+    timezone: str = "UTC"
+    language: str = "en"
 
     # Request metadata
     request_start: float = field(default_factory=time.monotonic)

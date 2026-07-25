@@ -119,7 +119,7 @@ class AuthenticationService(BaseService):
         iat_timestamp = payload.get("iat")
         if iat_timestamp and user.password_changed_at:
             token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
-            if token_iat_dt < user.password_changed_at:
+            if token_iat_dt < user.password_changed_at.replace(microsecond=0):
                 raise RefreshTokenException("Token has been invalidated by a password change.")
 
         # Re-verify account state and school tenant active status

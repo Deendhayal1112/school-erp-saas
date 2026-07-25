@@ -79,6 +79,23 @@ class Settings(BaseSettings):
     ENABLE_SECURITY_HEADERS: bool = True
     ENABLE_AUTHORIZATION_MIDDLEWARE: bool = True
 
+    # Platform Infrastructure Toggles & Configurations (Phase 3.5)
+    ENABLE_RATE_LIMITING: bool = True
+    ENABLE_NOTIFICATIONS: bool = True
+    ENABLE_REDIS: bool = True
+    ENABLE_S3: bool = False
+    ENABLE_CELERY: bool = False
+    ENABLE_HEALTH_CHECKS: bool = True
+
+    # File Storage Configurations
+    STORAGE_PROVIDER: str = "local"  # local or s3
+    STORAGE_BASE_DIR: str = "media"
+    STORAGE_BASE_URL: str = "/media"
+    S3_BUCKET_NAME: str = "school-erp-uploads"
+    AWS_ACCESS_KEY_ID: str | None = None
+    AWS_SECRET_ACCESS_KEY: str | None = None
+    AWS_REGION_NAME: str | None = None
+
     # ==========================================
     # Password Management Settings
     # ==========================================

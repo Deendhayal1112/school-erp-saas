@@ -1,3 +1,4 @@
+from app.audit.models import AuditLog
 from app.models.base import BaseEntity
 from app.models.email_verification_token import EmailVerificationToken
 from app.models.password_history import PasswordHistory
@@ -18,4 +19,5 @@ __all__ = [
     "RolePermission",
     "School",
     "User",
+    "AuditLog",
 ]

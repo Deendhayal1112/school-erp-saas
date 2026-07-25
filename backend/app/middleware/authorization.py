@@ -127,6 +127,10 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
         correlation_id = request.headers.get("X-Correlation-ID")
         client_ip = _extract_client_ip(request)
+        timezone = request.headers.get("X-Timezone") or "UTC"
+        language = request.headers.get("Accept-Language") or "en"
+        if language and "," in language:
+            language = language.split(",")[0].split(";")[0].strip()
 
         ctx = RequestContext(
             request_id=request_id,
@@ -134,6 +138,8 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             client_ip=client_ip,
             request_path=request.url.path,
             http_method=request.method,
+            timezone=timezone,
+            language=language,
         )
         set_request_context(ctx)
 
@@ -330,7 +336,7 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
                 iat_timestamp = payload.get("iat")
                 if iat_timestamp and user.password_changed_at:
                     token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
-                    if token_iat_dt < user.password_changed_at:
+                    if token_iat_dt < user.password_changed_at.replace(microsecond=0):
                         audit_log.log_token_validation_failure(
                             ip_address=client_ip,
                             path=path,

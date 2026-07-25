@@ -1,6 +1,5 @@
 import logging
 from contextlib import asynccontextmanager
-from datetime import UTC, datetime
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -379,6 +378,11 @@ async def global_exception_handler(request: Request, exc: Exception):
         ).model_dump(),
     )
 
+# Register platform infrastructure exception handlers
+from app.exceptions.handlers import register_exception_handlers
+
+register_exception_handlers(app)
+
 
 def _http_error_code(status_code: int) -> str:
     """Maps HTTP status codes to machine-readable error classification strings."""
@@ -416,17 +420,7 @@ async def read_root():
     }
 
 
-@app.get("/health", tags=["General"])
-async def health_check():
-    """
-    Production-ready health check endpoint.
-    Exposes service health status, environment parameters, and current UTC time.
-    """
-    # Placeholder for database and redis health verification queries
-    return {
-        "status": "healthy",
-        "service": settings.PROJECT_NAME,
-        "version": "1.0.0",
-        "environment": settings.ENV,
-        "timestamp": datetime.now(UTC).isoformat(),
-    }
+# Register Modular Health & Readiness Routers
+from app.health.router import router as health_router
+
+app.include_router(health_router)

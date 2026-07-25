@@ -45,7 +45,7 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     if iat_timestamp and user.password_changed_at:
         from datetime import datetime
         token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
-        if token_iat_dt < user.password_changed_at:
+        if token_iat_dt < user.password_changed_at.replace(microsecond=0):
             raise InvalidBearerTokenException("Token has been invalidated by a password change")
 
     return user
