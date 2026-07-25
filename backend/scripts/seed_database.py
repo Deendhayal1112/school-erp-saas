@@ -438,6 +438,54 @@ async def seed():
                 "module": "academic_year",
                 "desc": "Allows setting default academic year flag",
             },
+            {
+                "code": "term.create",
+                "name": "Create Term",
+                "module": "term",
+                "desc": "Allows creating terms/semesters",
+            },
+            {
+                "code": "term.read",
+                "name": "Read Term",
+                "module": "term",
+                "desc": "Allows reading terms/semesters",
+            },
+            {
+                "code": "term.update",
+                "name": "Update Term",
+                "module": "term",
+                "desc": "Allows updating terms/semesters",
+            },
+            {
+                "code": "term.delete",
+                "name": "Delete Term",
+                "module": "term",
+                "desc": "Allows deleting terms/semesters",
+            },
+            {
+                "code": "term.activate",
+                "name": "Activate Term",
+                "module": "term",
+                "desc": "Allows activating and deactivating terms/semesters",
+            },
+            {
+                "code": "term.lock",
+                "name": "Lock Term",
+                "module": "term",
+                "desc": "Allows locking and unlocking terms/semesters",
+            },
+            {
+                "code": "term.archive",
+                "name": "Archive Term",
+                "module": "term",
+                "desc": "Allows archiving terms/semesters",
+            },
+            {
+                "code": "term.default",
+                "name": "Set Default Term",
+                "module": "term",
+                "desc": "Allows setting default term flag",
+            },
         ]
 
         permissions_map = {}

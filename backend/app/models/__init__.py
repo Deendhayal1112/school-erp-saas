@@ -16,6 +16,7 @@ from app.modules.student_medical.models import StudentMedicalRecord, Allergy, Va
 from app.modules.student_assignment.models import StudentAcademicAssignment
 from app.modules.student_progression.models import StudentProgression
 from app.modules.academic_year.models import AcademicYear
+from app.modules.term.models import Term
 
 __all__ = [
     "BaseEntity",
@@ -41,4 +42,5 @@ __all__ = [
     "StudentAcademicAssignment",
     "StudentProgression",
     "AcademicYear",
+    "Term",
 ]
