@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
+from app.api.v1.admission.router import router as admission_router
 from app.api.v1.auth.router import router as auth_router
+from app.api.v1.guardian.router import router as guardian_router
 from app.api.v1.student.router import router as student_router
 from app.modules.auth.email.router import router as email_router
 from app.modules.auth.password.router import router as password_router
@@ -11,3 +13,5 @@ v1_router.include_router(auth_router)
 v1_router.include_router(password_router)
 v1_router.include_router(email_router)
 v1_router.include_router(student_router)
+v1_router.include_router(guardian_router)
+v1_router.include_router(admission_router)

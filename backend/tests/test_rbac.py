@@ -107,7 +107,6 @@ def make_user_no_role() -> MagicMock:
 # Permission Engine Tests
 # ===========================================================================
 class TestPermissionEngine:
-
     def test_super_admin_has_all_permissions(self):
         """Super Admin bypasses all permission checks — always returns True."""
         user = make_user(ROLE_SUPER_ADMIN)
@@ -149,7 +148,9 @@ class TestPermissionEngine:
 
     def test_has_all_permissions_all_match(self):
         """Returns True only when every permission matches."""
-        user = make_user(ROLE_PRINCIPAL, "student.view", "attendance.view", "exam.publish")
+        user = make_user(
+            ROLE_PRINCIPAL, "student.view", "attendance.view", "exam.publish"
+        )
         assert has_all_permissions(user, "student.view", "attendance.view") is True
 
     def test_has_all_permissions_partial_match(self):
@@ -178,7 +179,6 @@ class TestPermissionEngine:
 # Role Engine Tests
 # ===========================================================================
 class TestRoleEngine:
-
     def test_has_role_match(self):
         user = make_user(ROLE_SUPER_ADMIN)
         assert has_role(user, ROLE_SUPER_ADMIN) is True
@@ -260,6 +260,7 @@ class TestRoleEngine:
     def test_no_role_assigned(self):
         """User with no role returns None from get_user_role."""
         from app.auth.roles import get_user_role
+
         user = make_user_no_role()
         assert get_user_role(user) is None
 
@@ -268,7 +269,6 @@ class TestRoleEngine:
 # Authorization Engine (require_* async assertions)
 # ===========================================================================
 class TestAuthorizationEngine:
-
     @pytest.mark.asyncio
     async def test_require_permission_success(self):
         user = make_user(ROLE_TEACHER, "attendance.mark")
@@ -335,7 +335,6 @@ class TestAuthorizationEngine:
 # Permission Cache Tests
 # ===========================================================================
 class TestPermissionCache:
-
     @pytest.mark.asyncio
     async def test_cache_set_and_get_permissions(self):
         """Cache stores and retrieves permission sets correctly."""

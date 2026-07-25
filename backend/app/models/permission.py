@@ -14,11 +14,14 @@ class Permission(BaseEntity):
     Permission Entity defining fine-grained action scopes (e.g., 'user.create', 'student.view')
     within the School ERP SaaS system.
     """
+
     __tablename__ = "permissions"
 
     # Core permission metadata
     name: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
-    code: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    code: Mapped[str] = mapped_column(
+        String(50), unique=True, index=True, nullable=False
+    )
 
     # Scoping categorization (e.g. 'users', 'students', 'billing')
     module: Mapped[str] = mapped_column(String(50), index=True, nullable=False)

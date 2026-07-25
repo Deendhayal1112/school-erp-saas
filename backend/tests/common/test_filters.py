@@ -22,14 +22,20 @@ async def test_apply_filters():
     async with AsyncSessionLocal() as session:
         async with session.begin():
             conn = await session.connection()
-            await conn.run_sync(Base.metadata.create_all, tables=[FilterMockModel.__table__])
+            await conn.run_sync(
+                Base.metadata.create_all, tables=[FilterMockModel.__table__]
+            )
             await conn.execute(FilterMockModel.__table__.delete())
 
-            session.add_all([
-                FilterMockModel(id=1, title="Math Book", category="Education"),
-                FilterMockModel(id=2, title="Science Book", category="Education"),
-                FilterMockModel(id=3, title="Gaming Console", category="Entertainment"),
-            ])
+            session.add_all(
+                [
+                    FilterMockModel(id=1, title="Math Book", category="Education"),
+                    FilterMockModel(id=2, title="Science Book", category="Education"),
+                    FilterMockModel(
+                        id=3, title="Gaming Console", category="Entertainment"
+                    ),
+                ]
+            )
 
         # Test Exact Match
         query = select(FilterMockModel)
@@ -45,7 +51,9 @@ async def test_apply_filters():
         assert len(results) == 2
 
         # Test In Match
-        q = apply_filters(query, FilterMockModel, {"category__in": ["Education", "Entertainment"]})
+        q = apply_filters(
+            query, FilterMockModel, {"category__in": ["Education", "Entertainment"]}
+        )
         res = await session.execute(q)
         results = res.scalars().all()
         assert len(results) == 3

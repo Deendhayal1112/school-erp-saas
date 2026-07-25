@@ -33,6 +33,7 @@ from app.modules.student.service import StudentService
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _valid_create(school_id: uuid.UUID, **overrides) -> dict:
     """Return a base-valid StudentCreate payload dict."""
     payload = {
@@ -92,11 +93,15 @@ async def test_create_student_duplicate_admission_number():
         service = StudentService(repo, session)
 
         adm_no = f"ADM_{uuid.uuid4().hex[:8]}"
-        s1 = await service.create_student(StudentCreate(**_valid_create(school.id, admission_number=adm_no)))
+        s1 = await service.create_student(
+            StudentCreate(**_valid_create(school.id, admission_number=adm_no))
+        )
         await session.flush()
 
         with pytest.raises(DuplicateAdmissionNumberException):
-            await service.create_student(StudentCreate(**_valid_create(school.id, admission_number=adm_no)))
+            await service.create_student(
+                StudentCreate(**_valid_create(school.id, admission_number=adm_no))
+            )
 
         await session.delete(s1)
         await session.commit()
@@ -190,7 +195,9 @@ async def test_create_student_graduation_before_joined():
         joined = date.today() - timedelta(days=5)
         grad = date.today() - timedelta(days=10)  # Before joined
 
-        schema = StudentCreate(**_valid_create(school.id, joined_date=joined, graduation_date=grad))
+        schema = StudentCreate(
+            **_valid_create(school.id, joined_date=joined, graduation_date=grad)
+        )
         with pytest.raises(InvalidAdmissionDateException):
             await service.create_student(schema)
 
@@ -203,7 +210,9 @@ async def test_update_student_success():
         repo = StudentRepository(session)
         service = StudentService(repo, session)
 
-        student = await service.create_student(StudentCreate(**_valid_create(school.id)))
+        student = await service.create_student(
+            StudentCreate(**_valid_create(school.id))
+        )
         await session.flush()
 
         updated = await service.update_student(
@@ -227,16 +236,22 @@ async def test_update_student_status_revert_to_new_rejected():
         repo = StudentRepository(session)
         service = StudentService(repo, session)
 
-        student = await service.create_student(StudentCreate(**_valid_create(school.id)))
+        student = await service.create_student(
+            StudentCreate(**_valid_create(school.id))
+        )
         await session.flush()
 
         # Move to ACTIVE first
-        student = await service.update_student(student.id, StudentUpdate(status=StudentStatus.ACTIVE))
+        student = await service.update_student(
+            student.id, StudentUpdate(status=StudentStatus.ACTIVE)
+        )
         await session.flush()
 
         # Now try to revert back to NEW — must be blocked
         with pytest.raises(BadRequestException):
-            await service.update_student(student.id, StudentUpdate(status=StudentStatus.NEW))
+            await service.update_student(
+                student.id, StudentUpdate(status=StudentStatus.NEW)
+            )
 
         await session.delete(student)
         await session.commit()
@@ -250,7 +265,9 @@ async def test_update_nonexistent_student_raises():
         service = StudentService(repo, session)
 
         with pytest.raises(StudentNotFoundException):
-            await service.update_student(uuid.uuid4(), StudentUpdate(first_name="Ghost"))
+            await service.update_student(
+                uuid.uuid4(), StudentUpdate(first_name="Ghost")
+            )
 
 
 @pytest.mark.asyncio
@@ -261,7 +278,9 @@ async def test_soft_delete_and_restore():
         repo = StudentRepository(session)
         service = StudentService(repo, session)
 
-        student = await service.create_student(StudentCreate(**_valid_create(school.id)))
+        student = await service.create_student(
+            StudentCreate(**_valid_create(school.id))
+        )
         await session.flush()
         student_id = student.id
 
@@ -278,7 +297,9 @@ async def test_soft_delete_and_restore():
         await session.flush()
 
         # Post-restore — update should succeed
-        restored = await service.update_student(student_id, StudentUpdate(first_name="Restored"))
+        restored = await service.update_student(
+            student_id, StudentUpdate(first_name="Restored")
+        )
         await session.flush()
         assert restored.first_name == "Restored"
 
@@ -303,9 +324,13 @@ async def test_tenant_isolation():
         adm_no = f"ADM_{uuid.uuid4().hex[:8]}"
 
         # Same admission number allowed in different schools
-        s1 = await service.create_student(StudentCreate(**_valid_create(school_a.id, admission_number=adm_no)))
+        s1 = await service.create_student(
+            StudentCreate(**_valid_create(school_a.id, admission_number=adm_no))
+        )
         await session.flush()
-        s2 = await service.create_student(StudentCreate(**_valid_create(school_b.id, admission_number=adm_no)))
+        s2 = await service.create_student(
+            StudentCreate(**_valid_create(school_b.id, admission_number=adm_no))
+        )
         await session.flush()
 
         assert s1.school_id == school_a.id

@@ -51,11 +51,23 @@ async def seed():
         # 2. Seed System Roles
         # ==========================================
         roles_data = [
-            {"code": "SUPER_ADMIN", "name": "Super Admin", "desc": "SaaS Platform Super Administrator"},
-            {"code": "SCHOOL_ADMIN", "name": "School Admin", "desc": "School Tenant Administrator"},
+            {
+                "code": "SUPER_ADMIN",
+                "name": "Super Admin",
+                "desc": "SaaS Platform Super Administrator",
+            },
+            {
+                "code": "SCHOOL_ADMIN",
+                "name": "School Admin",
+                "desc": "School Tenant Administrator",
+            },
             {"code": "PRINCIPAL", "name": "Principal", "desc": "Academic Principal"},
             {"code": "TEACHER", "name": "Teacher", "desc": "Teaching Staff Member"},
-            {"code": "ACCOUNTANT", "name": "Accountant", "desc": "Finance and Accounts Administrator"},
+            {
+                "code": "ACCOUNTANT",
+                "name": "Accountant",
+                "desc": "Finance and Accounts Administrator",
+            },
             {"code": "STUDENT", "name": "Student", "desc": "Registered Student"},
             {"code": "PARENT", "name": "Parent", "desc": "Student Parent/Guardian"},
         ]
@@ -84,19 +96,162 @@ async def seed():
         # 3. Seed System Permissions
         # ==========================================
         permissions_data = [
-            {"code": "user.create", "name": "Create User", "module": "users", "desc": "Allows creating system users"},
-            {"code": "user.update", "name": "Update User", "module": "users", "desc": "Allows updating system users"},
-            {"code": "user.delete", "name": "Delete User", "module": "users", "desc": "Allows deleting system users"},
-            {"code": "student.view", "name": "View Student Profile", "module": "students", "desc": "Allows viewing student profiles"},
-            {"code": "student.create", "name": "Create Student Profile", "module": "students", "desc": "Allows enrolling students"},
-            {"code": "student.update", "name": "Update Student Profile", "module": "students", "desc": "Allows editing student profiles"},
-            {"code": "student.delete", "name": "Delete Student Profile", "module": "students", "desc": "Allows soft-deleting student records"},
-            {"code": "student.restore", "name": "Restore Student Profile", "module": "students", "desc": "Allows restoring soft-deleted student records"},
-            {"code": "attendance.mark", "name": "Mark Attendance", "module": "attendance", "desc": "Allows marking student attendance"},
-            {"code": "attendance.view", "name": "View Attendance", "module": "attendance", "desc": "Allows viewing attendance records"},
-            {"code": "fee.collect", "name": "Collect Fees", "module": "finance", "desc": "Allows collecting fee transactions"},
-            {"code": "fee.view", "name": "View Fees", "module": "finance", "desc": "Allows viewing invoice and fee records"},
-            {"code": "exam.publish", "name": "Publish Exams", "module": "exams", "desc": "Allows creating and publishing exam schedules"},
+            {
+                "code": "user.create",
+                "name": "Create User",
+                "module": "users",
+                "desc": "Allows creating system users",
+            },
+            {
+                "code": "user.update",
+                "name": "Update User",
+                "module": "users",
+                "desc": "Allows updating system users",
+            },
+            {
+                "code": "user.delete",
+                "name": "Delete User",
+                "module": "users",
+                "desc": "Allows deleting system users",
+            },
+            {
+                "code": "student.view",
+                "name": "View Student Profile",
+                "module": "students",
+                "desc": "Allows viewing student profiles",
+            },
+            {
+                "code": "student.create",
+                "name": "Create Student Profile",
+                "module": "students",
+                "desc": "Allows enrolling students",
+            },
+            {
+                "code": "student.update",
+                "name": "Update Student Profile",
+                "module": "students",
+                "desc": "Allows editing student profiles",
+            },
+            {
+                "code": "student.delete",
+                "name": "Delete Student Profile",
+                "module": "students",
+                "desc": "Allows soft-deleting student records",
+            },
+            {
+                "code": "student.restore",
+                "name": "Restore Student Profile",
+                "module": "students",
+                "desc": "Allows restoring soft-deleted student records",
+            },
+            {
+                "code": "attendance.mark",
+                "name": "Mark Attendance",
+                "module": "attendance",
+                "desc": "Allows marking student attendance",
+            },
+            {
+                "code": "attendance.view",
+                "name": "View Attendance",
+                "module": "attendance",
+                "desc": "Allows viewing attendance records",
+            },
+            {
+                "code": "fee.collect",
+                "name": "Collect Fees",
+                "module": "finance",
+                "desc": "Allows collecting fee transactions",
+            },
+            {
+                "code": "fee.view",
+                "name": "View Fees",
+                "module": "finance",
+                "desc": "Allows viewing invoice and fee records",
+            },
+            {
+                "code": "exam.publish",
+                "name": "Publish Exams",
+                "module": "exams",
+                "desc": "Allows creating and publishing exam schedules",
+            },
+            {
+                "code": "guardian.create",
+                "name": "Create Guardian",
+                "module": "guardians",
+                "desc": "Allows creating guardians",
+            },
+            {
+                "code": "guardian.read",
+                "name": "Read Guardian",
+                "module": "guardians",
+                "desc": "Allows reading guardians",
+            },
+            {
+                "code": "guardian.update",
+                "name": "Update Guardian",
+                "module": "guardians",
+                "desc": "Allows updating guardians",
+            },
+            {
+                "code": "guardian.delete",
+                "name": "Delete Guardian",
+                "module": "guardians",
+                "desc": "Allows deleting guardians",
+            },
+            {
+                "code": "guardian.restore",
+                "name": "Restore Guardian",
+                "module": "guardians",
+                "desc": "Allows restoring guardians",
+            },
+            {
+                "code": "student.guardian.manage",
+                "name": "Manage Student Guardians Mappings",
+                "module": "guardians",
+                "desc": "Allows mapping guardians to students",
+            },
+            {
+                "code": "admission.create",
+                "name": "Create Admission Application",
+                "module": "admissions",
+                "desc": "Allows creating admission applications",
+            },
+            {
+                "code": "admission.read",
+                "name": "Read Admission Application",
+                "module": "admissions",
+                "desc": "Allows reading admission applications",
+            },
+            {
+                "code": "admission.update",
+                "name": "Update Admission Application",
+                "module": "admissions",
+                "desc": "Allows updating admission applications",
+            },
+            {
+                "code": "admission.submit",
+                "name": "Submit Admission Application",
+                "module": "admissions",
+                "desc": "Allows submitting admission applications",
+            },
+            {
+                "code": "admission.approve",
+                "name": "Approve Admission Application",
+                "module": "admissions",
+                "desc": "Allows approving admission applications",
+            },
+            {
+                "code": "admission.reject",
+                "name": "Reject Admission Application",
+                "module": "admissions",
+                "desc": "Allows rejecting admission applications",
+            },
+            {
+                "code": "admission.enroll",
+                "name": "Enroll Approved Student",
+                "module": "admissions",
+                "desc": "Allows enrolling approved students into class rosters",
+            },
         ]
 
         permissions_map = {}
@@ -127,8 +282,15 @@ async def seed():
         role_permissions_assignments = {
             "SUPER_ADMIN": list(permissions_map.keys()),  # All permissions
             "SCHOOL_ADMIN": list(permissions_map.keys()),  # All permissions
-            "PRINCIPAL": [c for c in permissions_map.keys() if c != "user.delete"],  # No user deletion
-            "TEACHER": ["student.view", "attendance.mark", "attendance.view", "exam.publish"],
+            "PRINCIPAL": [
+                c for c in permissions_map.keys() if c != "user.delete"
+            ],  # No user deletion
+            "TEACHER": [
+                "student.view",
+                "attendance.mark",
+                "attendance.view",
+                "exam.publish",
+            ],
             "ACCOUNTANT": ["fee.collect", "fee.view", "student.view"],
             "STUDENT": ["student.view", "attendance.view", "fee.view"],
             "PARENT": ["student.view", "attendance.view", "fee.view"],
@@ -142,7 +304,7 @@ async def seed():
                 # Check if junction row exists
                 mapping_stmt = select(RolePermission).where(
                     RolePermission.role_id == role_obj.id,
-                    RolePermission.permission_id == perm_obj.id
+                    RolePermission.permission_id == perm_obj.id,
                 )
                 mapping_result = await session.execute(mapping_stmt)
                 mapping_obj = mapping_result.scalar_one_or_none()
@@ -182,7 +344,9 @@ async def seed():
             session.add(super_admin_user)
         else:
             print("Super Admin User already exists. Updating password hash...")
-            super_admin_user.password_hash = "$2b$12$cJgtCdXgJCo7PNXzZnuI/.pH7oYozMya1Y.SBnms/Xjg9/1ojDh2K"
+            super_admin_user.password_hash = (
+                "$2b$12$cJgtCdXgJCo7PNXzZnuI/.pH7oYozMya1Y.SBnms/Xjg9/1ojDh2K"
+            )
             super_admin_user.status = "active"
             super_admin_user.is_active = True
             session.add(super_admin_user)

@@ -52,8 +52,8 @@ def setup_logging() -> None:
     app_file_handler = RotatingFileHandler(
         filename=str(APP_LOG_PATH),
         maxBytes=10 * 1024 * 1024,  # 10 Megabytes per file
-        backupCount=5,             # Retains up to 5 rotation backups
-        encoding="utf-8"
+        backupCount=5,  # Retains up to 5 rotation backups
+        encoding="utf-8",
     )
     app_file_handler.setFormatter(formatter)
     app_file_handler.setLevel(log_level)
@@ -66,8 +66,8 @@ def setup_logging() -> None:
     error_file_handler = RotatingFileHandler(
         filename=str(ERROR_LOG_PATH),
         maxBytes=10 * 1024 * 1024,  # 10 Megabytes per file
-        backupCount=5,             # Retains up to 5 rotation backups
-        encoding="utf-8"
+        backupCount=5,  # Retains up to 5 rotation backups
+        encoding="utf-8",
     )
     error_file_handler.setFormatter(formatter)
     error_file_handler.setLevel(logging.ERROR)
@@ -83,7 +83,7 @@ def setup_logging() -> None:
         "uvicorn.access",
         "fastapi",
         "sqlalchemy.engine",  # Can be activated for query debugging
-        "celery"
+        "celery",
     ]
     for logger_name in third_party_loggers:
         third_party_logger = logging.getLogger(logger_name)
@@ -92,5 +92,6 @@ def setup_logging() -> None:
         third_party_logger.propagate = True
 
     logging.info(
+        # pyrefly: ignore [deprecated]
         f"Centralized logging initialized successfully. Log level: {logging.getLevelName(log_level)}"
     )

@@ -22,14 +22,18 @@ async def test_apply_sorting():
     async with AsyncSessionLocal() as session:
         async with session.begin():
             conn = await session.connection()
-            await conn.run_sync(Base.metadata.create_all, tables=[SortMockModel.__table__])
+            await conn.run_sync(
+                Base.metadata.create_all, tables=[SortMockModel.__table__]
+            )
             await conn.execute(SortMockModel.__table__.delete())
 
-            session.add_all([
-                SortMockModel(id=1, rank=10, label="Alpha"),
-                SortMockModel(id=2, rank=5, label="Beta"),
-                SortMockModel(id=3, rank=20, label="Gamma"),
-            ])
+            session.add_all(
+                [
+                    SortMockModel(id=1, rank=10, label="Alpha"),
+                    SortMockModel(id=2, rank=5, label="Beta"),
+                    SortMockModel(id=3, rank=20, label="Gamma"),
+                ]
+            )
 
         # Test whitelist sort asc
         query = select(SortMockModel)

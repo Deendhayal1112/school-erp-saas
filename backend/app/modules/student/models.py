@@ -10,15 +10,19 @@ from app.modules.student.enums import Gender, StudentStatus
 
 if TYPE_CHECKING:
     from app.models.school import School
+    from app.modules.guardian.models import StudentGuardian
 
 
 class Student(BaseEntity):
     """
     Student model representing a student enrolled in a School.
     """
+
     __tablename__ = "students"
     __table_args__ = (
-        UniqueConstraint("school_id", "admission_number", name="uq_students_school_admission"),
+        UniqueConstraint(
+            "school_id", "admission_number", name="uq_students_school_admission"
+        ),
     )
 
     school_id: Mapped[uuid.UUID] = mapped_column(
@@ -26,7 +30,9 @@ class Student(BaseEntity):
         nullable=False,
         index=True,
     )
-    admission_number: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    admission_number: Mapped[str] = mapped_column(
+        String(50), nullable=False, index=True
+    )
     roll_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
     emis_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
@@ -42,7 +48,9 @@ class Student(BaseEntity):
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     aadhaar_number: Mapped[str | None] = mapped_column(String(12), nullable=True)
 
-    nationality: Mapped[str] = mapped_column(String(50), default="Indian", nullable=False)
+    nationality: Mapped[str] = mapped_column(
+        String(50), default="Indian", nullable=False
+    )
     religion: Mapped[str | None] = mapped_column(String(50), nullable=True)
     caste: Mapped[str | None] = mapped_column(String(50), nullable=True)
     community: Mapped[str | None] = mapped_column(String(50), nullable=True)
@@ -62,8 +70,10 @@ class Student(BaseEntity):
     # Tenant Relationship
     school: Mapped["School"] = relationship("School", lazy="selectin")
 
-    # Future Relationships Placeholders:
-    # guardians: Mapped[list["Guardian"]] = relationship("Guardian", back_populates="student")
+    # Relationships
+    guardian_mappings: Mapped[list["StudentGuardian"]] = relationship(
+        "StudentGuardian", back_populates="student", cascade="all, delete-orphan"
+    )
     # classroom: Mapped["Class"] = relationship("Class", back_populates="students")
     # section: Mapped["Section"] = relationship("Section", back_populates="students")
     # attendances: Mapped[list["Attendance"]] = relationship("Attendance", back_populates="student")

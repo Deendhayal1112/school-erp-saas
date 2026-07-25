@@ -208,7 +208,9 @@ async def test_reset_password_expired_token(test_user):
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
 
         # Artificially expire the token in database
-        stmt = select(PasswordResetToken).where(PasswordResetToken.token_hash == token_hash)
+        stmt = select(PasswordResetToken).where(
+            PasswordResetToken.token_hash == token_hash
+        )
         res = await session.execute(stmt)
         token_record = res.scalar_one()
         token_record.expires_at = datetime.now(UTC) - timedelta(minutes=1)
@@ -229,7 +231,9 @@ async def test_failed_login_lockout_and_automatic_unlock(test_user):
         # Fail logins up to threshold (5 attempts)
         for _ in range(settings.ACCOUNT_LOCKOUT_THRESHOLD - 1):
             with pytest.raises(InvalidCredentialsException):
-                await auth_service.authenticate_user(test_user["email"], "WrongSecret123!")
+                await auth_service.authenticate_user(
+                    test_user["email"], "WrongSecret123!"
+                )
 
         # The 5th attempt triggers lockout
         with pytest.raises(AccountLockedException):
@@ -237,7 +241,9 @@ async def test_failed_login_lockout_and_automatic_unlock(test_user):
 
         # Subsequent attempts are locked
         with pytest.raises(AccountLockedException):
-            await auth_service.authenticate_user(test_user["email"], test_user["password"])
+            await auth_service.authenticate_user(
+                test_user["email"], test_user["password"]
+            )
 
         # Simulate automatic unlock by setting locked_until in the past
         stmt = select(User).where(User.id == test_user["id"])
@@ -248,12 +254,16 @@ async def test_failed_login_lockout_and_automatic_unlock(test_user):
         await session.commit()
 
         # Try authenticating again — should unlock automatically and succeed
-        auth_res = await auth_service.authenticate_user(test_user["email"], test_user["password"])
+        auth_res = await auth_service.authenticate_user(
+            test_user["email"], test_user["password"]
+        )
         assert auth_res["access_token"] is not None
 
 
 @pytest.mark.asyncio
-async def test_active_tokens_invalidated_by_password_change(client: AsyncClient, test_user):
+async def test_active_tokens_invalidated_by_password_change(
+    client: AsyncClient, test_user
+):
     """Verifies that previously active access/refresh tokens are invalidated once password is changed."""
     # 1. Login to get tokens
     login_resp = await client.post(

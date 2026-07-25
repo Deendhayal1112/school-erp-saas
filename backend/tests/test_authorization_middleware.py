@@ -77,15 +77,20 @@ def _make_invalid_signature_token() -> str:
         "exp": datetime.now(UTC) + timedelta(minutes=30),
         "iat": datetime.now(UTC),
     }
-    return jwt.encode(payload, "WRONG_SECRET_KEY_EXCEEDING_32_BYTES_FOR_HMAC", algorithm=settings.ALGORITHM)
+    return jwt.encode(
+        payload,
+        "WRONG_SECRET_KEY_EXCEEDING_32_BYTES_FOR_HMAC",
+        algorithm=settings.ALGORITHM,
+    )
 
 
 # ===========================================================================
 # 1. Authentication Flow Tests
 # ===========================================================================
 class TestAuthenticationFlow:
-
-    async def test_valid_jwt_returns_200(self, client: AsyncClient, superadmin_token: str):
+    async def test_valid_jwt_returns_200(
+        self, client: AsyncClient, superadmin_token: str
+    ):
         """Valid Bearer token succeeds on protected endpoint."""
         resp = await client.get(
             f"{AUTH_BASE}/me",
@@ -145,7 +150,6 @@ class TestAuthenticationFlow:
 # 2. Security Headers Tests
 # ===========================================================================
 class TestSecurityHeaders:
-
     async def test_x_content_type_options_present(self, client: AsyncClient):
         resp = await client.get("/health")
         assert resp.headers.get("X-Content-Type-Options") == "nosniff"
@@ -183,7 +187,9 @@ class TestSecurityHeaders:
         assert resp.headers.get("X-Content-Type-Options") == "nosniff"
         assert resp.headers.get("X-Frame-Options") == "DENY"
 
-    async def test_security_headers_present_on_error_response(self, client: AsyncClient):
+    async def test_security_headers_present_on_error_response(
+        self, client: AsyncClient
+    ):
         """Security headers are injected even on 401 error responses."""
         resp = await client.get(f"{AUTH_BASE}/me")
         assert resp.headers.get("X-Content-Type-Options") == "nosniff"
@@ -193,7 +199,6 @@ class TestSecurityHeaders:
 # 3. Request-ID & Correlation-ID Tests
 # ===========================================================================
 class TestRequestTracingHeaders:
-
     async def test_x_request_id_echoed_in_response(self, client: AsyncClient):
         """X-Request-ID supplied by caller is echoed in the response."""
         my_request_id = str(uuid.uuid4())
@@ -231,7 +236,6 @@ class TestRequestTracingHeaders:
 # 4. Public Endpoint Tests
 # ===========================================================================
 class TestPublicEndpoints:
-
     async def test_health_endpoint_accessible_without_auth(self, client: AsyncClient):
         """Public /health endpoint returns 200 without any authentication."""
         resp = await client.get("/health")
@@ -256,7 +260,6 @@ class TestPublicEndpoints:
 # 5. Request Context Tests
 # ===========================================================================
 class TestRequestContext:
-
     def test_request_context_defaults(self):
         """RequestContext defaults are sensible out of the box."""
         ctx = RequestContext()
@@ -274,6 +277,7 @@ class TestRequestContext:
     def test_request_context_elapsed_ms(self):
         """elapsed_ms returns a positive float."""
         import time
+
         ctx = RequestContext()
         time.sleep(0.001)
         assert ctx.elapsed_ms > 0
@@ -309,7 +313,6 @@ class TestRequestContext:
 # 6. Audit Logging Tests
 # ===========================================================================
 class TestAuditLogging:
-
     def test_audit_entry_structure(self):
         """_build_entry produces all required fields."""
         uid = uuid.uuid4()
@@ -336,6 +339,7 @@ class TestAuditLogging:
     def test_audit_log_emitted_on_login_success(self, caplog):
         """log_login_success emits a log entry at INFO level."""
         from app.middleware.audit import log_login_success
+
         uid = uuid.uuid4()
         sid = uuid.uuid4()
         with caplog.at_level(logging.INFO, logger="school_erp.audit"):
@@ -345,6 +349,7 @@ class TestAuditLogging:
     def test_audit_log_emitted_on_permission_denied(self, caplog):
         """log_permission_denied emits a WARNING log entry."""
         from app.middleware.audit import log_permission_denied
+
         uid = uuid.uuid4()
         with caplog.at_level(logging.WARNING, logger="school_erp.audit"):
             log_permission_denied(
@@ -360,6 +365,7 @@ class TestAuditLogging:
     def test_audit_log_emitted_on_token_expired(self, caplog):
         """log_token_expired emits a WARNING log entry."""
         from app.middleware.audit import log_token_expired
+
         with caplog.at_level(logging.WARNING, logger="school_erp.audit"):
             log_token_expired(
                 ip_address="10.0.0.1",
@@ -372,6 +378,7 @@ class TestAuditLogging:
     def test_audit_log_emitted_on_role_denied(self, caplog):
         """log_role_denied emits a WARNING log entry."""
         from app.middleware.audit import log_role_denied
+
         uid = uuid.uuid4()
         with caplog.at_level(logging.WARNING, logger="school_erp.audit"):
             log_role_denied(

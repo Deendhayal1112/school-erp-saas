@@ -24,7 +24,9 @@ def validate_student_phone(value: str | None) -> str | None:
         return None
     clean = value.strip()
     if not PHONE_PATTERN.match(clean):
-        raise ValueError("Phone number must match standard international E.164 format (e.g. +1234567890).")
+        raise ValueError(
+            "Phone number must match standard international E.164 format (e.g. +1234567890)."
+        )
     return clean
 
 

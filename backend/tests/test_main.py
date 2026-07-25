@@ -10,7 +10,9 @@ async def test_read_root():
     Verifies that the root endpoint (/) returns HTTP 200
     and contains correct project details.
     """
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as ac:
         response = await ac.get("/")
 
     assert response.status_code == 200
@@ -26,7 +28,9 @@ async def test_health_check():
     Verifies that the health check endpoint (/health) returns HTTP 200
     and confirms healthy status parameters.
     """
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as ac:
         response = await ac.get("/health")
 
     assert response.status_code == 200

@@ -7,6 +7,7 @@ from enum import Enum
 
 class NotificationChannel(str, Enum):
     """Channels supported by the notification delivery service."""
+
     EMAIL = "email"
     SMS = "sms"
     PUSH = "push"
@@ -15,6 +16,7 @@ class NotificationChannel(str, Enum):
 
 class StorageProviderType(str, Enum):
     """Storage provider backends supported by File Storage Service."""
+
     LOCAL = "local"
     S3 = "s3"
     GCS = "gcs"
@@ -23,6 +25,7 @@ class StorageProviderType(str, Enum):
 
 class AuditAction(str, Enum):
     """Audit action types recorded in audit logs."""
+
     CREATE = "create"
     UPDATE = "update"
     DELETE = "delete"

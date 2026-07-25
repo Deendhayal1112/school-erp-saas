@@ -8,16 +8,19 @@ All authorization-layer exceptions are business-domain exceptions
 
 class AuthorizationException(Exception):
     """Base exception for all authorization-related failures."""
+
     pass
 
 
 class UnauthorizedException(AuthorizationException):
     """Raised when an unauthenticated user attempts to access a protected resource."""
+
     pass
 
 
 class ForbiddenException(AuthorizationException):
     """Raised when a user is authenticated but lacks the required role or permission."""
+
     pass
 
 

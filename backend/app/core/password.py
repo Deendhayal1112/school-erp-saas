@@ -33,10 +33,14 @@ def validate_password_strength(password: str) -> None:
     Raises ValueError with a specific, readable message if any validation checks fail.
     """
     if len(password) < constants.PASSWORD_MIN_LENGTH:
-        raise ValueError(f"Password must be at least {constants.PASSWORD_MIN_LENGTH} characters long.")
+        raise ValueError(
+            f"Password must be at least {constants.PASSWORD_MIN_LENGTH} characters long."
+        )
 
     if len(password) > constants.PASSWORD_MAX_LENGTH:
-        raise ValueError(f"Password cannot be longer than {constants.PASSWORD_MAX_LENGTH} characters.")
+        raise ValueError(
+            f"Password cannot be longer than {constants.PASSWORD_MAX_LENGTH} characters."
+        )
 
     if constants.PASSWORD_REQUIRE_UPPERCASE and not any(c.isupper() for c in password):
         raise ValueError("Password must contain at least one uppercase character.")

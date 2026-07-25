@@ -17,6 +17,7 @@ class RolePermission(BaseEntity):
     Association Entity implementing the Many-to-Many junction between Roles and Permissions.
     Maps which permissions are granted to which roles.
     """
+
     __tablename__ = "role_permissions"
 
     # Foreign Keys referencing Role and Permission tables

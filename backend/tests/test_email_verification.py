@@ -129,7 +129,7 @@ async def test_verify_email_success_activates_account(test_user):
             user_id=test_user["id"],
             token_hash=token_hash,
             expires_at=expires_at,
-            used=False
+            used=False,
         )
         session.add(token_record)
         await session.commit()
@@ -180,7 +180,7 @@ async def test_verify_email_expired_token(test_user):
             user_id=test_user["id"],
             token_hash=token_hash,
             expires_at=expires_at,
-            used=False
+            used=False,
         )
         session.add(token_record)
         await session.commit()
@@ -204,7 +204,7 @@ async def test_replay_attack_prevention(test_user):
             user_id=test_user["id"],
             token_hash=token_hash,
             expires_at=expires_at,
-            used=False
+            used=False,
         )
         session.add(token_record)
         await session.commit()

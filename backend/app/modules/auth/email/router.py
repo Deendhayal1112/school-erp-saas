@@ -13,7 +13,9 @@ from app.schemas.response import SuccessResponse
 router = APIRouter(prefix="/auth", tags=["Email Verification"])
 
 
-async def get_email_service(db: AsyncSession = Depends(get_db)) -> EmailVerificationService:
+async def get_email_service(
+    db: AsyncSession = Depends(get_db),
+) -> EmailVerificationService:
     """Dependency helper injecting EmailVerificationService instances into endpoints."""
     return EmailVerificationService(db)
 

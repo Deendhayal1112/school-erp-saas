@@ -56,7 +56,9 @@ class EmailVerificationService:
 
         if user.email_verified:
             # Silently return or raise depending on scenario, but to prevent enumeration, silent return
-            logger.info(f"Verification email requested for already verified user: {email}")
+            logger.info(
+                f"Verification email requested for already verified user: {email}"
+            )
             return
 
         # 1. Enforce rate limiting between successive verification requests
@@ -115,7 +117,9 @@ class EmailVerificationService:
         token_record = res.scalar_one_or_none()
 
         if not token_record:
-            raise InvalidVerificationTokenException("Invalid or already used verification token.")
+            raise InvalidVerificationTokenException(
+                "Invalid or already used verification token."
+            )
 
         # Check expiration
         if token_record.expires_at < datetime.now(UTC):
@@ -127,7 +131,9 @@ class EmailVerificationService:
         # Load user
         user = await self.user_repo.get_by_id(token_record.user_id)
         if not user:
-            raise InvalidVerificationTokenException("User associated with this token not found.")
+            raise InvalidVerificationTokenException(
+                "User associated with this token not found."
+            )
 
         if user.email_verified:
             # Token is technically unused but user is already verified. Mark token as used.

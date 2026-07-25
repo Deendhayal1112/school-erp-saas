@@ -35,7 +35,9 @@ class PasswordService:
         self.session = session
         self.user_repo = UserRepository(session)
 
-    async def change_password(self, user_id: uuid.UUID, current_password: str, new_password: str) -> None:
+    async def change_password(
+        self, user_id: uuid.UUID, current_password: str, new_password: str
+    ) -> None:
         """
         Securely changes a user's password.
         Validates current password, checks complexity policies, prevents reuse,
@@ -88,10 +90,7 @@ class PasswordService:
             minutes=settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES
         )
         reset_token = PasswordResetToken(
-            user_id=user.id,
-            token_hash=token_hash,
-            expires_at=expires_at,
-            used=False
+            user_id=user.id, token_hash=token_hash, expires_at=expires_at, used=False
         )
         self.session.add(reset_token)
         await self.session.commit()
@@ -105,12 +104,9 @@ class PasswordService:
         token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
 
         # Find matching unexpired, unused token
-        stmt = (
-            select(PasswordResetToken)
-            .where(
-                PasswordResetToken.token_hash == token_hash,
-                PasswordResetToken.used.is_(False)
-            )
+        stmt = select(PasswordResetToken).where(
+            PasswordResetToken.token_hash == token_hash,
+            PasswordResetToken.used.is_(False),
         )
         result = await self.session.execute(stmt)
         token_record = result.scalar_one_or_none()
@@ -127,7 +123,9 @@ class PasswordService:
         # Load user
         user = await self.user_repo.get_by_id(token_record.user_id)
         if not user:
-            raise InvalidResetTokenException("User associated with this token not found.")
+            raise InvalidResetTokenException(
+                "User associated with this token not found."
+            )
 
         # Validate password policy
         validate_password_policy(new_password)
@@ -156,7 +154,9 @@ class PasswordService:
         """Checks new password against user's historical hashes."""
         # Check active password first
         if verify_password(new_password, user.password_hash):
-            raise PasswordReuseException("New password cannot be the same as the current password.")
+            raise PasswordReuseException(
+                "New password cannot be the same as the current password."
+            )
 
         # Query history
         stmt = (
@@ -170,14 +170,13 @@ class PasswordService:
 
         for item in history_items:
             if verify_password(new_password, item.password_hash):
-                raise PasswordReuseException("Password was used recently and cannot be reused.")
+                raise PasswordReuseException(
+                    "Password was used recently and cannot be reused."
+                )
 
     async def _add_to_history(self, user_id: uuid.UUID, password_hash: str) -> None:
         """Adds a password hash to history and handles automatic cleanup of overflow."""
-        history_item = PasswordHistory(
-            user_id=user_id,
-            password_hash=password_hash
-        )
+        history_item = PasswordHistory(user_id=user_id, password_hash=password_hash)
         self.session.add(history_item)
 
         # Cleanup old history records exceeding PASSWORD_HISTORY_LENGTH
@@ -192,6 +191,6 @@ class PasswordService:
         # If it exceeds history length, delete oldest ones
         if len(all_history) >= settings.PASSWORD_HISTORY_LENGTH:
             # We are about to add one, so prune any beyond length - 1
-            excess_items = all_history[settings.PASSWORD_HISTORY_LENGTH - 1:]
+            excess_items = all_history[settings.PASSWORD_HISTORY_LENGTH - 1 :]
             for item in excess_items:
                 await self.session.delete(item)

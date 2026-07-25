@@ -131,7 +131,9 @@ def _student_payload(school_id: uuid.UUID, **overrides) -> dict:
 
 
 @pytest.mark.asyncio
-async def test_create_student_success(client: AsyncClient, auth_headers: dict, school_id: uuid.UUID):
+async def test_create_student_success(
+    client: AsyncClient, auth_headers: dict, school_id: uuid.UUID
+):
     """POST /students returns 201 on valid payload."""
     payload = _student_payload(school_id)
     resp = await client.post(BASE_URL + "/", json=payload, headers=auth_headers)

@@ -70,13 +70,11 @@ def test_corrupted_token():
 def test_wrong_secret_key():
     """Verify that encoding with a wrong key raises a signature failure during default key checks."""
     subject = "test-user-uuid"
-    payload = {
-        "sub": subject,
-        "exp": int(time.time() + 60),
-        "type": "access"
-    }
+    payload = {"sub": subject, "exp": int(time.time() + 60), "type": "access"}
     # Encode with a custom key
-    token = jwt.encode_token(payload, secret_key="custom-unrecognized-secret-key-exceeding-32-bytes")
+    token = jwt.encode_token(
+        payload, secret_key="custom-unrecognized-secret-key-exceeding-32-bytes"
+    )
     # Decode with defaults (uses settings.SECRET_KEY)
     with pytest.raises(jwt.InvalidSignatureError):
         jwt.decode_token(token)
@@ -86,7 +84,7 @@ def test_missing_payload_claims():
     """Verify that decoding raises MissingClaimsError if standard claims are missing."""
     payload = {
         "exp": int(time.time() + 60),
-        "type": "access"
+        "type": "access",
         # 'sub' is missing
     }
     token = jwt.encode_token(payload)
@@ -97,11 +95,7 @@ def test_missing_payload_claims():
 def test_invalid_algorithm():
     """Verify that decoding raises an exception if the signing algorithm does not match."""
     subject = "test-user-uuid"
-    payload = {
-        "sub": subject,
-        "exp": int(time.time() + 60),
-        "type": "access"
-    }
+    payload = {"sub": subject, "exp": int(time.time() + 60), "type": "access"}
     token = jwt.encode_token(payload)
     # Attempt to decode expecting HS512 (default is HS256)
     with pytest.raises(jwt.InvalidTokenError):

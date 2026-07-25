@@ -106,4 +106,6 @@ def decode_authenticated_user(token: str) -> dict:
     except jwt.TokenExpiredError as e:
         raise TokenExpiredException("Signature has expired") from e
     except jwt.JWTError as e:
-        raise InvalidBearerTokenException("Invalid token signature or formatting") from e
+        raise InvalidBearerTokenException(
+            "Invalid token signature or formatting"
+        ) from e

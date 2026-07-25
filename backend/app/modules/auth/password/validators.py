@@ -10,8 +10,16 @@ from app.modules.auth.password.exceptions import PasswordValidationError
 
 # Configurable list of basic dictionary words to reject
 DEFAULT_DICTIONARY_WORDS = {
-    "password", "admin", "administrator", "school", "saas", "qwerty", "welcome", "pass123"
+    "password",
+    "admin",
+    "administrator",
+    "school",
+    "saas",
+    "qwerty",
+    "welcome",
+    "pass123",
 }
+
 
 def calculate_shannon_entropy(password: str) -> float:
     """
@@ -28,6 +36,7 @@ def calculate_shannon_entropy(password: str) -> float:
         entropy -= p * math.log2(p)
     return entropy
 
+
 def validate_password_policy(
     password: str,
     min_length: int = constants.PASSWORD_MIN_LENGTH,
@@ -38,32 +47,46 @@ def validate_password_policy(
     require_special: bool = constants.PASSWORD_REQUIRE_SPECIAL_CHARACTER,
     reject_dictionary_words: bool = True,
     dictionary_words: set[str] = DEFAULT_DICTIONARY_WORDS,
-    min_entropy: float = 2.5
+    min_entropy: float = 2.5,
 ) -> None:
     """
     Validates a plaintext password against standard policies and entropy checks.
     Raises PasswordValidationError if validation fails.
     """
     if len(password) < min_length:
-        raise PasswordValidationError(f"Password must be at least {min_length} characters long.")
+        raise PasswordValidationError(
+            f"Password must be at least {min_length} characters long."
+        )
     if len(password) > max_length:
-        raise PasswordValidationError(f"Password cannot exceed {max_length} characters.")
+        raise PasswordValidationError(
+            f"Password cannot exceed {max_length} characters."
+        )
 
     if require_uppercase and not any(c.isupper() for c in password):
-        raise PasswordValidationError("Password must contain at least one uppercase letter.")
+        raise PasswordValidationError(
+            "Password must contain at least one uppercase letter."
+        )
     if require_lowercase and not any(c.islower() for c in password):
-        raise PasswordValidationError("Password must contain at least one lowercase letter.")
+        raise PasswordValidationError(
+            "Password must contain at least one lowercase letter."
+        )
     if require_number and not any(c.isdigit() for c in password):
-        raise PasswordValidationError("Password must contain at least one numeric digit.")
+        raise PasswordValidationError(
+            "Password must contain at least one numeric digit."
+        )
     if require_special and not any(c in constants.SPECIAL_CHARACTERS for c in password):
-        raise PasswordValidationError("Password must contain at least one special character.")
+        raise PasswordValidationError(
+            "Password must contain at least one special character."
+        )
 
     # Dictionary word rejection (case-insensitive substring and exact matches)
     if reject_dictionary_words:
         normalized_pwd = password.lower()
         for word in dictionary_words:
             if word.lower() in normalized_pwd:
-                raise PasswordValidationError(f"Password is too common and contains the rejected word: '{word}'.")
+                raise PasswordValidationError(
+                    f"Password is too common and contains the rejected word: '{word}'."
+                )
 
     # Entropy check
     entropy = calculate_shannon_entropy(password)

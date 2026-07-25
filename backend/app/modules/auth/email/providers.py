@@ -59,7 +59,9 @@ class SMTPProvider(EmailProvider):
         self, to_email: str, subject: str, html_content: str, text_content: str
     ) -> None:
         if not settings.SMTP_HOST:
-            logger.warning("SMTP_HOST not configured. Falling back to Console delivery.")
+            logger.warning(
+                "SMTP_HOST not configured. Falling back to Console delivery."
+            )
             console = ConsoleProvider()
             await console.send_email(to_email, subject, html_content, text_content)
             return
@@ -83,7 +85,9 @@ class SMTPProvider(EmailProvider):
 
         try:
             # Connect and send
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT or 587, timeout=10) as server:
+            with smtplib.SMTP(
+                settings.SMTP_HOST, settings.SMTP_PORT or 587, timeout=10
+            ) as server:
                 server.ehlo()
                 if settings.SMTP_USER and settings.SMTP_PASS:
                     server.starttls()

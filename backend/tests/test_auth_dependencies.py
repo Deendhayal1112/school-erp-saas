@@ -30,7 +30,9 @@ def build_mock_request(headers: dict) -> Request:
     """Builds a mock Request object using Starlette headers mapping structure."""
     scope = {
         "type": "http",
-        "headers": [(k.lower().encode("utf-8"), v.encode("utf-8")) for k, v in headers.items()],
+        "headers": [
+            (k.lower().encode("utf-8"), v.encode("utf-8")) for k, v in headers.items()
+        ],
     }
     return Request(scope)
 
@@ -46,12 +48,16 @@ async def test_auth_dependencies_flows():
         school_stmt = select(School).limit(1)
         school_res = await session.execute(school_stmt)
         school = school_res.scalar_one_or_none()
-        assert school is not None, "Database must be seeded with a School record before running tests"
+        assert school is not None, (
+            "Database must be seeded with a School record before running tests"
+        )
 
         role_stmt = select(Role).where(Role.code == "TEACHER")
         role_res = await session.execute(role_stmt)
         role = role_res.scalar_one_or_none()
-        assert role is not None, "Database must be seeded with a TEACHER Role record before running tests"
+        assert role is not None, (
+            "Database must be seeded with a TEACHER Role record before running tests"
+        )
 
         user_repo = UserRepository(session)
 
@@ -90,16 +96,22 @@ async def test_auth_dependencies_flows():
                 await get_current_user(req_missing, session)
 
             # C. Verify Invalid Bearer Format throws InvalidBearerTokenException
-            req_bad_format = build_mock_request({"Authorization": f"Bearer{valid_token}"})
+            req_bad_format = build_mock_request(
+                {"Authorization": f"Bearer{valid_token}"}
+            )
             with pytest.raises(InvalidBearerTokenException):
                 await get_current_user(req_bad_format, session)
 
-            req_bad_scheme = build_mock_request({"Authorization": f"Basic {valid_token}"})
+            req_bad_scheme = build_mock_request(
+                {"Authorization": f"Basic {valid_token}"}
+            )
             with pytest.raises(InvalidBearerTokenException):
                 await get_current_user(req_bad_scheme, session)
 
             # D. Verify Invalid JWT throws InvalidBearerTokenException
-            req_bad_jwt = build_mock_request({"Authorization": "Bearer this-is-a-bad-jwt-string"})
+            req_bad_jwt = build_mock_request(
+                {"Authorization": "Bearer this-is-a-bad-jwt-string"}
+            )
             with pytest.raises(InvalidBearerTokenException):
                 await get_current_user(req_bad_jwt, session)
 
@@ -107,13 +119,17 @@ async def test_auth_dependencies_flows():
             expired_token = tokens.create_access_token(
                 subject=str(created_user.id), expires_delta=timedelta(seconds=-10)
             )
-            req_expired = build_mock_request({"Authorization": f"Bearer {expired_token}"})
+            req_expired = build_mock_request(
+                {"Authorization": f"Bearer {expired_token}"}
+            )
             with pytest.raises(TokenExpiredException):
                 await get_current_user(req_expired, session)
 
             # F. Verify Unknown User ID throws UserNotFoundException
             unknown_token = tokens.create_access_token(subject=str(uuid.uuid4()))
-            req_unknown = build_mock_request({"Authorization": f"Bearer {unknown_token}"})
+            req_unknown = build_mock_request(
+                {"Authorization": f"Bearer {unknown_token}"}
+            )
             with pytest.raises(UserNotFoundException):
                 await get_current_user(req_unknown, session)
 

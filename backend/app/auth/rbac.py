@@ -36,6 +36,7 @@ def RequirePermission(permission_code: str) -> Callable:
     Example:
         @router.post("/students", dependencies=[Depends(RequirePermission("student.create"))])
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_permission(current_user, permission_code)
         return current_user
@@ -55,6 +56,7 @@ def RequireAnyPermission(*permission_codes: str) -> Callable:
     Example:
         @router.get("/reports", dependencies=[Depends(RequireAnyPermission("report.view", "report.export"))])
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_any_permission(current_user, *permission_codes)
         return current_user
@@ -75,6 +77,7 @@ def RequireAllPermissions(*permission_codes: str) -> Callable:
     Example:
         @router.post("/exams/publish", dependencies=[Depends(RequireAllPermissions("exam.create", "exam.publish"))])
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_all_permissions(current_user, *permission_codes)
         return current_user
@@ -98,6 +101,7 @@ def RequireRole(role_code: str) -> Callable:
     Example:
         @router.delete("/school/{id}", dependencies=[Depends(RequireRole("SUPER_ADMIN"))])
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_role(current_user, role_code)
         return current_user
@@ -117,6 +121,7 @@ def RequireAnyRole(*role_codes: str) -> Callable:
     Example:
         @router.get("/dashboard", dependencies=[Depends(RequireAnyRole("SUPER_ADMIN", "SCHOOL_ADMIN", "PRINCIPAL"))])
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_any_role(current_user, *role_codes)
         return current_user
@@ -138,12 +143,11 @@ def RequireMinimumRole(minimum_role_code: str) -> Callable:
         @router.get("/staff", dependencies=[Depends(RequireMinimumRole("PRINCIPAL"))])
         # Allows SUPER_ADMIN, SCHOOL_ADMIN, PRINCIPAL but not TEACHER, STUDENT, etc.
     """
+
     async def dependency(current_user: User = Depends(get_current_active_user)) -> User:
         await authz.require_minimum_role(current_user, minimum_role_code)
         return current_user
 
     dependency.__name__ = f"require_minimum_role_{minimum_role_code}"
-    dependency.__doc__ = (
-        f"**Authentication Required** | **Minimum Role Required**: `{minimum_role_code}` or higher"
-    )
+    dependency.__doc__ = f"**Authentication Required** | **Minimum Role Required**: `{minimum_role_code}` or higher"
     return dependency

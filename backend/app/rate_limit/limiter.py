@@ -41,7 +41,11 @@ class RateLimiter:
             identifier = f"ip:{get_client_ip(request)}"
 
         # Clean endpoint name to avoid collisions
-        endpoint_name = request.scope.get("endpoint").__name__ if request.scope.get("endpoint") else "global"
+        endpoint_name = (
+            request.scope.get("endpoint").__name__
+            if request.scope.get("endpoint")
+            else "global"
+        )
         key = f"rate_limit:{endpoint_name}:{identifier}"
 
         now = time.time()
@@ -63,7 +67,13 @@ class RateLimiter:
                 _, current_count, _, _ = await pipe.execute()
 
                 if current_count >= self.limit:
-                    logger.warning("Rate limit exceeded for client %s on %s: %d/%d", identifier, endpoint_name, current_count, self.limit)
+                    logger.warning(
+                        "Rate limit exceeded for client %s on %s: %d/%d",
+                        identifier,
+                        endpoint_name,
+                        current_count,
+                        self.limit,
+                    )
                     raise RateLimitExceededException(
                         message=f"Rate limit exceeded. Maximum allowed: {self.limit} requests per {self.window_seconds}s."
                     )
@@ -71,7 +81,10 @@ class RateLimiter:
             except RateLimitExceededException:
                 raise
             except Exception as exc:
-                logger.warning("Redis rate limiter error: %s. Falling back to local memory limit.", exc)
+                logger.warning(
+                    "Redis rate limiter error: %s. Falling back to local memory limit.",
+                    exc,
+                )
 
         # 2. Local memory fallback sliding window
         logger.debug("Executing local memory rate limit fallback for key=%s", key)

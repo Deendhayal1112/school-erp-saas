@@ -32,6 +32,7 @@ celery_app.autodiscover_tasks(["app.tasks"])
 def send_email_background(recipient: str, subject: str, body: str) -> bool:
     """Standard background task to send emails asynchronously."""
     import logging
+
     logger = logging.getLogger(__name__)
     logger.info("Executing Celery background task: Sending email to %s", recipient)
     # Delegates to the notifications/email module

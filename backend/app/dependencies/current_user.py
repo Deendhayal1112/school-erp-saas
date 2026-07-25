@@ -18,7 +18,9 @@ from app.models.user import User
 from app.repositories.user_repository import UserRepository
 
 
-async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> User:
+async def get_current_user(
+    request: Request, db: AsyncSession = Depends(get_db)
+) -> User:
     """
     Authenticates requesting users by verifying Bearer headers and decoding signatures.
     Resolves the matching database User ORM instance.
@@ -44,14 +46,19 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     iat_timestamp = payload.get("iat")
     if iat_timestamp and user.password_changed_at:
         from datetime import datetime
+
         token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
         if token_iat_dt < user.password_changed_at.replace(microsecond=0):
-            raise InvalidBearerTokenException("Token has been invalidated by a password change")
+            raise InvalidBearerTokenException(
+                "Token has been invalidated by a password change"
+            )
 
     return user
 
 
-async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
+async def get_current_active_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
     """
     Verifies that the resolved user credentials map to active accounts
     and active tenant school systems.

@@ -7,6 +7,7 @@ from enum import Enum
 
 class ErrorCode(str, Enum):
     """Categorized taxonomic error codes returning unified platform feedback."""
+
     SYSTEM_ERROR = "SYS_001"
     VALIDATION_ERROR = "ValidationError"
     NOT_FOUND = "ERR_404"

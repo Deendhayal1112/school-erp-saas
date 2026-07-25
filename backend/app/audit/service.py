@@ -61,7 +61,9 @@ class AuditLogService:
                 metadata_json=metadata_json,
             )
             self.session.add(log_entry)
-            await self.session.flush()  # Write to DB without committing transaction prematurely
+            await (
+                self.session.flush()
+            )  # Write to DB without committing transaction prematurely
             logger.debug(
                 "Audit log written: module=%s, action=%s, user_id=%s",
                 module,

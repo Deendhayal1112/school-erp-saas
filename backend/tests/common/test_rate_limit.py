@@ -29,6 +29,7 @@ async def test_rate_limiter_allows_and_blocks():
         await client.delete("rate_limit:<lambda>:ip:192.168.1.100")
 
     from app.core.config import settings
+
     original_val = settings.ENABLE_RATE_LIMITING
     settings.ENABLE_RATE_LIMITING = True
 

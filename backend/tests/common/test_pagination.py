@@ -31,16 +31,17 @@ async def test_pagination_by_page_and_offset():
         async with session.begin():
             # Check if tables exists or create them
             conn = await session.connection()
-            await conn.run_sync(Base.metadata.create_all, tables=[PaginationMockModel.__table__])
+            await conn.run_sync(
+                Base.metadata.create_all, tables=[PaginationMockModel.__table__]
+            )
 
             # Clear old records
             await conn.execute(PaginationMockModel.__table__.delete())
 
             # Add 25 records
-            session.add_all([
-                PaginationMockModel(id=i, name=f"Item {i}")
-                for i in range(1, 26)
-            ])
+            session.add_all(
+                [PaginationMockModel(id=i, name=f"Item {i}") for i in range(1, 26)]
+            )
 
         # Test Page Number Pagination
         query = select(PaginationMockModel)
@@ -56,14 +57,20 @@ async def test_pagination_by_page_and_offset():
 
         # Test Offset Pagination
         offset_params = OffsetParams(offset=20, limit=10)
-        offset_res = await paginate_by_offset(session, query, offset_params, "http://localhost/items")
+        offset_res = await paginate_by_offset(
+            session, query, offset_params, "http://localhost/items"
+        )
         assert len(offset_res["results"]) == 5
         assert offset_res["pagination"]["page"] == 3
 
         # Test Cursor Pagination
         cursor_params = CursorParams(limit=10)
         cursor_res = await paginate_by_cursor(
-            session, query, cursor_params, PaginationMockModel.id, "http://localhost/items"
+            session,
+            query,
+            cursor_params,
+            PaginationMockModel.id,
+            "http://localhost/items",
         )
         assert len(cursor_res["results"]) == 10
         assert cursor_res["pagination"]["next"] is not None

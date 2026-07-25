@@ -7,5 +7,5 @@ class Base(DeclarativeBase):
     All future domain-specific database models (e.g. Students, Teachers)
     will inherit from this Base class to share metadata and state.
     """
-    pass
 
+    pass

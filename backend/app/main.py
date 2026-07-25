@@ -121,7 +121,9 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Converts Pydantic v2 validation errors to standard JSON envelope format."""
     details = [
-        ValidationErrorDetail(loc=[str(l) for l in e["loc"]], msg=e["msg"], type=e["type"])
+        ValidationErrorDetail(
+            loc=[str(l) for l in e["loc"]], msg=e["msg"], type=e["type"]
+        )
         for e in exc.errors()
     ]
     return JSONResponse(
@@ -131,10 +133,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.exception_handler(InvalidCredentialsException)
-async def invalid_credentials_handler(request: Request, exc: InvalidCredentialsException):
+async def invalid_credentials_handler(
+    request: Request, exc: InvalidCredentialsException
+):
     return JSONResponse(
         status_code=401,
-        content=ErrorResponse(error="InvalidCredentials", message=str(exc)).model_dump(),
+        content=ErrorResponse(
+            error="InvalidCredentials", message=str(exc)
+        ).model_dump(),
         headers={"WWW-Authenticate": "Bearer"},
     )
 
@@ -152,7 +158,9 @@ async def token_expired_handler(request: Request, exc: ServiceTokenExpiredExcept
 async def refresh_token_handler(request: Request, exc: RefreshTokenException):
     return JSONResponse(
         status_code=401,
-        content=ErrorResponse(error="InvalidRefreshToken", message=str(exc)).model_dump(),
+        content=ErrorResponse(
+            error="InvalidRefreshToken", message=str(exc)
+        ).model_dump(),
         headers={"WWW-Authenticate": "Bearer"},
     )
 
@@ -260,7 +268,9 @@ async def account_locked_handler(request: Request, exc: AccountLockedException):
 
 
 @app.exception_handler(InvalidCurrentPasswordException)
-async def invalid_current_password_handler(request: Request, exc: InvalidCurrentPasswordException):
+async def invalid_current_password_handler(
+    request: Request, exc: InvalidCurrentPasswordException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -293,7 +303,9 @@ async def password_validation_handler(request: Request, exc: PasswordValidationE
 
 
 @app.exception_handler(InvalidResetTokenException)
-async def invalid_reset_token_handler(request: Request, exc: InvalidResetTokenException):
+async def invalid_reset_token_handler(
+    request: Request, exc: InvalidResetTokenException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -304,7 +316,9 @@ async def invalid_reset_token_handler(request: Request, exc: InvalidResetTokenEx
 
 
 @app.exception_handler(ExpiredResetTokenException)
-async def expired_reset_token_handler(request: Request, exc: ExpiredResetTokenException):
+async def expired_reset_token_handler(
+    request: Request, exc: ExpiredResetTokenException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -323,7 +337,9 @@ from app.modules.auth.email.exceptions import (
 
 
 @app.exception_handler(InvalidVerificationTokenException)
-async def invalid_verification_token_handler(request: Request, exc: InvalidVerificationTokenException):
+async def invalid_verification_token_handler(
+    request: Request, exc: InvalidVerificationTokenException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -334,7 +350,9 @@ async def invalid_verification_token_handler(request: Request, exc: InvalidVerif
 
 
 @app.exception_handler(ExpiredVerificationTokenException)
-async def expired_verification_token_handler(request: Request, exc: ExpiredVerificationTokenException):
+async def expired_verification_token_handler(
+    request: Request, exc: ExpiredVerificationTokenException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -356,7 +374,9 @@ async def email_rate_limit_handler(request: Request, exc: EmailRateLimitExceptio
 
 
 @app.exception_handler(AccountAlreadyVerifiedException)
-async def account_already_verified_handler(request: Request, exc: AccountAlreadyVerifiedException):
+async def account_already_verified_handler(
+    request: Request, exc: AccountAlreadyVerifiedException
+):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
@@ -377,6 +397,7 @@ async def global_exception_handler(request: Request, exc: Exception):
             message="An unexpected error occurred. Please contact system support.",
         ).model_dump(),
     )
+
 
 # Register platform infrastructure exception handlers
 from app.exceptions.handlers import register_exception_handlers

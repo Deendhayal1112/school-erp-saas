@@ -184,6 +184,7 @@ ACTIVATED_HTML = """
 <p>If you did not trigger this activation, please contact support immediately.</p>
 """
 
+
 # ===========================================================================
 # Render Engines
 # ===========================================================================
@@ -218,8 +219,7 @@ def render_template(
     # Render HTML body, then inject it into base layout wrapper
     body_html_rendered = _simple_render(html_body_tmpl, full_context)
     html_rendered = _simple_render(
-        HTML_BASE_WRAPPER.replace("{{ body_html }}", body_html_rendered),
-        full_context
+        HTML_BASE_WRAPPER.replace("{{ body_html }}", body_html_rendered), full_context
     )
 
     return html_rendered, text_rendered

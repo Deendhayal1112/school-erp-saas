@@ -19,9 +19,16 @@ from app.schemas.response import (
 logger = logging.getLogger(__name__)
 
 
-async def platform_exception_handler(request: Request, exc: PlatformException) -> JSONResponse:
+async def platform_exception_handler(
+    request: Request, exc: PlatformException
+) -> JSONResponse:
     """Handles all customized business logic PlatformExceptions."""
-    logger.warning("Platform exception [code=%s, status=%d]: %s", exc.error_code, exc.status_code, exc.message)
+    logger.warning(
+        "Platform exception [code=%s, status=%d]: %s",
+        exc.error_code,
+        exc.status_code,
+        exc.message,
+    )
     content = {
         "success": False,
         "error": exc.error_code,
@@ -32,7 +39,9 @@ async def platform_exception_handler(request: Request, exc: PlatformException) -
     return JSONResponse(status_code=exc.status_code, content=content)
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     """Handles Pydantic request body validation failures."""
     logger.debug("Request validation failed: %s", exc.errors())
     details = [

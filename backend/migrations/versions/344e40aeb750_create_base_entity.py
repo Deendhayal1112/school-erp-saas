@@ -1,14 +1,15 @@
 """Create Base Entity
 
 Revision ID: 344e40aeb750
-Revises: 
+Revises:
 Create Date: 2026-07-25 08:30:33.412403
 
 """
+
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
-revision: str = '344e40aeb750'
+revision: str = "344e40aeb750"
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None

@@ -51,7 +51,9 @@ class BaseRepository(Generic[ModelType]):
             result = await self.session.execute(stmt)
             return result.scalars().all()
         except SQLAlchemyError as e:
-            raise DatabaseError(f"Failed to fetch database entity sequence: {e!s}") from e
+            raise DatabaseError(
+                f"Failed to fetch database entity sequence: {e!s}"
+            ) from e
 
     async def update(self, entity: ModelType) -> ModelType:
         """Updates an existing entity database record."""
@@ -61,7 +63,9 @@ class BaseRepository(Generic[ModelType]):
             return entity
         except IntegrityError as e:
             await self.session.rollback()
-            raise DuplicateEntityError(f"Database record collision during update: {e!s}") from e
+            raise DuplicateEntityError(
+                f"Database record collision during update: {e!s}"
+            ) from e
         except SQLAlchemyError as e:
             await self.session.rollback()
             raise DatabaseError(f"Failed to update database entity: {e!s}") from e
@@ -82,7 +86,9 @@ class BaseRepository(Generic[ModelType]):
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none() is not None
         except SQLAlchemyError as e:
-            raise DatabaseError(f"Failed to check database record existence: {e!s}") from e
+            raise DatabaseError(
+                f"Failed to check database record existence: {e!s}"
+            ) from e
 
     async def count(self) -> int:
         """Counts total active database records for this model."""

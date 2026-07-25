@@ -21,6 +21,7 @@ class User(BaseEntity):
     User Entity representing registration profiles (Admins, Staff, Students, Parents)
     registered under a School tenant in the School ERP SaaS system.
     """
+
     __tablename__ = "users"
 
     # ==========================================
@@ -28,15 +29,21 @@ class User(BaseEntity):
     # ==========================================
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
-    username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    username: Mapped[str] = mapped_column(
+        String(50), unique=True, index=True, nullable=False
+    )
+    email: Mapped[str] = mapped_column(
+        String(100), unique=True, index=True, nullable=False
+    )
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # ==========================================
     # Authentication Fields
     # ==========================================
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-    last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_login: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     # ==========================================
     # Profile Fields
@@ -56,8 +63,12 @@ class User(BaseEntity):
     # Account Security Fields
     # ==========================================
     failed_login_count: Mapped[int] = mapped_column(default=0, nullable=False)
-    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    password_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    locked_until: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    password_changed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     # ==========================================
     # Foreign Key Constraints
@@ -102,4 +113,3 @@ class User(BaseEntity):
         back_populates="user",
         cascade="all, delete-orphan",
     )
-

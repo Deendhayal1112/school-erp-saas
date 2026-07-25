@@ -10,12 +10,13 @@ class Settings(BaseSettings):
     Application settings loaded from environment variables and .env files.
     Uses Pydantic Settings v2 for robust validation and type coercion.
     """
+
     model_config = SettingsConfigDict(
         # Supports reading .env from backend/ directory or root directory
         env_file=(".env", "../.env", "backend/.env"),
         env_file_encoding="utf-8",
         case_sensitive=True,
-        extra="ignore"
+        extra="ignore",
     )
 
     # ==========================================
@@ -41,7 +42,9 @@ class Settings(BaseSettings):
         """Asynchronous database connection string for SQLAlchemy & asyncpg."""
         if self.DATABASE_URL:
             if self.DATABASE_URL.startswith("postgresql://"):
-                return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+                return self.DATABASE_URL.replace(
+                    "postgresql://", "postgresql+asyncpg://", 1
+                )
             return self.DATABASE_URL
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
@@ -50,7 +53,9 @@ class Settings(BaseSettings):
         """Synchronous database connection string (e.g., for Alembic migrations)."""
         if self.DATABASE_URL:
             if self.DATABASE_URL.startswith("postgresql+asyncpg://"):
-                return self.DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://", 1)
+                return self.DATABASE_URL.replace(
+                    "postgresql+asyncpg://", "postgresql://", 1
+                )
             return self.DATABASE_URL
         return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
@@ -99,11 +104,11 @@ class Settings(BaseSettings):
     # ==========================================
     # Password Management Settings
     # ==========================================
-    PASSWORD_HISTORY_LENGTH: int = 5          # How many previous passwords to remember
+    PASSWORD_HISTORY_LENGTH: int = 5  # How many previous passwords to remember
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 30  # Reset link TTL
-    PASSWORD_EXPIRE_DAYS: int = 0             # 0 = never expires
-    ACCOUNT_LOCKOUT_THRESHOLD: int = 5        # Failed attempts before lockout
-    ACCOUNT_LOCKOUT_MINUTES: int = 15         # Lockout duration
+    PASSWORD_EXPIRE_DAYS: int = 0  # 0 = never expires
+    ACCOUNT_LOCKOUT_THRESHOLD: int = 5  # Failed attempts before lockout
+    ACCOUNT_LOCKOUT_MINUTES: int = 15  # Lockout duration
 
     # ==========================================
     # 6. Celery Settings
@@ -133,12 +138,11 @@ class Settings(BaseSettings):
     # ==========================================
     # Email Verification & Account Recovery
     # ==========================================
-    EMAIL_PROVIDER: str = "console"           # console, smtp, mock
+    EMAIL_PROVIDER: str = "console"  # console, smtp, mock
     EMAIL_VERIFICATION_EXPIRE_MINUTES: int = 1440  # 24 hours
     EMAIL_SENDER: str = "noreply@schoolerpsaas.com"
-    BASE_URL: str = "http://localhost:3000"   # Base URL for verification/reset links
-    EMAIL_RATE_LIMIT_SECONDS: int = 60        # Rate limit between resend requests
-
+    BASE_URL: str = "http://localhost:3000"  # Base URL for verification/reset links
+    EMAIL_RATE_LIMIT_SECONDS: int = 60  # Rate limit between resend requests
 
     # ==========================================
     # 7. CORS Settings

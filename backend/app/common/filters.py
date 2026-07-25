@@ -20,8 +20,12 @@ OPERATOR_MAP = {
     "gte": lambda col, val: col >= val,
     "lt": lambda col, val: col < val,
     "lte": lambda col, val: col <= val,
-    "in": lambda col, val: col.in_(val) if isinstance(val, (list, tuple, set)) else col.in_([val]),
-    "notin": lambda col, val: ~col.in_(val) if isinstance(val, (list, tuple, set)) else ~col.in_([val]),
+    "in": lambda col, val: (
+        col.in_(val) if isinstance(val, (list, tuple, set)) else col.in_([val])
+    ),
+    "notin": lambda col, val: (
+        ~col.in_(val) if isinstance(val, (list, tuple, set)) else ~col.in_([val])
+    ),
     "isnull": lambda col, val: col.is_(None) if val else col.isnot(None),
 }
 

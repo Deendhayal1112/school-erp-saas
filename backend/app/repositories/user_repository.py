@@ -82,7 +82,9 @@ class UserRepository(BaseRepository[User]):
         """Updates an existing user record in the database."""
         return await self.update(user)
 
-    async def update_last_login(self, user_id: uuid.UUID, last_login_dt: datetime) -> None:
+    async def update_last_login(
+        self, user_id: uuid.UUID, last_login_dt: datetime
+    ) -> None:
         """Updates the last_login timestamp audit field of a user."""
         user = await super().get_by_id(user_id)
         if not user:

@@ -72,6 +72,7 @@ class S3StorageProvider(StorageProvider):
     def _get_client(self) -> Any:
         try:
             import boto3
+
             return boto3.client(
                 "s3",
                 aws_access_key_id=self.aws_access_key_id,
@@ -85,6 +86,7 @@ class S3StorageProvider(StorageProvider):
     async def upload(self, key: str, file_bytes: bytes, content_type: str) -> str:
         client = self._get_client()
         import asyncio
+
         # Run synchronous boto3 upload call in thread executor to prevent event loop blocking
         await asyncio.to_thread(
             client.put_object,
@@ -93,11 +95,14 @@ class S3StorageProvider(StorageProvider):
             Body=file_bytes,
             ContentType=content_type,
         )
-        return f"https://{self.bucket_name}.s3.{self.region_name or 'amazonaws'}.com/{key}"
+        return (
+            f"https://{self.bucket_name}.s3.{self.region_name or 'amazonaws'}.com/{key}"
+        )
 
     async def download_url(self, key: str, expires_in: int = 3600) -> str:
         client = self._get_client()
         import asyncio
+
         url = await asyncio.to_thread(
             client.generate_presigned_url,
             "get_object",
@@ -109,6 +114,7 @@ class S3StorageProvider(StorageProvider):
     async def delete(self, key: str) -> None:
         client = self._get_client()
         import asyncio
+
         await asyncio.to_thread(
             client.delete_object,
             Bucket=self.bucket_name,

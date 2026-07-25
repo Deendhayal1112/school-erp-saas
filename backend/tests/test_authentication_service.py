@@ -33,12 +33,16 @@ async def test_authentication_service_flows():
         school_stmt = select(School).limit(1)
         school_res = await session.execute(school_stmt)
         school = school_res.scalar_one_or_none()
-        assert school is not None, "Database must be seeded with a School record before running tests"
+        assert school is not None, (
+            "Database must be seeded with a School record before running tests"
+        )
 
         role_stmt = select(Role).where(Role.code == "TEACHER")
         role_res = await session.execute(role_stmt)
         role = role_res.scalar_one_or_none()
-        assert role is not None, "Database must be seeded with a TEACHER Role record before running tests"
+        assert role is not None, (
+            "Database must be seeded with a TEACHER Role record before running tests"
+        )
 
         user_repo = UserRepository(session)
         auth_service = AuthenticationService(user_repo)
@@ -64,7 +68,9 @@ async def test_authentication_service_flows():
 
         try:
             # A. Verify Successful login & token creation
-            login_response = await auth_service.authenticate_user(test_email, plain_password)
+            login_response = await auth_service.authenticate_user(
+                test_email, plain_password
+            )
             assert login_response is not None
             assert "access_token" in login_response
             assert "refresh_token" in login_response
@@ -81,7 +87,9 @@ async def test_authentication_service_flows():
 
             # C. Verify Unknown email rejection
             with pytest.raises(InvalidCredentialsException):
-                await auth_service.authenticate_user("unknown_auth@demoschool.edu", plain_password)
+                await auth_service.authenticate_user(
+                    "unknown_auth@demoschool.edu", plain_password
+                )
 
             # D. Verify Inactive user status check
             await user_repo.deactivate_user(created_user.id)
@@ -131,7 +139,9 @@ async def test_authentication_service_flows():
 
             # I. Verify Invalid/Corrupted refresh token rejection
             with pytest.raises(RefreshTokenException):
-                await auth_service.refresh_access_token("corrupted_refresh_token_payload")
+                await auth_service.refresh_access_token(
+                    "corrupted_refresh_token_payload"
+                )
 
             # J. Verify Logout signature does not crash
             await auth_service.logout_user(created_user.id)

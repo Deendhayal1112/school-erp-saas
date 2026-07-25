@@ -22,6 +22,7 @@ class PasswordHistory(BaseEntity):
     The service layer checks this list before accepting a new password,
     preventing reuse of the last N passwords (configurable via settings).
     """
+
     __tablename__ = "password_history"
 
     user_id: Mapped[uuid.UUID] = mapped_column(

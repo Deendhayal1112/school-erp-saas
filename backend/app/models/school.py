@@ -14,14 +14,19 @@ class School(BaseEntity):
     School Entity representing a tenant in the School ERP SaaS system.
     Every database record belongs directly or indirectly to a School.
     """
+
     __tablename__ = "schools"
 
     # Core identification
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    code: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
+    code: Mapped[str] = mapped_column(
+        String(20), unique=True, index=True, nullable=False
+    )
 
     # Contact information
-    email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(100), unique=True, index=True, nullable=False
+    )
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     website: Mapped[str | None] = mapped_column(String(100), nullable=True)
 

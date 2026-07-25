@@ -84,12 +84,17 @@ async def _get_redis():
         import redis.asyncio as aioredis
 
         from app.core.config import settings
-        client = aioredis.from_url(settings.REDIS_URL, decode_responses=True, socket_connect_timeout=2)
+
+        client = aioredis.from_url(
+            settings.REDIS_URL, decode_responses=True, socket_connect_timeout=2
+        )
         await client.ping()
         _redis_client = client
         logger.info("RBAC cache: Redis connected at %s", settings.REDIS_URL)
     except Exception as exc:
-        logger.warning("RBAC cache: Redis unavailable (%s), falling back to in-process cache.", exc)
+        logger.warning(
+            "RBAC cache: Redis unavailable (%s), falling back to in-process cache.", exc
+        )
         _redis_client = None
     return _redis_client
 

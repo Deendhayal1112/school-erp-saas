@@ -23,12 +23,16 @@ async def test_user_repository_flows():
         school_stmt = select(School).limit(1)
         school_res = await session.execute(school_stmt)
         school = school_res.scalar_one_or_none()
-        assert school is not None, "Ensure database is seeded with a School record before running tests"
+        assert school is not None, (
+            "Ensure database is seeded with a School record before running tests"
+        )
 
         role_stmt = select(Role).where(Role.code == "TEACHER")
         role_res = await session.execute(role_stmt)
         role = role_res.scalar_one_or_none()
-        assert role is not None, "Ensure database is seeded with a TEACHER Role record before running tests"
+        assert role is not None, (
+            "Ensure database is seeded with a TEACHER Role record before running tests"
+        )
 
         repo = UserRepository(session)
 

@@ -16,4 +16,4 @@ school-erp-saas/
 ├── scripts/            # Utility scripts (setup, backup, migration, etc.)
 ├── testing/            # End-to-end and integration tests
 └── .github/            # GitHub Actions CI/CD workflows and issue templates
-
+```

@@ -13,21 +13,41 @@ from app.modules.student.validators import (
 
 
 class StudentBase(BaseModel):
-    admission_number: str = Field(..., max_length=50, description="Admission number unique within the school.")
-    roll_number: str | None = Field(None, max_length=50, description="Roll number inside class/section.")
-    emis_number: str | None = Field(None, max_length=50, description="Optional EMIS tracking number.")
+    admission_number: str = Field(
+        ..., max_length=50, description="Admission number unique within the school."
+    )
+    roll_number: str | None = Field(
+        None, max_length=50, description="Roll number inside class/section."
+    )
+    emis_number: str | None = Field(
+        None, max_length=50, description="Optional EMIS tracking number."
+    )
 
-    first_name: str = Field(..., min_length=1, max_length=50, description="First name of the student.")
-    middle_name: str | None = Field(None, max_length=50, description="Optional middle name of the student.")
-    last_name: str = Field(..., min_length=1, max_length=50, description="Last name of the student.")
+    first_name: str = Field(
+        ..., min_length=1, max_length=50, description="First name of the student."
+    )
+    middle_name: str | None = Field(
+        None, max_length=50, description="Optional middle name of the student."
+    )
+    last_name: str = Field(
+        ..., min_length=1, max_length=50, description="Last name of the student."
+    )
 
     gender: Gender = Field(..., description="Recognized gender of the student.")
     date_of_birth: date = Field(..., description="Date of birth of the student.")
-    blood_group: str | None = Field(None, max_length=10, description="Blood group code (e.g. A+, O-).")
+    blood_group: str | None = Field(
+        None, max_length=10, description="Blood group code (e.g. A+, O-)."
+    )
 
-    email: str | None = Field(None, max_length=100, description="Contact email of the student.")
-    phone: str | None = Field(None, max_length=20, description="Contact phone of the student.")
-    aadhaar_number: str | None = Field(None, max_length=12, description="Aadhaar ID number (exactly 12 digits).")
+    email: str | None = Field(
+        None, max_length=100, description="Contact email of the student."
+    )
+    phone: str | None = Field(
+        None, max_length=20, description="Contact phone of the student."
+    )
+    aadhaar_number: str | None = Field(
+        None, max_length=12, description="Aadhaar ID number (exactly 12 digits)."
+    )
 
     nationality: str = Field("Indian", max_length=50)
     religion: str | None = Field(None, max_length=50)
@@ -160,3 +180,42 @@ class StudentFilter(BaseModel):
 class StudentListResponse(BaseModel):
     students: list[StudentSummary]
     total: int
+
+
+class BulkDeleteRequest(BaseModel):
+    student_ids: list[uuid.UUID] = Field(
+        ..., min_length=1, description="List of student UUIDs to delete."
+    )
+
+
+class BulkRestoreRequest(BaseModel):
+    student_ids: list[uuid.UUID] = Field(
+        ..., min_length=1, description="List of student UUIDs to restore."
+    )
+
+
+class BulkStatusRequest(BaseModel):
+    student_ids: list[uuid.UUID] = Field(
+        ..., min_length=1, description="List of student UUIDs to update."
+    )
+    status: StudentStatus = Field(..., description="Target status to apply.")
+
+
+class BulkExportRequest(BaseModel):
+    student_ids: list[uuid.UUID] = Field(
+        ..., description="List of student UUIDs to export."
+    )
+
+
+class ImportResultRow(BaseModel):
+    row_number: int
+    admission_number: str | None = None
+    status: str  # "imported", "failed", "skipped"
+    errors: list[str] = []
+
+
+class ImportSummaryResponse(BaseModel):
+    imported: int
+    failed: int
+    skipped: int
+    details: list[ImportResultRow]

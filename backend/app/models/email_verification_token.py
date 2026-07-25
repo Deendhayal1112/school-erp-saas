@@ -21,6 +21,7 @@ class EmailVerificationToken(BaseEntity):
     """
     Stores a hashed email-verification token with an expiry timestamp.
     """
+
     __tablename__ = "email_verification_tokens"
 
     user_id: Mapped[uuid.UUID] = mapped_column(
@@ -30,8 +31,14 @@ class EmailVerificationToken(BaseEntity):
         index=True,
     )
     # SHA-256 hex digest of the raw token
-    token_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
-    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    token_hash: Mapped[str] = mapped_column(
+        String(64), unique=True, index=True, nullable=False
+    )
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
     used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
-    user: Mapped["User"] = relationship("User", back_populates="email_verification_tokens")
+    user: Mapped["User"] = relationship(
+        "User", back_populates="email_verification_tokens"
+    )

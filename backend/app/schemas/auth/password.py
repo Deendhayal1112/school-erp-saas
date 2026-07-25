@@ -7,6 +7,7 @@ from app.core.password import validate_password_strength
 
 class ChangePasswordRequest(BaseModel):
     """Schema representing credentials sent to change a user's password."""
+
     current_password: str = Field(
         ...,
         description="The active plaintext password credential associated with the session.",
@@ -42,6 +43,7 @@ class ChangePasswordRequest(BaseModel):
 
 class ForgotPasswordRequest(BaseModel):
     """Schema representing parameters required to request a password reset email."""
+
     email: str = Field(
         ...,
         description="The registered email address associated with the account.",
@@ -61,6 +63,7 @@ class ForgotPasswordRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     """Schema representing variables required to finalize a password recovery cycle."""
+
     reset_token: str = Field(
         ...,
         description="The cryptographic validation token received in the password recovery email.",

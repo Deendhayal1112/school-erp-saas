@@ -56,5 +56,7 @@ class NotificationService:
                 metadata=metadata,
             )
         except Exception as exc:
-            logger.exception("Failed to deliver notification over channel %s: %s", channel, exc)
+            logger.exception(
+                "Failed to deliver notification over channel %s: %s", channel, exc
+            )
             return False

@@ -5,11 +5,12 @@ Revises: 87573b1543e0
 Create Date: 2026-07-25 09:06:20.084454
 
 """
+
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
-revision: str = '84802920e7db'
-down_revision: str | Sequence[str] | None = '87573b1543e0'
+revision: str = "84802920e7db"
+down_revision: str | Sequence[str] | None = "87573b1543e0"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

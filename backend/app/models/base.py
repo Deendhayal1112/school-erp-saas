@@ -16,7 +16,10 @@ class BaseEntity(Base):
     Provides standardized primary keys, audit tracing, status controls,
     and soft-delete capabilities.
     """
-    __abstract__ = True  # Prevents SQLAlchemy from creating a physical table for this class
+
+    __abstract__ = (
+        True  # Prevents SQLAlchemy from creating a physical table for this class
+    )
 
     # UUID Primary Key (placed at the top of the columns list)
     id: Mapped[uuid.UUID] = mapped_column(

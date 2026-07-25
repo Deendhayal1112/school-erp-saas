@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class LoginRequest(BaseModel):
     """Schema representing credentials sent to authenticate a login session."""
+
     email: str = Field(
         ...,
         description="Standard email login identifier. Whitespace will be trimmed.",
@@ -37,6 +38,7 @@ class LoginRequest(BaseModel):
 
 class LoginResponse(BaseModel):
     """Schema representing the standard successful authentication response payload."""
+
     access_token: str = Field(
         ...,
         description="JSON Web Access Token used to authenticate requesting API headers.",

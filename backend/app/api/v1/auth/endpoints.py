@@ -40,7 +40,9 @@ async def login(
     request_data: LoginRequest,
     auth_service: AuthenticationService = Depends(get_auth_service),
 ) -> LoginResponse:
-    auth_data = await auth_service.authenticate_user(request_data.email, request_data.password)
+    auth_data = await auth_service.authenticate_user(
+        request_data.email, request_data.password
+    )
     return LoginResponse(**auth_data)
 
 

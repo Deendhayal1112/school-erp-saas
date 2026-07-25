@@ -17,20 +17,31 @@ T = TypeVar("T")
 
 class PageParams(BaseModel):
     """Query parameters mapping standard Page Number pagination requests."""
+
     page: int = Field(1, ge=1, description="Active target page index (1-indexed).")
-    page_size: int = Field(20, ge=1, le=100, description="Count limit of records returned per query page.")
+    page_size: int = Field(
+        20, ge=1, le=100, description="Count limit of records returned per query page."
+    )
 
 
 class OffsetParams(BaseModel):
     """Query parameters mapping standard Offset-Limit pagination requests."""
+
     offset: int = Field(0, ge=0, description="Count offset to skip database records.")
-    limit: int = Field(20, ge=1, le=100, description="Limit bound of returned database records.")
+    limit: int = Field(
+        20, ge=1, le=100, description="Limit bound of returned database records."
+    )
 
 
 class CursorParams(BaseModel):
     """Query parameters mapping Cursor-based pagination requests."""
-    cursor: str | None = Field(None, description="Encoded Base64 token cursor mapping page offsets.")
-    limit: int = Field(20, ge=1, le=100, description="Limit bound of returned database records.")
+
+    cursor: str | None = Field(
+        None, description="Encoded Base64 token cursor mapping page offsets."
+    )
+    limit: int = Field(
+        20, ge=1, le=100, description="Limit bound of returned database records."
+    )
 
 
 async def paginate_by_page(

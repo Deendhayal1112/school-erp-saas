@@ -123,7 +123,9 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp) -> None:
         super().__init__(app)
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
         correlation_id = request.headers.get("X-Correlation-ID")
         client_ip = _extract_client_ip(request)
@@ -178,7 +180,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp) -> None:
         super().__init__(app)
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         from app.middleware.request_context import get_request_context
 
         response = await call_next(request)
@@ -189,9 +193,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Inject static security headers
         for header, value in _SECURITY_HEADERS.items():
             if header == "Content-Security-Policy" and (
-                request.url.path.startswith("/docs") or
-                request.url.path.startswith("/redoc") or
-                request.url.path.startswith("/openapi.json")
+                request.url.path.startswith("/docs")
+                or request.url.path.startswith("/redoc")
+                or request.url.path.startswith("/openapi.json")
             ):
                 response.headers[header] = (
                     "default-src 'self'; "
@@ -239,7 +243,9 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp) -> None:
         super().__init__(app)
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         if not settings.ENABLE_AUTHORIZATION_MIDDLEWARE:
             return await call_next(request)
 
@@ -333,6 +339,7 @@ class AuthorizationAuditMiddleware(BaseHTTPMiddleware):
 
                 # Invalidate if password changed since token issuance
                 from datetime import datetime
+
                 iat_timestamp = payload.get("iat")
                 if iat_timestamp and user.password_changed_at:
                     token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)

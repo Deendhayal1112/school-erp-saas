@@ -66,23 +66,24 @@ async def test_complete_e2e_authentication_workflow(client: AsyncClient):
     try:
         # 2. Try Logging In prior to verification -> Should fail with Inactive User check (401 or 403 depending on status)
         login_fail = await client.post(
-            "/api/v1/auth/login",
-            json={"email": email, "password": pwd}
+            "/api/v1/auth/login", json={"email": email, "password": pwd}
         )
         assert login_fail.status_code in (401, 403)
 
         # 3. Request verification email
         send_email_resp = await client.post(
-            "/api/v1/auth/send-verification-email",
-            json={"email": email}
+            "/api/v1/auth/send-verification-email", json={"email": email}
         )
         assert send_email_resp.status_code == 200
 
         # Retrieve generated token from DB
         async with AsyncSessionLocal() as session:
-            stmt = select(EmailVerificationToken).where(
-                EmailVerificationToken.user_id == user_id
-            ).order_by(EmailVerificationToken.created_at.desc()).limit(1)
+            stmt = (
+                select(EmailVerificationToken)
+                .where(EmailVerificationToken.user_id == user_id)
+                .order_by(EmailVerificationToken.created_at.desc())
+                .limit(1)
+            )
             res = await session.execute(stmt)
             token_record = res.scalar_one()
 
@@ -98,15 +99,13 @@ async def test_complete_e2e_authentication_workflow(client: AsyncClient):
 
         # 4. Verify email token via API
         verify_resp = await client.post(
-            "/api/v1/auth/verify-email",
-            json={"token": raw_token}
+            "/api/v1/auth/verify-email", json={"token": raw_token}
         )
         assert verify_resp.status_code == 200
 
         # 5. Login after activation -> Should succeed
         login_resp = await client.post(
-            "/api/v1/auth/login",
-            json={"email": email, "password": pwd}
+            "/api/v1/auth/login", json={"email": email, "password": pwd}
         )
         assert login_resp.status_code == 200
         tokens_data = login_resp.json()
@@ -115,16 +114,14 @@ async def test_complete_e2e_authentication_workflow(client: AsyncClient):
 
         # 6. Retrieve active profile info via /me
         me_resp = await client.get(
-            "/api/v1/auth/me",
-            headers={"Authorization": f"Bearer {access_token}"}
+            "/api/v1/auth/me", headers={"Authorization": f"Bearer {access_token}"}
         )
         assert me_resp.status_code == 200
         assert me_resp.json()["email"] == email
 
         # 7. Refresh token rotation
         refresh_resp = await client.post(
-            "/api/v1/auth/refresh",
-            json={"refresh_token": refresh_token}
+            "/api/v1/auth/refresh", json={"refresh_token": refresh_token}
         )
         assert refresh_resp.status_code == 200
         new_tokens_data = refresh_resp.json()
@@ -138,31 +135,28 @@ async def test_complete_e2e_authentication_workflow(client: AsyncClient):
             json={
                 "current_password": pwd,
                 "new_password": new_pwd,
-                "confirm_password": new_pwd
+                "confirm_password": new_pwd,
             },
-            headers={"Authorization": f"Bearer {new_access}"}
+            headers={"Authorization": f"Bearer {new_access}"},
         )
         assert change_resp.status_code == 200
 
         # 9. Verify that old access/refresh tokens are now rejected (session invalidation)
         old_me_resp = await client.get(
-            "/api/v1/auth/me",
-            headers={"Authorization": f"Bearer {new_access}"}
+            "/api/v1/auth/me", headers={"Authorization": f"Bearer {new_access}"}
         )
         assert old_me_resp.status_code == 401
 
         # 10. Login with new password -> Should succeed
         login_new_resp = await client.post(
-            "/api/v1/auth/login",
-            json={"email": email, "password": new_pwd}
+            "/api/v1/auth/login", json={"email": email, "password": new_pwd}
         )
         assert login_new_resp.status_code == 200
         final_access = login_new_resp.json()["access_token"]
 
         # 11. Logout successfully
         logout_resp = await client.post(
-            "/api/v1/auth/logout",
-            headers={"Authorization": f"Bearer {final_access}"}
+            "/api/v1/auth/logout", headers={"Authorization": f"Bearer {final_access}"}
         )
         assert logout_resp.status_code == 200
 
@@ -181,7 +175,6 @@ async def test_complete_e2e_authentication_workflow(client: AsyncClient):
 # TASK 2: Security Protection Validation Tests
 # ===========================================================================
 class TestSecurityProtections:
-
     @pytest.mark.asyncio
     async def test_sql_injection_defense(self, client: AsyncClient):
         """Verifies that SQL Injection characters in login fields are rejected or parameterized safely."""
@@ -193,7 +186,7 @@ class TestSecurityProtections:
         for payload in sqli_payloads:
             resp = await client.post(
                 "/api/v1/auth/login",
-                json={"email": payload, "password": "SomePassword123!"}
+                json={"email": payload, "password": "SomePassword123!"},
             )
             # Should fail validation (422) or credentials (401), but NEVER throw 500 or execute SQL
             assert resp.status_code in (401, 422)
@@ -207,8 +200,7 @@ class TestSecurityProtections:
             "unsignedorcorruptedsignaturehere"
         )
         resp = await client.get(
-            "/api/v1/auth/me",
-            headers={"Authorization": f"Bearer {tampered_token}"}
+            "/api/v1/auth/me", headers={"Authorization": f"Bearer {tampered_token}"}
         )
         assert resp.status_code == 401
 
@@ -217,7 +209,10 @@ class TestSecurityProtections:
         """Verifies that normal users cannot invoke endpoints protected by higher roles (e.g. Super Admin)."""
         # Since business endpoints aren't implemented, we mock a custom role check to make sure it raises 403.
         from app.auth.roles import ROLE_SUPER_ADMIN, has_minimum_role
-        normal_user = type("MockUser", (), {"role": type("MockRole", (), {"code": "STUDENT"})()})()
+
+        normal_user = type(
+            "MockUser", (), {"role": type("MockRole", (), {"code": "STUDENT"})()}
+        )()
         assert has_minimum_role(normal_user, ROLE_SUPER_ADMIN) is False
 
 
@@ -225,7 +220,6 @@ class TestSecurityProtections:
 # TASK 3: Performance Performance Tests
 # ===========================================================================
 class TestPerformanceThresholds:
-
     @pytest.mark.asyncio
     async def test_jwt_validation_speed(self):
         """Measures speed of JWT decoding and validation (Threshold: < 10ms)."""
@@ -236,7 +230,9 @@ class TestPerformanceThresholds:
         elapsed_ms = (time.perf_counter() - start) * 1000
 
         # Assert performance requirement met
-        assert elapsed_ms < 10.0, f"JWT validation took {elapsed_ms:.2f}ms (threshold: 10ms)"
+        assert elapsed_ms < 10.0, (
+            f"JWT validation took {elapsed_ms:.2f}ms (threshold: 10ms)"
+        )
 
     @pytest.mark.asyncio
     async def test_permission_lookup_speed(self):
@@ -251,4 +247,6 @@ class TestPerformanceThresholds:
         has_permission(user, "student.view")
         elapsed_ms = (time.perf_counter() - start) * 1000
 
-        assert elapsed_ms < 15.0, f"Permission lookup took {elapsed_ms:.2f}ms (threshold: 15ms)"
+        assert elapsed_ms < 15.0, (
+            f"Permission lookup took {elapsed_ms:.2f}ms (threshold: 15ms)"
+        )

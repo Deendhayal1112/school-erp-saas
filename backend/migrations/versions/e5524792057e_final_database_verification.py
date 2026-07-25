@@ -5,11 +5,12 @@ Revises: 84802920e7db
 Create Date: 2026-07-25 09:09:54.910715
 
 """
+
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
-revision: str = 'e5524792057e'
-down_revision: str | Sequence[str] | None = '84802920e7db'
+revision: str = "e5524792057e"
+down_revision: str | Sequence[str] | None = "84802920e7db"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

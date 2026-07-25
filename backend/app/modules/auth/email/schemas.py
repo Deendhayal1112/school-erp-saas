@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class VerifyEmailRequest(BaseModel):
     """Schema representing validation parameters to complete email verification."""
+
     token: str = Field(
         ...,
         description="The cryptographic validation token received in the verification email.",
@@ -17,6 +18,7 @@ class VerifyEmailRequest(BaseModel):
 
 class ResendVerificationRequest(BaseModel):
     """Schema representing email parameter needed to resend a verification token."""
+
     email: str = Field(
         ...,
         description="The registered email address associated with the account.",

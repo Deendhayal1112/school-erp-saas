@@ -72,6 +72,7 @@ async def readiness(
         # Verify provider responds (e.g. check local dir or ping S3)
         if hasattr(storage.provider, "base_dir"):
             import os
+
             if os.path.exists(storage.provider.base_dir):
                 storage_status = "healthy"
         else:
@@ -84,7 +85,9 @@ async def readiness(
         for s in [db_status, redis_status, storage_status]
     )
 
-    response_status = status.HTTP_200_OK if is_ready else status.HTTP_503_SERVICE_UNAVAILABLE
+    response_status = (
+        status.HTTP_200_OK if is_ready else status.HTTP_503_SERVICE_UNAVAILABLE
+    )
     response.status_code = response_status
 
     return {

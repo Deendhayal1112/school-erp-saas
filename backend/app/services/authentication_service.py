@@ -42,7 +42,7 @@ class AuthenticationService(BaseService):
                 raise AccountLockedException(
                     "This account is temporarily locked due to multiple failed login attempts. "
                     f"Please try again after {user.locked_until.isoformat()}.",
-                    unlock_time=user.locked_until
+                    unlock_time=user.locked_until,
                 )
             else:
                 # Lockout duration has expired, reset counters automatically
@@ -65,7 +65,7 @@ class AuthenticationService(BaseService):
                 raise AccountLockedException(
                     "This account is temporarily locked due to multiple failed login attempts. "
                     f"Please try again after {user.locked_until.isoformat()}.",
-                    unlock_time=user.locked_until
+                    unlock_time=user.locked_until,
                 )
             raise InvalidCredentialsException("Incorrect email or password.")
 
@@ -120,7 +120,9 @@ class AuthenticationService(BaseService):
         if iat_timestamp and user.password_changed_at:
             token_iat_dt = datetime.fromtimestamp(iat_timestamp, tz=UTC)
             if token_iat_dt < user.password_changed_at.replace(microsecond=0):
-                raise RefreshTokenException("Token has been invalidated by a password change.")
+                raise RefreshTokenException(
+                    "Token has been invalidated by a password change."
+                )
 
         # Re-verify account state and school tenant active status
         self.validate_user_status(user)

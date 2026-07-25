@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 class CurrentUserResponse(BaseModel):
     """Schema representing profile metadata returned to the currently authenticated user."""
+
     id: uuid.UUID = Field(
         ...,
         description="The unique user identifier (UUID).",

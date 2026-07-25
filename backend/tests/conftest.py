@@ -16,5 +16,6 @@ def event_loop():
 async def dispose_engine():
     """Teardown fixture that disposes the async engine pool to prevent event loop mismatch errors."""
     from app.db.engine import async_engine
+
     yield
     await async_engine.dispose()

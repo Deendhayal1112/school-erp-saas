@@ -64,6 +64,7 @@ class CacheService:
             return None
         try:
             import redis.asyncio as aioredis
+
             client = aioredis.from_url(
                 settings.REDIS_URL,
                 decode_responses=True,
@@ -73,7 +74,10 @@ class CacheService:
             self._redis_client = client
             logger.info("CacheService: Connected to Redis at %s", settings.REDIS_URL)
         except Exception as exc:
-            logger.warning("CacheService: Redis offline (%s), falling back to in-process memory.", exc)
+            logger.warning(
+                "CacheService: Redis offline (%s), falling back to in-process memory.",
+                exc,
+            )
             self._redis_client = None
         return self._redis_client
 
@@ -138,7 +142,9 @@ class CacheService:
                     await client.delete(*keys)
                 return
             except Exception as exc:
-                logger.warning("CacheService DELETE_PATTERN error for pattern=%s: %s", pattern, exc)
+                logger.warning(
+                    "CacheService DELETE_PATTERN error for pattern=%s: %s", pattern, exc
+                )
 
         # Local fallback delete matching pattern
         async with _LOCAL_STORE_LOCK:

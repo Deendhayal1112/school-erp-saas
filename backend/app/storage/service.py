@@ -70,13 +70,17 @@ class FileStorageService:
         # 2. Check file size limits
         size_mb = len(file_bytes) / (1024 * 1024)
         if size_mb > max_size_mb:
-            raise BadRequestException(f"File size exceeds the limit of {max_size_mb}MB.")
+            raise BadRequestException(
+                f"File size exceeds the limit of {max_size_mb}MB."
+            )
 
         # 3. Validate file extension
         filename = file.filename or ""
         ext = filename.split(".")[-1].lower() if "." in filename else ""
 
-        target_allowed = allowed_extensions or ALLOWED_IMAGE_EXTENSIONS.union(ALLOWED_DOCUMENT_EXTENSIONS)
+        target_allowed = allowed_extensions or ALLOWED_IMAGE_EXTENSIONS.union(
+            ALLOWED_DOCUMENT_EXTENSIONS
+        )
         if ext not in target_allowed:
             raise BadRequestException(f"Unsupported file extension: .{ext}")
 
@@ -108,7 +112,9 @@ class FileStorageService:
         logger.info("Deleting file key=%s", key)
         await self.provider.delete(key)
 
-    async def generate_signed_url(self, file_url_or_key: str, expires_in: int = 3600) -> str:
+    async def generate_signed_url(
+        self, file_url_or_key: str, expires_in: int = 3600
+    ) -> str:
         """Generates pre-signed link for retrieval."""
         key = file_url_or_key
         if key.startswith(settings.STORAGE_BASE_URL):

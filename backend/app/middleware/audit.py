@@ -33,6 +33,7 @@ audit_logger = logging.getLogger("school_erp.audit")
 
 class AuditEvent(StrEnum):
     """Canonical audit event type identifiers."""
+
     # Authentication events
     LOGIN_SUCCESS = "auth.login.success"
     LOGIN_FAILURE = "auth.login.failure"
@@ -103,14 +104,17 @@ def log_login_success(
     ip_address: str | None,
     request_id: str | None = None,
 ) -> None:
-    _emit(logging.INFO, _build_entry(
-        AuditEvent.LOGIN_SUCCESS,
-        request_id=request_id,
-        user_id=user_id,
-        school_id=school_id,
-        role=role,
-        ip_address=ip_address,
-    ))
+    _emit(
+        logging.INFO,
+        _build_entry(
+            AuditEvent.LOGIN_SUCCESS,
+            request_id=request_id,
+            user_id=user_id,
+            school_id=school_id,
+            role=role,
+            ip_address=ip_address,
+        ),
+    )
 
 
 def log_login_failure(
@@ -119,13 +123,16 @@ def log_login_failure(
     detail: str | None = None,
     request_id: str | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.LOGIN_FAILURE,
-        request_id=request_id,
-        ip_address=ip_address,
-        path=path,
-        detail=detail,
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.LOGIN_FAILURE,
+            request_id=request_id,
+            ip_address=ip_address,
+            path=path,
+            detail=detail,
+        ),
+    )
 
 
 def log_logout(
@@ -133,12 +140,15 @@ def log_logout(
     ip_address: str | None,
     request_id: str | None = None,
 ) -> None:
-    _emit(logging.INFO, _build_entry(
-        AuditEvent.LOGOUT,
-        request_id=request_id,
-        user_id=user_id,
-        ip_address=ip_address,
-    ))
+    _emit(
+        logging.INFO,
+        _build_entry(
+            AuditEvent.LOGOUT,
+            request_id=request_id,
+            user_id=user_id,
+            ip_address=ip_address,
+        ),
+    )
 
 
 def log_token_validation_failure(
@@ -149,15 +159,18 @@ def log_token_validation_failure(
     request_id: str | None = None,
     correlation_id: str | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.TOKEN_VALIDATION_FAILURE,
-        request_id=request_id,
-        correlation_id=correlation_id,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-        detail=detail,
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.TOKEN_VALIDATION_FAILURE,
+            request_id=request_id,
+            correlation_id=correlation_id,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+            detail=detail,
+        ),
+    )
 
 
 def log_token_expired(
@@ -166,14 +179,17 @@ def log_token_expired(
     method: str | None,
     request_id: str | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.TOKEN_EXPIRED,
-        request_id=request_id,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-        detail="JWT access token has expired.",
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.TOKEN_EXPIRED,
+            request_id=request_id,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+            detail="JWT access token has expired.",
+        ),
+    )
 
 
 def log_authentication_failure(
@@ -184,15 +200,18 @@ def log_authentication_failure(
     request_id: str | None = None,
     correlation_id: str | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.AUTHENTICATION_FAILURE,
-        request_id=request_id,
-        correlation_id=correlation_id,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-        detail=detail,
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.AUTHENTICATION_FAILURE,
+            request_id=request_id,
+            correlation_id=correlation_id,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+            detail=detail,
+        ),
+    )
 
 
 def log_authorization_success(
@@ -205,17 +224,20 @@ def log_authorization_success(
     request_id: str | None = None,
     correlation_id: str | None = None,
 ) -> None:
-    _emit(logging.INFO, _build_entry(
-        AuditEvent.AUTHORIZATION_SUCCESS,
-        request_id=request_id,
-        correlation_id=correlation_id,
-        user_id=user_id,
-        school_id=school_id,
-        role=role,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-    ))
+    _emit(
+        logging.INFO,
+        _build_entry(
+            AuditEvent.AUTHORIZATION_SUCCESS,
+            request_id=request_id,
+            correlation_id=correlation_id,
+            user_id=user_id,
+            school_id=school_id,
+            role=role,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+        ),
+    )
 
 
 def log_permission_denied(
@@ -229,18 +251,21 @@ def log_permission_denied(
     school_id: uuid.UUID | None = None,
     correlation_id: str | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.PERMISSION_DENIED,
-        request_id=request_id,
-        correlation_id=correlation_id,
-        user_id=user_id,
-        school_id=school_id,
-        role=role,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-        detail=f"Permission denied: '{permission}'",
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.PERMISSION_DENIED,
+            request_id=request_id,
+            correlation_id=correlation_id,
+            user_id=user_id,
+            school_id=school_id,
+            role=role,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+            detail=f"Permission denied: '{permission}'",
+        ),
+    )
 
 
 def log_role_denied(
@@ -253,17 +278,20 @@ def log_role_denied(
     request_id: str | None = None,
     school_id: uuid.UUID | None = None,
 ) -> None:
-    _emit(logging.WARNING, _build_entry(
-        AuditEvent.ROLE_DENIED,
-        request_id=request_id,
-        user_id=user_id,
-        school_id=school_id,
-        role=role,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-        detail=f"Role denied: '{required_role}' required.",
-    ))
+    _emit(
+        logging.WARNING,
+        _build_entry(
+            AuditEvent.ROLE_DENIED,
+            request_id=request_id,
+            user_id=user_id,
+            school_id=school_id,
+            role=role,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+            detail=f"Role denied: '{required_role}' required.",
+        ),
+    )
 
 
 def log_request_received(
@@ -273,14 +301,17 @@ def log_request_received(
     request_id: str | None = None,
     correlation_id: str | None = None,
 ) -> None:
-    _emit(logging.DEBUG, _build_entry(
-        AuditEvent.REQUEST_RECEIVED,
-        request_id=request_id,
-        correlation_id=correlation_id,
-        ip_address=ip_address,
-        path=path,
-        method=method,
-    ))
+    _emit(
+        logging.DEBUG,
+        _build_entry(
+            AuditEvent.REQUEST_RECEIVED,
+            request_id=request_id,
+            correlation_id=correlation_id,
+            ip_address=ip_address,
+            path=path,
+            method=method,
+        ),
+    )
 
 
 def log_request_completed(
@@ -290,10 +321,13 @@ def log_request_completed(
     elapsed_ms: float,
     request_id: str | None = None,
 ) -> None:
-    _emit(logging.INFO, _build_entry(
-        AuditEvent.REQUEST_COMPLETED,
-        request_id=request_id,
-        path=path,
-        method=method,
-        extra={"status_code": status_code, "elapsed_ms": round(elapsed_ms, 2)},
-    ))
+    _emit(
+        logging.INFO,
+        _build_entry(
+            AuditEvent.REQUEST_COMPLETED,
+            request_id=request_id,
+            path=path,
+            method=method,
+            extra={"status_code": status_code, "elapsed_ms": round(elapsed_ms, 2)},
+        ),
+    )
