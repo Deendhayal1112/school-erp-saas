@@ -37,6 +37,10 @@ async def test_student_repository_flows():
 
         repo = StudentRepository(session)
 
+        # Capture baseline counts before creating test students
+        baseline_primary = await repo.count_students(school.id)
+        baseline_other = 0  # other_school is freshly created, starts at 0
+
         # 1. Verify existence checks are negative originally
         adm_no = f"ADM_{uuid.uuid4().hex[:8]}"
         email = f"student_{uuid.uuid4().hex[:8]}@school.com"
@@ -104,9 +108,9 @@ async def test_student_repository_flows():
         await session.flush()
         assert tenant_student.id is not None
 
-        # Verify count is isolated per school
-        assert await repo.count_students(school.id) == 1
-        assert await repo.count_students(other_school.id) == 1
+        # Verify count is isolated per school (relative to baselines)
+        assert await repo.count_students(school.id) == baseline_primary + 1
+        assert await repo.count_students(other_school.id) == baseline_other + 1
 
         # 7. Search API
         search_res = await repo.search(school.id, "Repository")
@@ -122,22 +126,22 @@ async def test_student_repository_flows():
         # 8. Pagination API
         params = PageParams(page=1, page_size=10)
         paginated = await repo.paginate(school.id, params)
-        assert paginated["pagination"]["total_records"] == 1
-        assert len(paginated["results"]) == 1
+        assert paginated["pagination"]["total_records"] == baseline_primary + 1
+        assert len(paginated["results"]) >= 1
 
         # 9. Soft Delete & Restore
         assert await repo.delete(student.id) is True
         await session.flush()
 
         # Active student counts and lookups bypass soft deleted record
-        assert await repo.count_students(school.id) == 0
+        assert await repo.count_students(school.id) == baseline_primary
         assert await repo.get_by_id(student.id) is None
         assert await repo.get_by_id(student.id, include_deleted=True) is not None
 
         # Restore
         assert await repo.restore(student.id) is True
         await session.flush()
-        assert await repo.count_students(school.id) == 1
+        assert await repo.count_students(school.id) == baseline_primary + 1
         assert await repo.get_by_id(student.id) is not None
 
         # Clean up database records

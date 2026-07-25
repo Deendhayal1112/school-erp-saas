@@ -90,6 +90,8 @@ async def seed():
             {"code": "student.view", "name": "View Student Profile", "module": "students", "desc": "Allows viewing student profiles"},
             {"code": "student.create", "name": "Create Student Profile", "module": "students", "desc": "Allows enrolling students"},
             {"code": "student.update", "name": "Update Student Profile", "module": "students", "desc": "Allows editing student profiles"},
+            {"code": "student.delete", "name": "Delete Student Profile", "module": "students", "desc": "Allows soft-deleting student records"},
+            {"code": "student.restore", "name": "Restore Student Profile", "module": "students", "desc": "Allows restoring soft-deleted student records"},
             {"code": "attendance.mark", "name": "Mark Attendance", "module": "attendance", "desc": "Allows marking student attendance"},
             {"code": "attendance.view", "name": "View Attendance", "module": "attendance", "desc": "Allows viewing attendance records"},
             {"code": "fee.collect", "name": "Collect Fees", "module": "finance", "desc": "Allows collecting fee transactions"},
@@ -125,7 +127,7 @@ async def seed():
         role_permissions_assignments = {
             "SUPER_ADMIN": list(permissions_map.keys()),  # All permissions
             "SCHOOL_ADMIN": list(permissions_map.keys()),  # All permissions
-            "PRINCIPAL": [c for c in permissions_map.keys() if c != "user.delete"],  # No deletion power
+            "PRINCIPAL": [c for c in permissions_map.keys() if c != "user.delete"],  # No user deletion
             "TEACHER": ["student.view", "attendance.mark", "attendance.view", "exam.publish"],
             "ACCOUNTANT": ["fee.collect", "fee.view", "student.view"],
             "STUDENT": ["student.view", "attendance.view", "fee.view"],

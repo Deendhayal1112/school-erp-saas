@@ -84,7 +84,9 @@ class StudentService:
             remarks=schema.remarks,
             status=StudentStatus.NEW,  # Force initial status to NEW on registration
         )
-        return await self.repo.create(student)
+        result = await self.repo.create(student)
+        await self.session.flush()  # Populate DB-generated fields (id, timestamps, defaults)
+        return result
 
     async def update_student(self, student_id: uuid.UUID, schema: StudentUpdate) -> Student:
         """Applies mutation validations and updates student record details."""
@@ -170,7 +172,9 @@ class StudentService:
         if schema.remarks is not None:
             student.remarks = schema.remarks
 
-        return await self.repo.update(student)
+        result = await self.repo.update(student)
+        await self.session.flush()  # Populate updated timestamps
+        return result
 
     async def delete_student(self, student_id: uuid.UUID) -> bool:
         """Deletes a student record (soft-delete)."""
