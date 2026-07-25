@@ -185,6 +185,47 @@ async def duplicate_entity_handler(request: Request, exc: DuplicateEntityError):
     )
 
 
+from app.auth.exceptions import (
+    ForbiddenException,
+    PermissionDeniedException,
+    RoleDeniedException,
+    UnauthorizedException,
+)
+
+
+@app.exception_handler(PermissionDeniedException)
+async def permission_denied_handler(request: Request, exc: PermissionDeniedException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="PermissionDenied", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(RoleDeniedException)
+async def role_denied_handler(request: Request, exc: RoleDeniedException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="RoleDenied", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(ForbiddenException)
+async def forbidden_handler(request: Request, exc: ForbiddenException):
+    return JSONResponse(
+        status_code=403,
+        content=ErrorResponse(error="Forbidden", message=str(exc)).model_dump(),
+    )
+
+
+@app.exception_handler(UnauthorizedException)
+async def unauthorized_handler(request: Request, exc: UnauthorizedException):
+    return JSONResponse(
+        status_code=401,
+        content=ErrorResponse(error="Unauthorized", message=str(exc)).model_dump(),
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Fallback handler for unhandled exceptions to return standard JSON structure."""
