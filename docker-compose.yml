@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Database service (e.g., PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: school-erp-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: school_erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Redis service (caching/queues)
+  redis:
+    image: redis:7-alpine
+    container_name: school-erp-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # Backend API service placeholder
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: ../docker/backend.Dockerfile
+  #   container_name: school-erp-backend
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DB_HOST=db
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - db
+  #     - redis
+
+  # Frontend service placeholder
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ../docker/frontend.Dockerfile
+  #   container_name: school-erp-frontend
+  #   restart: always
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+
+volumes:
+  pgdata:
