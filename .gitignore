@@ -24,6 +24,11 @@ Thumbs.db
 .env.test.local
 .env.production.local
 *.env
+.venv/
+venv/
+ENV/
+env/
+
 
 # IDE / Editor configuration
 .vscode/
