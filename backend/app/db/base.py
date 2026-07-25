@@ -8,3 +8,9 @@ class Base(DeclarativeBase):
     will inherit from this Base class to share metadata and state.
     """
     pass
+
+
+# Import all application models here to ensure they are registered
+# on Base.metadata for Alembic autogeneration detection.
+from app.models.base import BaseEntity
+from app.models.school import School
