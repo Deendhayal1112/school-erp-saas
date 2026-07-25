@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.modules.student_documents.models import StudentDocument
     from app.modules.student_medical.models import StudentMedicalRecord
     from app.modules.student_assignment.models import StudentAcademicAssignment
+    from app.modules.student_progression.models import StudentProgression
 
 
 class Student(BaseEntity):
@@ -97,6 +98,12 @@ class Student(BaseEntity):
     )
     academic_assignments: Mapped[list["StudentAcademicAssignment"]] = relationship(
         "StudentAcademicAssignment",
+        back_populates="student",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    progressions: Mapped[list["StudentProgression"]] = relationship(
+        "StudentProgression",
         back_populates="student",
         cascade="all, delete-orphan",
         lazy="selectin",

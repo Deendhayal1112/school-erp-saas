@@ -336,6 +336,42 @@ async def seed():
                 "module": "student_assignment",
                 "desc": "Allows transferring students between classes and sections",
             },
+            {
+                "code": "student.progression.create",
+                "name": "Create Student Progression",
+                "module": "student_progression",
+                "desc": "Allows creating student progression events",
+            },
+            {
+                "code": "student.progression.read",
+                "name": "Read Student Progression",
+                "module": "student_progression",
+                "desc": "Allows reading student progression history",
+            },
+            {
+                "code": "student.progression.promote",
+                "name": "Promote Student",
+                "module": "student_progression",
+                "desc": "Allows promoting students",
+            },
+            {
+                "code": "student.progression.transfer",
+                "name": "Transfer Student Progression",
+                "module": "student_progression",
+                "desc": "Allows transferring students",
+            },
+            {
+                "code": "student.progression.graduate",
+                "name": "Graduate Student",
+                "module": "student_progression",
+                "desc": "Allows graduating students",
+            },
+            {
+                "code": "student.progression.alumni",
+                "name": "Convert to Alumni",
+                "module": "student_progression",
+                "desc": "Allows converting students to alumni",
+            },
         ]
 
         permissions_map = {}
