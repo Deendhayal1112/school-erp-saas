@@ -22,6 +22,7 @@ from app.modules.student_medical.models import (
     Vaccination,
 )
 from app.modules.student_progression.models import StudentProgression
+from app.modules.subject_group.models import SubjectGroup, SubjectGroupMapping
 from app.modules.subject_management.models import Subject
 from app.modules.term.models import Term
 
@@ -53,4 +54,6 @@ __all__ = [
     "SchoolClass",
     "Section",
     "Subject",
+    "SubjectGroup",
+    "SubjectGroupMapping",
 ]

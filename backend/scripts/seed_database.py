@@ -576,6 +576,54 @@ async def seed():
                 "module": "subject",
                 "desc": "Allows archiving subjects",
             },
+            {
+                "code": "subject_group.create",
+                "name": "Create Subject Group",
+                "module": "subject_group",
+                "desc": "Allows creating subject groups",
+            },
+            {
+                "code": "subject_group.read",
+                "name": "Read Subject Group",
+                "module": "subject_group",
+                "desc": "Allows reading subject groups",
+            },
+            {
+                "code": "subject_group.update",
+                "name": "Update Subject Group",
+                "module": "subject_group",
+                "desc": "Allows updating subject groups",
+            },
+            {
+                "code": "subject_group.delete",
+                "name": "Delete Subject Group",
+                "module": "subject_group",
+                "desc": "Allows deleting subject groups",
+            },
+            {
+                "code": "subject_group.activate",
+                "name": "Activate Subject Group",
+                "module": "subject_group",
+                "desc": "Allows activating and deactivating subject groups",
+            },
+            {
+                "code": "subject_group.lock",
+                "name": "Lock Subject Group",
+                "module": "subject_group",
+                "desc": "Allows locking and unlocking subject groups",
+            },
+            {
+                "code": "subject_group.archive",
+                "name": "Archive Subject Group",
+                "module": "subject_group",
+                "desc": "Allows archiving subject groups",
+            },
+            {
+                "code": "subject_group.manage_subjects",
+                "name": "Manage Group Subjects",
+                "module": "subject_group",
+                "desc": "Allows adding and removing subjects within a group",
+            },
         ]
 
         permissions_map = {}
