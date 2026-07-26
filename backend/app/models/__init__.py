@@ -16,6 +16,7 @@ from app.modules.class_subject_mapping.models import ClassSubject
 from app.modules.curriculum.models import Curriculum, CurriculumUnit
 from app.modules.department.models import Department
 from app.modules.designation.models import Designation
+from app.modules.employee.models import Employee
 from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.section_management.models import Section
 from app.modules.student.models import Student
@@ -67,4 +68,5 @@ __all__ = [
     "AcademicSettings",
     "Department",
     "Designation",
+    "Employee",
 ]

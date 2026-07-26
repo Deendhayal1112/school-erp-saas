@@ -858,6 +858,48 @@ async def seed():
                 "module": "designation",
                 "desc": "Allows archiving designations",
             },
+            {
+                "code": "employee.create",
+                "name": "Create Employee Profile",
+                "module": "employee",
+                "desc": "Allows creating employee profiles",
+            },
+            {
+                "code": "employee.read",
+                "name": "Read Employee Details",
+                "module": "employee",
+                "desc": "Allows reading employee details",
+            },
+            {
+                "code": "employee.update",
+                "name": "Update Employee Details",
+                "module": "employee",
+                "desc": "Allows updating employee details",
+            },
+            {
+                "code": "employee.delete",
+                "name": "Delete Employee Profile",
+                "module": "employee",
+                "desc": "Allows soft-deleting and restoring employee profiles",
+            },
+            {
+                "code": "employee.activate",
+                "name": "Activate Employee Profile",
+                "module": "employee",
+                "desc": "Allows activating and deactivating employee profiles",
+            },
+            {
+                "code": "employee.lock",
+                "name": "Lock Employee Profile",
+                "module": "employee",
+                "desc": "Allows locking and unlocking employee profiles",
+            },
+            {
+                "code": "employee.archive",
+                "name": "Archive Employee Profile",
+                "module": "employee",
+                "desc": "Allows archiving employee profiles",
+            },
         ]
 
         permissions_map = {}
