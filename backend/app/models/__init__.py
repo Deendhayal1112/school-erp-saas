@@ -9,6 +9,7 @@ from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.school import School
 from app.models.user import User
+from app.modules.academic_settings.models import AcademicSettings
 from app.modules.academic_year.models import AcademicYear
 from app.modules.admission.models import Admission, AdmissionSequence, AdmissionTimeline
 from app.modules.class_subject_mapping.models import ClassSubject
@@ -61,4 +62,5 @@ __all__ = [
     "ClassSubject",
     "Curriculum",
     "CurriculumUnit",
+    "AcademicSettings",
 ]

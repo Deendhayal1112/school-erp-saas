@@ -714,6 +714,42 @@ async def seed():
                 "module": "curriculum",
                 "desc": "Allows creating, updating, and deleting curriculum units",
             },
+            {
+                "code": "academic_settings.create",
+                "name": "Create Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows creating academic settings configurations",
+            },
+            {
+                "code": "academic_settings.read",
+                "name": "Read Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows reading academic settings configurations",
+            },
+            {
+                "code": "academic_settings.update",
+                "name": "Update Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows updating academic settings configurations",
+            },
+            {
+                "code": "academic_settings.activate",
+                "name": "Activate Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows activating and deactivating academic settings",
+            },
+            {
+                "code": "academic_settings.lock",
+                "name": "Lock Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows locking and unlocking academic settings",
+            },
+            {
+                "code": "academic_settings.archive",
+                "name": "Archive Academic Settings",
+                "module": "academic_settings",
+                "desc": "Allows archiving academic settings configurations",
+            },
         ]
 
         permissions_map = {}
