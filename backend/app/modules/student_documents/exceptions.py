@@ -16,7 +16,9 @@ class DocumentNotFoundException(PlatformException):
 class DuplicateDocumentException(PlatformException):
     """Exception raised when an identical document is uploaded."""
 
-    def __init__(self, message: str = "Duplicate document detected (identical checksum).") -> None:
+    def __init__(
+        self, message: str = "Duplicate document detected (identical checksum)."
+    ) -> None:
         super().__init__(
             error_code=ErrorCode.BAD_REQUEST,
             status_code=400,

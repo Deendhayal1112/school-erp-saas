@@ -1,10 +1,10 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import select, or_, and_, func
+from sqlalchemy import func, select
 
-from app.modules.section_management.models import Section
 from app.modules.section_management.enums import SectionStatus
+from app.modules.section_management.models import Section
 
 
 class SectionRepository:
@@ -41,7 +41,9 @@ class SectionRepository:
             return True
         return False
 
-    async def get_by_id(self, section_id: uuid.UUID, include_deleted: bool = False) -> Section | None:
+    async def get_by_id(
+        self, section_id: uuid.UUID, include_deleted: bool = False
+    ) -> Section | None:
         stmt = select(Section).where(Section.id == section_id)
         if not include_deleted:
             stmt = stmt.where(Section.is_deleted == False)
@@ -50,66 +52,55 @@ class SectionRepository:
         return val if isinstance(val, Section) else None
 
     async def get_by_code(self, school_id: uuid.UUID, code: str) -> Section | None:
-        stmt = (
-            select(Section)
-            .where(
-                Section.school_id == school_id,
-                Section.code == code,
-                Section.is_deleted == False,
-            )
+        stmt = select(Section).where(
+            Section.school_id == school_id,
+            Section.code == code,
+            Section.is_deleted == False,
         )
         result = await self.session.execute(stmt)
         val = result.scalar_one_or_none()
         return val if isinstance(val, Section) else None
 
     async def get_by_name(self, class_id: uuid.UUID, name: str) -> Section | None:
-        stmt = (
-            select(Section)
-            .where(
-                Section.class_id == class_id,
-                Section.name == name,
-                Section.is_deleted == False,
-            )
+        stmt = select(Section).where(
+            Section.class_id == class_id,
+            Section.name == name,
+            Section.is_deleted == False,
         )
         result = await self.session.execute(stmt)
         val = result.scalar_one_or_none()
         return val if isinstance(val, Section) else None
 
-    async def get_by_display_order(self, class_id: uuid.UUID, display_order: int) -> Section | None:
-        stmt = (
-            select(Section)
-            .where(
-                Section.class_id == class_id,
-                Section.display_order == display_order,
-                Section.is_deleted == False,
-            )
+    async def get_by_display_order(
+        self, class_id: uuid.UUID, display_order: int
+    ) -> Section | None:
+        stmt = select(Section).where(
+            Section.class_id == class_id,
+            Section.display_order == display_order,
+            Section.is_deleted == False,
         )
         result = await self.session.execute(stmt)
         val = result.scalar_one_or_none()
         return val if isinstance(val, Section) else None
 
     async def get_default_section(self, class_id: uuid.UUID) -> Section | None:
-        stmt = (
-            select(Section)
-            .where(
-                Section.class_id == class_id,
-                Section.is_default == True,
-                Section.is_deleted == False,
-            )
+        stmt = select(Section).where(
+            Section.class_id == class_id,
+            Section.is_default == True,
+            Section.is_deleted == False,
         )
         result = await self.session.execute(stmt)
         val = result.scalar_one_or_none()
         return val if isinstance(val, Section) else None
 
-    async def list_other_default_sections(self, class_id: uuid.UUID, exclude_id: uuid.UUID) -> list[Section]:
-        stmt = (
-            select(Section)
-            .where(
-                Section.class_id == class_id,
-                Section.id != exclude_id,
-                Section.is_default == True,
-                Section.is_deleted == False,
-            )
+    async def list_other_default_sections(
+        self, class_id: uuid.UUID, exclude_id: uuid.UUID
+    ) -> list[Section]:
+        stmt = select(Section).where(
+            Section.class_id == class_id,
+            Section.id != exclude_id,
+            Section.is_default == True,
+            Section.is_deleted == False,
         )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
@@ -152,7 +143,9 @@ class SectionRepository:
         limit: int = 100,
         offset: int = 0,
     ) -> tuple[list[Section], int]:
-        stmt = select(Section).where(Section.school_id == school_id, Section.is_deleted == False)
+        stmt = select(Section).where(
+            Section.school_id == school_id, Section.is_deleted == False
+        )
 
         if academic_year_id:
             stmt = stmt.where(Section.academic_year_id == academic_year_id)

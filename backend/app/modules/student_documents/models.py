@@ -42,12 +42,16 @@ class StudentDocument(BaseEntity):
     file_extension: Mapped[str] = mapped_column(String(10), nullable=False)
     mime_type: Mapped[str] = mapped_column(String(100), nullable=False)
     file_size: Mapped[int] = mapped_column(Integer, nullable=False)  # in bytes
-    storage_provider: Mapped[str] = mapped_column(String(50), nullable=False)  # "local", "s3"
+    storage_provider: Mapped[str] = mapped_column(
+        String(50), nullable=False
+    )  # "local", "s3"
     storage_path: Mapped[str] = mapped_column(String(500), nullable=False)
     storage_url: Mapped[str | None] = mapped_column(String(1000), nullable=True)
 
     version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    checksum: Mapped[str] = mapped_column(String(64), nullable=False, index=True)  # SHA-256
+    checksum: Mapped[str] = mapped_column(
+        String(64), nullable=False, index=True
+    )  # SHA-256
 
     uploaded_by: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"),

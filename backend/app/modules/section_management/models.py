@@ -1,7 +1,15 @@
 import uuid
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import (
+    Boolean,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -9,9 +17,9 @@ from app.models.base import BaseEntity
 from app.modules.section_management.enums import SectionStatus
 
 if TYPE_CHECKING:
+    from app.models.class_model import SchoolClass
     from app.models.school import School
     from app.modules.academic_year.models import AcademicYear
-    from app.models.class_model import SchoolClass
 
 
 class Section(BaseEntity):
@@ -23,7 +31,9 @@ class Section(BaseEntity):
     __table_args__ = (
         UniqueConstraint("class_id", "name", name="uq_sections_class_name"),
         UniqueConstraint("school_id", "code", name="uq_sections_school_code"),
-        UniqueConstraint("class_id", "display_order", name="uq_sections_class_display_order"),
+        UniqueConstraint(
+            "class_id", "display_order", name="uq_sections_class_display_order"
+        ),
     )
 
     school_id: Mapped[uuid.UUID] = mapped_column(

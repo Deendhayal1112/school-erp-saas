@@ -63,12 +63,16 @@ class StudentDocumentService:
 
         # 3. Calculate checksum & verify duplicate presence
         checksum = calculate_sha256(file_content)
-        existing_duplicate = await self.repo.get_by_checksum_and_student(checksum, student_id)
+        existing_duplicate = await self.repo.get_by_checksum_and_student(
+            checksum, student_id
+        )
         if existing_duplicate:
             raise DuplicateDocumentException()
 
         # 4. Resolve version logic
-        existing_types = await self.repo.get_by_type_and_student(document_type, student_id)
+        existing_types = await self.repo.get_by_type_and_student(
+            document_type, student_id
+        )
         version = 1
         if existing_types:
             version = existing_types[0].version + 1
@@ -157,7 +161,9 @@ class StudentDocumentService:
         checksum = calculate_sha256(file_content)
 
         # Check duplicate
-        existing_duplicate = await self.repo.get_by_checksum_and_student(checksum, doc.student_id)
+        existing_duplicate = await self.repo.get_by_checksum_and_student(
+            checksum, doc.student_id
+        )
         if existing_duplicate and existing_duplicate.id != doc.id:
             raise DuplicateDocumentException()
 

@@ -4,13 +4,13 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies.current_user import get_current_active_user
-from app.exceptions.exceptions import ForbiddenException
 from app.common.responses import (
     CreatedResponse,
     SuccessResponse,
 )
 from app.db.database import get_db
+from app.dependencies.current_user import get_current_active_user
+from app.exceptions.exceptions import ForbiddenException
 from app.models.user import User
 from app.modules.section_management.enums import SectionStatus
 from app.modules.section_management.exceptions import SectionNotFoundException
@@ -79,14 +79,22 @@ async def create_section(
     summary="List Sections",
 )
 async def list_sections(
-    academic_year_id: Annotated[uuid.UUID | None, Query(description="Filter by Academic Year")] = None,
+    academic_year_id: Annotated[
+        uuid.UUID | None, Query(description="Filter by Academic Year")
+    ] = None,
     class_id: Annotated[uuid.UUID | None, Query(description="Filter by Class")] = None,
-    status_filter: Annotated[SectionStatus | None, Query(alias="status", description="Filter by status")] = None,
+    status_filter: Annotated[
+        SectionStatus | None, Query(alias="status", description="Filter by status")
+    ] = None,
     name: Annotated[str | None, Query(description="Filter by name")] = None,
     code: Annotated[str | None, Query(description="Filter by code")] = None,
     capacity: Annotated[int | None, Query(description="Filter by capacity")] = None,
-    sort_by: Annotated[str | None, Query(description="Sort field name")] = "display_order",
-    sort_dir: Annotated[str | None, Query(description="Sort direction (asc/desc)")] = "asc",
+    sort_by: Annotated[
+        str | None, Query(description="Sort field name")
+    ] = "display_order",
+    sort_dir: Annotated[
+        str | None, Query(description="Sort direction (asc/desc)")
+    ] = "asc",
     page: Annotated[int, Query(ge=1, description="Page number")] = 1,
     limit: Annotated[int, Query(ge=1, le=100, description="Page size limit")] = 20,
     db: AsyncSession = Depends(get_db),
@@ -157,7 +165,9 @@ async def get_sections_by_academic_year(
     # Ensure multi-tenant security
     for item in items:
         if item.school_id != current_user.school_id:
-            raise ForbiddenException("Access to this academic year's sections is restricted.")
+            raise ForbiddenException(
+                "Access to this academic year's sections is restricted."
+            )
 
     return SuccessResponse[list[SectionResponse]](
         message="Sections list for Academic Year retrieved successfully.",

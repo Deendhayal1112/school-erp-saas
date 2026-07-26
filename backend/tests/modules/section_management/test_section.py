@@ -1,20 +1,21 @@
 import uuid
-import pytest
 from datetime import date
+
+import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import select
 
 from app.core.password import hash_password
 from app.db.session import AsyncSessionLocal
 from app.main import app
+from app.models.class_model import SchoolClass
 from app.models.role import Role
 from app.models.school import School
 from app.models.user import User
-from app.models.class_model import SchoolClass
-from app.modules.academic_year.models import AcademicYear
 from app.modules.academic_year.enums import AcademicYearStatus
-from app.modules.section_management.models import Section
+from app.modules.academic_year.models import AcademicYear
 from app.modules.section_management.enums import SectionStatus
+from app.modules.section_management.models import Section
 from app.modules.section_management.service import SectionService
 
 
@@ -195,7 +196,9 @@ async def test_section_lifecycle_and_rules(
         "class_id": str(cls1.id),
         "description": "First section division",
     }
-    resp = await client.post("/api/v1/sections", json=payload_sec1, headers=auth_headers_alp)
+    resp = await client.post(
+        "/api/v1/sections", json=payload_sec1, headers=auth_headers_alp
+    )
     assert resp.status_code == 201
     sec1 = resp.json()["data"]
     assert sec1["status"] == "PLANNED"
@@ -212,8 +215,12 @@ async def test_section_lifecycle_and_rules(
             "academic_year_id": str(ay1.id),
             "class_id": str(cls1.id),
         }
-        resp_invalid = await client.post("/api/v1/sections", json=payload_invalid_cap, headers=auth_headers_alp)
-        assert resp_invalid.status_code == 422  # ge=1 schema validator triggers 422 Unprocessable Entity
+        resp_invalid = await client.post(
+            "/api/v1/sections", json=payload_invalid_cap, headers=auth_headers_alp
+        )
+        assert (
+            resp_invalid.status_code == 422
+        )  # ge=1 schema validator triggers 422 Unprocessable Entity
 
         # 3. Duplicate display order in same Class check -> should fail (400 Bad Request)
         payload_dup_order = {
@@ -225,24 +232,33 @@ async def test_section_lifecycle_and_rules(
             "academic_year_id": str(ay1.id),
             "class_id": str(cls1.id),
         }
-        resp_dup = await client.post("/api/v1/sections", json=payload_dup_order, headers=auth_headers_alp)
+        resp_dup = await client.post(
+            "/api/v1/sections", json=payload_dup_order, headers=auth_headers_alp
+        )
         assert resp_dup.status_code == 400
         assert "display order" in resp_dup.json()["message"].lower()
 
         # 4. Activate Section
-        resp_act = await client.patch(f"/api/v1/sections/{sec1_id}/activate", headers=auth_headers_alp)
+        resp_act = await client.patch(
+            f"/api/v1/sections/{sec1_id}/activate", headers=auth_headers_alp
+        )
         assert resp_act.status_code == 200
         assert resp_act.json()["data"]["status"] == "ACTIVE"
 
         # 5. Cannot delete active section
-        resp_del = await client.delete(f"/api/v1/sections/{sec1_id}", headers=auth_headers_alp)
+        resp_del = await client.delete(
+            f"/api/v1/sections/{sec1_id}", headers=auth_headers_alp
+        )
         assert resp_del.status_code == 400
         assert "active" in resp_del.json()["message"].lower()
 
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
-            await session.execute(delete(Section).where(Section.id == uuid.UUID(sec1_id)))
+
+            await session.execute(
+                delete(Section).where(Section.id == uuid.UUID(sec1_id))
+            )
             await session.commit()
 
 
@@ -274,7 +290,9 @@ async def test_section_locked_and_archived_restraints(
         url_sec = f"/api/v1/sections/{sec_id}"
 
         # 1. Update locked section -> should fail
-        resp = await client.put(url_sec, json={"name": "New Locked Name"}, headers=auth_headers_alp)
+        resp = await client.put(
+            url_sec, json={"name": "New Locked Name"}, headers=auth_headers_alp
+        )
         assert resp.status_code == 400
         assert "locked" in resp.json()["message"].lower()
 
@@ -301,14 +319,13 @@ async def test_section_locked_and_archived_restraints(
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
+
             await session.execute(delete(Section).where(Section.id == sec_id))
             await session.commit()
 
 
 @pytest.mark.asyncio
-async def test_section_caching(
-    client: AsyncClient, school_fixtures
-):
+async def test_section_caching(client: AsyncClient, school_fixtures):
     """Validates CacheService stores and invalidates section objects on modifications."""
     _, _, ay1, _, cls1, _ = school_fixtures
 
@@ -343,6 +360,7 @@ async def test_section_caching(
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
+
             await session.execute(delete(Section).where(Section.id == sec_id))
             await session.commit()
 
@@ -384,5 +402,6 @@ async def test_section_tenant_isolation(
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
+
             await session.execute(delete(Section).where(Section.id == sec_id))
             await session.commit()

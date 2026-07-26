@@ -1,17 +1,16 @@
 import uuid
-from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.audit.service import AuditLogService
 from app.cache.service import CacheService
-from app.models.school import School
 from app.models.class_model import SchoolClass
+from app.models.school import School
 from app.modules.academic_year.models import AcademicYear
 from app.modules.section_management.enums import SectionStatus
 from app.modules.section_management.exceptions import (
-    SectionNotFoundException,
     InvalidSectionDataException,
+    SectionNotFoundException,
 )
 from app.modules.section_management.models import Section
 from app.modules.section_management.repository import SectionRepository
@@ -30,7 +29,9 @@ class SectionService:
         self.audit = AuditLogService(db)
         self.cache = CacheService()
 
-    async def _invalidate_cache(self, school_id: uuid.UUID, academic_year_id: uuid.UUID, class_id: uuid.UUID) -> None:
+    async def _invalidate_cache(
+        self, school_id: uuid.UUID, academic_year_id: uuid.UUID, class_id: uuid.UUID
+    ) -> None:
         """Helper to clear cached section items context."""
         await self.cache.delete(f"section:class:{class_id}")
         await self.cache.delete(f"section:ay:{academic_year_id}")
@@ -50,7 +51,9 @@ class SectionService:
         # 2. Verify Academic Year presence
         ay = await self.db.get(AcademicYear, data.academic_year_id)
         if not ay or ay.school_id != school_id or ay.is_deleted:
-            raise InvalidSectionDataException("Academic Year does not exist or is deleted.")
+            raise InvalidSectionDataException(
+                "Academic Year does not exist or is deleted."
+            )
 
         # 3. Verify Class presence
         cls = await self.db.get(SchoolClass, data.class_id)
@@ -59,7 +62,9 @@ class SectionService:
 
         # 4. Verify Class alignment with Academic Year
         if cls.academic_year_id != data.academic_year_id:
-            raise InvalidSectionDataException("Class does not belong to the selected Academic Year.")
+            raise InvalidSectionDataException(
+                "Class does not belong to the selected Academic Year."
+            )
 
         # 5. Validate capacity > 0
         validate_capacity(data.capacity)
@@ -67,15 +72,21 @@ class SectionService:
         # 6. Validate code unique per school
         conflict_code = await self.repo.get_by_code(school_id, data.code)
         if conflict_code:
-            raise InvalidSectionDataException(f"Section with code '{data.code}' already exists.")
+            raise InvalidSectionDataException(
+                f"Section with code '{data.code}' already exists."
+            )
 
         # 7. Validate name unique per Class
         conflict_name = await self.repo.get_by_name(data.class_id, data.name)
         if conflict_name:
-            raise InvalidSectionDataException(f"Section with name '{data.name}' already exists in this Class.")
+            raise InvalidSectionDataException(
+                f"Section with name '{data.name}' already exists in this Class."
+            )
 
         # 8. Validate display order unique per Class
-        conflict_order = await self.repo.get_by_display_order(data.class_id, data.display_order)
+        conflict_order = await self.repo.get_by_display_order(
+            data.class_id, data.display_order
+        )
         if conflict_order:
             raise InvalidSectionDataException(
                 f"Section with display order {data.display_order} already exists in this Class."
@@ -138,14 +149,18 @@ class SectionService:
         if data.name and data.name != sec.name:
             conflict_name = await self.repo.get_by_name(sec.class_id, data.name)
             if conflict_name:
-                raise InvalidSectionDataException(f"Section with name '{data.name}' already exists in this Class.")
+                raise InvalidSectionDataException(
+                    f"Section with name '{data.name}' already exists in this Class."
+                )
             sec.name = data.name
 
         # Validate code uniqueness if updated
         if data.code and data.code != sec.code:
             conflict_code = await self.repo.get_by_code(school_id, data.code)
             if conflict_code:
-                raise InvalidSectionDataException(f"Section with code '{data.code}' already exists.")
+                raise InvalidSectionDataException(
+                    f"Section with code '{data.code}' already exists."
+                )
             sec.code = data.code
 
         # Validate capacity if updated
@@ -155,7 +170,9 @@ class SectionService:
 
         # Validate display order if updated
         if data.display_order is not None and data.display_order != sec.display_order:
-            conflict_order = await self.repo.get_by_display_order(sec.class_id, data.display_order)
+            conflict_order = await self.repo.get_by_display_order(
+                sec.class_id, data.display_order
+            )
             if conflict_order:
                 raise InvalidSectionDataException(
                     f"Section with display order {data.display_order} already exists in this Class."
@@ -190,7 +207,9 @@ class SectionService:
 
         return sec
 
-    async def delete_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> bool:
+    async def delete_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> bool:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -213,7 +232,9 @@ class SectionService:
             )
         return res
 
-    async def restore_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> bool:
+    async def restore_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> bool:
         sec = await self.repo.get_by_id(section_id, include_deleted=True)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -232,7 +253,9 @@ class SectionService:
             )
         return res
 
-    async def activate_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def activate_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -258,7 +281,9 @@ class SectionService:
 
         return sec
 
-    async def deactivate_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def deactivate_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -280,13 +305,17 @@ class SectionService:
 
         return sec
 
-    async def set_default_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def set_default_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
 
         # Clear other default flags for sections within the same Class
-        other_defaults = await self.repo.list_other_default_sections(sec.class_id, section_id)
+        other_defaults = await self.repo.list_other_default_sections(
+            sec.class_id, section_id
+        )
         for od in other_defaults:
             od.is_default = False
             await self.repo.update(od)
@@ -308,7 +337,9 @@ class SectionService:
 
         return sec
 
-    async def lock_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def lock_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -330,7 +361,9 @@ class SectionService:
 
         return sec
 
-    async def unlock_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def unlock_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -352,7 +385,9 @@ class SectionService:
 
         return sec
 
-    async def archive_section(self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID) -> Section:
+    async def archive_section(
+        self, section_id: uuid.UUID, school_id: uuid.UUID, user_id: uuid.UUID
+    ) -> Section:
         sec = await self.repo.get_by_id(section_id)
         if not sec or sec.school_id != school_id:
             raise SectionNotFoundException()
@@ -396,8 +431,12 @@ class SectionService:
                     is_default=t["is_default"],
                     is_locked=t["is_locked"],
                     status=SectionStatus(t["status"]),
-                    created_by=uuid.UUID(t["created_by"]) if t.get("created_by") else None,
-                    updated_by=uuid.UUID(t["updated_by"]) if t.get("updated_by") else None,
+                    created_by=uuid.UUID(t["created_by"])
+                    if t.get("created_by")
+                    else None,
+                    updated_by=uuid.UUID(t["updated_by"])
+                    if t.get("updated_by")
+                    else None,
                 )
                 for t in cached
             ]
@@ -429,7 +468,9 @@ class SectionService:
         await self.cache.set(cache_key, state_list, 3600)
         return sections
 
-    async def get_by_academic_year_cached(self, academic_year_id: uuid.UUID) -> list[Section]:
+    async def get_by_academic_year_cached(
+        self, academic_year_id: uuid.UUID
+    ) -> list[Section]:
         cache_key = f"section:ay:{academic_year_id}"
         cached = await self.cache.get(cache_key)
         if cached:
@@ -451,8 +492,12 @@ class SectionService:
                     is_default=t["is_default"],
                     is_locked=t["is_locked"],
                     status=SectionStatus(t["status"]),
-                    created_by=uuid.UUID(t["created_by"]) if t.get("created_by") else None,
-                    updated_by=uuid.UUID(t["updated_by"]) if t.get("updated_by") else None,
+                    created_by=uuid.UUID(t["created_by"])
+                    if t.get("created_by")
+                    else None,
+                    updated_by=uuid.UUID(t["updated_by"])
+                    if t.get("updated_by")
+                    else None,
                 )
                 for t in cached
             ]

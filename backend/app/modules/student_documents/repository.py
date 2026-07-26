@@ -112,7 +112,9 @@ class StudentDocumentRepository:
             if "student_id" in filters:
                 stmt = stmt.where(StudentDocument.student_id == filters["student_id"])
             if "document_type" in filters:
-                stmt = stmt.where(StudentDocument.document_type == filters["document_type"])
+                stmt = stmt.where(
+                    StudentDocument.document_type == filters["document_type"]
+                )
             if "is_verified" in filters:
                 stmt = stmt.where(StudentDocument.is_verified == filters["is_verified"])
 

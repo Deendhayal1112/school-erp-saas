@@ -7,12 +7,18 @@ from app.modules.student_documents.enums import DocumentType
 
 
 class StudentDocumentBase(BaseModel):
-    document_name: str = Field(..., max_length=100, description="Logical name of document (e.g. My Aadhaar)")
-    remarks: str | None = Field(None, description="Optional annotations or observations")
+    document_name: str = Field(
+        ..., max_length=100, description="Logical name of document (e.g. My Aadhaar)"
+    )
+    remarks: str | None = Field(
+        None, description="Optional annotations or observations"
+    )
 
 
 class StudentDocumentCreate(StudentDocumentBase):
-    document_type: DocumentType = Field(..., description="Category classification of the document")
+    document_type: DocumentType = Field(
+        ..., description="Category classification of the document"
+    )
 
 
 class StudentDocumentUpdate(StudentDocumentBase):

@@ -158,14 +158,18 @@ async def test_document_upload_and_lifecycle(
         url_base = f"/api/v1/students/{student_id}/documents"
 
         # 1. Upload valid document (Aadhaar PDF)
-        files = {"file": ("aadhaar.pdf", b"Fake PDF Document Content A", "application/pdf")}
+        files = {
+            "file": ("aadhaar.pdf", b"Fake PDF Document Content A", "application/pdf")
+        }
         data = {
             "document_type": DocumentType.AADHAAR.value,
             "document_name": "Aadhaar Card",
             "remarks": "Initial Aadhaar Upload",
         }
 
-        resp = await client.post(url_base, data=data, files=files, headers=auth_headers_prm)
+        resp = await client.post(
+            url_base, data=data, files=files, headers=auth_headers_prm
+        )
         assert resp.status_code == 201
         doc_data = resp.json()["data"]
         doc_id = doc_data["id"]
@@ -176,13 +180,23 @@ async def test_document_upload_and_lifecycle(
         assert doc_data["storage_url"] is not None
 
         # 2. Try uploading duplicate file (same content) -> should fail (400 Bad Request)
-        resp2 = await client.post(url_base, data=data, files=files, headers=auth_headers_prm)
+        resp2 = await client.post(
+            url_base, data=data, files=files, headers=auth_headers_prm
+        )
         assert resp2.status_code == 400
         assert "duplicate" in resp2.json()["message"].lower()
 
         # 3. Upload a different file content for same document type -> should succeed and version becomes 2
-        files_v2 = {"file": ("aadhaar_new.pdf", b"Fake PDF Document Content B", "application/pdf")}
-        resp3 = await client.post(url_base, data=data, files=files_v2, headers=auth_headers_prm)
+        files_v2 = {
+            "file": (
+                "aadhaar_new.pdf",
+                b"Fake PDF Document Content B",
+                "application/pdf",
+            )
+        }
+        resp3 = await client.post(
+            url_base, data=data, files=files_v2, headers=auth_headers_prm
+        )
         assert resp3.status_code == 201
         doc_data_v2 = resp3.json()["data"]
         assert doc_data_v2["version"] == 2
@@ -198,7 +212,13 @@ async def test_document_upload_and_lifecycle(
         assert verify_resp.json()["data"]["verified_by"] is not None
 
         # 5. Replace document binary file (via PUT) -> should clear verification and increment version
-        files_put = {"file": ("aadhaar_replaced.pdf", b"Fake PDF Document Content C", "application/pdf")}
+        files_put = {
+            "file": (
+                "aadhaar_replaced.pdf",
+                b"Fake PDF Document Content C",
+                "application/pdf",
+            )
+        }
         put_resp = await client.put(
             f"{url_base}/{doc_id}",
             data={"document_name": "Aadhaar Replaced", "remarks": "Replaced via PUT"},
@@ -214,7 +234,10 @@ async def test_document_upload_and_lifecycle(
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
-            await session.execute(delete(StudentDocument).where(StudentDocument.student_id == student_id))
+
+            await session.execute(
+                delete(StudentDocument).where(StudentDocument.student_id == student_id)
+            )
             await session.execute(delete(Student).where(Student.id == student_id))
             await session.commit()
 
@@ -251,20 +274,25 @@ async def test_document_validation_rules(
             "document_type": DocumentType.BIRTH_CERTIFICATE.value,
             "document_name": "Birth Cert Text",
         }
-        resp = await client.post(url_base, data=data, files=files, headers=auth_headers_prm)
+        resp = await client.post(
+            url_base, data=data, files=files, headers=auth_headers_prm
+        )
         assert resp.status_code == 400
         assert "extension" in resp.json()["message"].lower()
 
         # 2. File size limit exceeded (>10MB) -> should fail (400 Bad Request)
         large_content = b"0" * (11 * 1024 * 1024)  # 11 MB
         files_large = {"file": ("birth.pdf", large_content, "application/pdf")}
-        resp_large = await client.post(url_base, data=data, files=files_large, headers=auth_headers_prm)
+        resp_large = await client.post(
+            url_base, data=data, files=files_large, headers=auth_headers_prm
+        )
         assert resp_large.status_code == 400
         assert "size" in resp_large.json()["message"].lower()
 
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
+
             await session.execute(delete(Student).where(Student.id == student_id))
             await session.commit()
 
@@ -302,7 +330,9 @@ async def test_document_tenant_isolation(
             "document_type": DocumentType.PHOTO.value,
             "document_name": "My Photo",
         }
-        resp = await client.post(url_base, data=data, files=files, headers=auth_headers_prm)
+        resp = await client.post(
+            url_base, data=data, files=files, headers=auth_headers_prm
+        )
         assert resp.status_code == 201
         doc_id = resp.json()["data"]["id"]
 
@@ -326,6 +356,11 @@ async def test_document_tenant_isolation(
     finally:
         async with AsyncSessionLocal() as session:
             from sqlalchemy import delete
-            await session.execute(delete(StudentDocument).where(StudentDocument.student_id == student_a_id))
+
+            await session.execute(
+                delete(StudentDocument).where(
+                    StudentDocument.student_id == student_a_id
+                )
+            )
             await session.execute(delete(Student).where(Student.id == student_a_id))
             await session.commit()

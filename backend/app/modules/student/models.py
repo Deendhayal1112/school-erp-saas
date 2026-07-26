@@ -11,9 +11,9 @@ from app.modules.student.enums import Gender, StudentStatus
 if TYPE_CHECKING:
     from app.models.school import School
     from app.modules.guardian.models import StudentGuardian
+    from app.modules.student_assignment.models import StudentAcademicAssignment
     from app.modules.student_documents.models import StudentDocument
     from app.modules.student_medical.models import StudentMedicalRecord
-    from app.modules.student_assignment.models import StudentAcademicAssignment
     from app.modules.student_progression.models import StudentProgression
 
 

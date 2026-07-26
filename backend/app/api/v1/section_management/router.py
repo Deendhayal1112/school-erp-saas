@@ -4,4 +4,6 @@ from app.api.v1.section_management.endpoints import router as section_endpoints_
 
 router = APIRouter()
 
-router.include_router(section_endpoints_router, prefix="/sections", tags=["Section Management"])
+router.include_router(
+    section_endpoints_router, prefix="/sections", tags=["Section Management"]
+)

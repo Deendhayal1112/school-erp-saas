@@ -60,8 +60,12 @@ def _make_service(db: AsyncSession) -> StudentDocumentService:
 )
 async def upload_document(
     student_id: uuid.UUID,
-    document_type: Annotated[DocumentType, Form(description="Category of the document.")],
-    document_name: Annotated[str, Form(max_length=100, description="Logical descriptive name.")],
+    document_type: Annotated[
+        DocumentType, Form(description="Category of the document.")
+    ],
+    document_name: Annotated[
+        str, Form(max_length=100, description="Logical descriptive name.")
+    ],
     remarks: Annotated[str | None, Form(description="Optional remarks.")] = None,
     file: UploadFile = File(description="File upload stream."),
     db: AsyncSession = Depends(get_db),
@@ -93,7 +97,9 @@ async def upload_document(
     await db.refresh(doc)
 
     # Generate signed retrieval URL
-    signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+    signed_url = await service.storage.generate_signed_url(
+        doc.storage_url or doc.storage_path
+    )
     res_data = StudentDocumentResponse.model_validate(doc)
     res_data.storage_url = signed_url
 
@@ -120,8 +126,12 @@ async def list_documents(
     page: Annotated[int, Query(ge=1, description="Page index.")] = 1,
     page_size: Annotated[int, Query(ge=1, le=100, description="Page size limit.")] = 10,
     search: Annotated[str | None, Query(description="Wildcard name search.")] = None,
-    document_type: Annotated[DocumentType | None, Query(description="Filter by type.")] = None,
-    is_verified: Annotated[bool | None, Query(description="Filter by verification state.")] = None,
+    document_type: Annotated[
+        DocumentType | None, Query(description="Filter by type.")
+    ] = None,
+    is_verified: Annotated[
+        bool | None, Query(description="Filter by verification state.")
+    ] = None,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> PaginatedResponse[StudentDocumentResponse]:
@@ -150,7 +160,9 @@ async def list_documents(
 
     results = []
     for doc in paginated["results"]:
-        signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+        signed_url = await service.storage.generate_signed_url(
+            doc.storage_url or doc.storage_path
+        )
         data = StudentDocumentResponse.model_validate(doc)
         data.storage_url = signed_url
         results.append(data)
@@ -187,10 +199,16 @@ async def get_document(
     service = _make_service(db)
 
     doc = await service.repo.get_by_id(document_id)
-    if not doc or doc.school_id != current_user.school_id or doc.student_id != student_id:
+    if (
+        not doc
+        or doc.school_id != current_user.school_id
+        or doc.student_id != student_id
+    ):
         raise DocumentNotFoundException()
 
-    signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+    signed_url = await service.storage.generate_signed_url(
+        doc.storage_url or doc.storage_path
+    )
     res_data = StudentDocumentResponse.model_validate(doc)
     res_data.storage_url = signed_url
 
@@ -227,7 +245,11 @@ async def update_document(
 
     # 1. Fetch document and confirm boundaries
     doc = await service.repo.get_by_id(document_id)
-    if not doc or doc.school_id != current_user.school_id or doc.student_id != student_id:
+    if (
+        not doc
+        or doc.school_id != current_user.school_id
+        or doc.student_id != student_id
+    ):
         raise DocumentNotFoundException()
 
     # 2. Perform updates depending on whether a new file was posted
@@ -267,7 +289,9 @@ async def update_document(
     await db.commit()
     await db.refresh(doc)
 
-    signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+    signed_url = await service.storage.generate_signed_url(
+        doc.storage_url or doc.storage_path
+    )
     res_data = StudentDocumentResponse.model_validate(doc)
     res_data.storage_url = signed_url
 
@@ -346,7 +370,9 @@ async def verify_document(
     await db.commit()
     await db.refresh(doc)
 
-    signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+    signed_url = await service.storage.generate_signed_url(
+        doc.storage_url or doc.storage_path
+    )
     res_data = StudentDocumentResponse.model_validate(doc)
     res_data.storage_url = signed_url
 
@@ -390,7 +416,9 @@ async def restore_document(
     doc = await service.repo.get_by_id(document_id)
     assert doc is not None
 
-    signed_url = await service.storage.generate_signed_url(doc.storage_url or doc.storage_path)
+    signed_url = await service.storage.generate_signed_url(
+        doc.storage_url or doc.storage_path
+    )
     res_data = StudentDocumentResponse.model_validate(doc)
     res_data.storage_url = signed_url
 

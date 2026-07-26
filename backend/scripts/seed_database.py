@@ -534,6 +534,48 @@ async def seed():
                 "module": "section",
                 "desc": "Allows setting default section flag within class context",
             },
+            {
+                "code": "subject.create",
+                "name": "Create Subject",
+                "module": "subject",
+                "desc": "Allows creating subjects",
+            },
+            {
+                "code": "subject.read",
+                "name": "Read Subject",
+                "module": "subject",
+                "desc": "Allows reading subjects",
+            },
+            {
+                "code": "subject.update",
+                "name": "Update Subject",
+                "module": "subject",
+                "desc": "Allows updating subjects",
+            },
+            {
+                "code": "subject.delete",
+                "name": "Delete Subject",
+                "module": "subject",
+                "desc": "Allows deleting subjects",
+            },
+            {
+                "code": "subject.activate",
+                "name": "Activate Subject",
+                "module": "subject",
+                "desc": "Allows activating and deactivating subjects",
+            },
+            {
+                "code": "subject.lock",
+                "name": "Lock Subject",
+                "module": "subject",
+                "desc": "Allows locking and unlocking subjects",
+            },
+            {
+                "code": "subject.archive",
+                "name": "Archive Subject",
+                "module": "subject",
+                "desc": "Allows archiving subjects",
+            },
         ]
 
         permissions_map = {}

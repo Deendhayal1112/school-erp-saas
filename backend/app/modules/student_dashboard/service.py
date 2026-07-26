@@ -324,7 +324,9 @@ class StudentDashboardService:
     ) -> list[GuardianReportItem]:
         from app.modules.guardian.models import StudentGuardian
 
-        stmt = select(StudentGuardian).join(Student).where(Student.school_id == school_id)
+        stmt = (
+            select(StudentGuardian).join(Student).where(Student.school_id == school_id)
+        )
         res = await self.db.execute(stmt)
 
         items = []
