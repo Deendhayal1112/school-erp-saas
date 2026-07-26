@@ -36,6 +36,7 @@ class SectionService:
         await self.cache.delete(f"section:class:{class_id}")
         await self.cache.delete(f"section:ay:{academic_year_id}")
         await self.cache.delete_pattern(f"section:list:{school_id}*")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_section(
         self,

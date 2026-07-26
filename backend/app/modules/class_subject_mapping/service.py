@@ -55,6 +55,7 @@ class ClassSubjectService:
             await self.cache.delete(f"class_subject:detail:{mapping_id}")
         if class_id:
             await self.cache.delete(f"class_subject:class:{class_id}")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
         if section_id:
             await self.cache.delete(f"class_subject:section:{section_id}")
 

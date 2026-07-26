@@ -46,6 +46,7 @@ class CurriculumService:
         if curriculum_id:
             await self.cache.delete(f"curriculum:detail:{curriculum_id}")
             await self.cache.delete(f"curriculum:units:{curriculum_id}")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_curriculum(
         self,

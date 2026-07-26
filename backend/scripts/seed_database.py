@@ -750,6 +750,30 @@ async def seed():
                 "module": "academic_settings",
                 "desc": "Allows archiving academic settings configurations",
             },
+            {
+                "code": "dashboard.read",
+                "name": "Read Academic Dashboard Overview",
+                "module": "academic_dashboard",
+                "desc": "Allows viewing academic dashboard overview metrics and KPIs",
+            },
+            {
+                "code": "analytics.read",
+                "name": "Read Academic Analytics Metrics",
+                "module": "academic_dashboard",
+                "desc": "Allows viewing deep academic analytics aggregates",
+            },
+            {
+                "code": "reports.read",
+                "name": "Read Academic Reports",
+                "module": "academic_dashboard",
+                "desc": "Allows generating and viewing academic reports",
+            },
+            {
+                "code": "reports.export",
+                "name": "Export Academic Reports",
+                "module": "academic_dashboard",
+                "desc": "Allows exporting academic reports to PDF/Excel/CSV format",
+            },
         ]
 
         permissions_map = {}

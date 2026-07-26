@@ -34,6 +34,7 @@ class SubjectService:
         await self.cache.delete_pattern(f"subject:list:{school_id}*")
         if subject_id:
             await self.cache.delete(f"subject:detail:{subject_id}")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_subject(
         self,

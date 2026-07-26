@@ -42,6 +42,7 @@ class AcademicSettingsService:
         await self.cache.delete(f"academic_settings:active:{school_id}")
         if settings_id:
             await self.cache.delete(f"academic_settings:detail:{settings_id}")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_settings(
         self,

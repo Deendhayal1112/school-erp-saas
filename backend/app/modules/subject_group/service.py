@@ -36,6 +36,7 @@ class SubjectGroupService:
         if group_id:
             await self.cache.delete(f"subject_group:detail:{group_id}")
             await self.cache.delete(f"subject_group:subjects:{group_id}")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_subject_group(
         self,

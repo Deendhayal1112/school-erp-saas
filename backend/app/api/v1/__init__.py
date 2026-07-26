@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.api.v1.academic_dashboard.router import router as academic_dashboard_router
 from app.api.v1.academic_settings.router import router as academic_settings_router
 from app.api.v1.academic_year.router import router as academic_year_router
 from app.api.v1.admission.router import router as admission_router
@@ -41,3 +42,4 @@ v1_router.include_router(subject_group_router)
 v1_router.include_router(class_subject_router)
 v1_router.include_router(curriculum_router)
 v1_router.include_router(academic_settings_router)
+v1_router.include_router(academic_dashboard_router)

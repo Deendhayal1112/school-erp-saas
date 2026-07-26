@@ -34,6 +34,7 @@ class AcademicYearService:
         await self.cache.delete(f"ay:active:{school_id}")
         await self.cache.delete(f"ay:default:{school_id}")
         await self.cache.delete_pattern(f"ay:list:{school_id}*")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_academic_year(
         self,

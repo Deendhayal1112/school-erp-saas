@@ -39,6 +39,7 @@ class TermService:
         await self.cache.delete(f"term:default:{academic_year_id}")
         await self.cache.delete(f"term:list:{academic_year_id}")
         await self.cache.delete_pattern(f"term:search:{school_id}*")
+        await self.cache.delete_pattern(f"academic_dashboard:*:{school_id}*")
 
     async def create_term(
         self,
