@@ -774,6 +774,48 @@ async def seed():
                 "module": "academic_dashboard",
                 "desc": "Allows exporting academic reports to PDF/Excel/CSV format",
             },
+            {
+                "code": "department.create",
+                "name": "Create Department",
+                "module": "department",
+                "desc": "Allows creating departments",
+            },
+            {
+                "code": "department.read",
+                "name": "Read Department Details",
+                "module": "department",
+                "desc": "Allows reading department details",
+            },
+            {
+                "code": "department.update",
+                "name": "Update Department Details",
+                "module": "department",
+                "desc": "Allows updating department details",
+            },
+            {
+                "code": "department.delete",
+                "name": "Delete Department",
+                "module": "department",
+                "desc": "Allows soft-deleting and restoring departments",
+            },
+            {
+                "code": "department.activate",
+                "name": "Activate Department",
+                "module": "department",
+                "desc": "Allows activating and deactivating departments",
+            },
+            {
+                "code": "department.lock",
+                "name": "Lock Department",
+                "module": "department",
+                "desc": "Allows locking and unlocking departments",
+            },
+            {
+                "code": "department.archive",
+                "name": "Archive Department",
+                "module": "department",
+                "desc": "Allows archiving departments",
+            },
         ]
 
         permissions_map = {}

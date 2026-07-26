@@ -14,6 +14,7 @@ from app.modules.academic_year.models import AcademicYear
 from app.modules.admission.models import Admission, AdmissionSequence, AdmissionTimeline
 from app.modules.class_subject_mapping.models import ClassSubject
 from app.modules.curriculum.models import Curriculum, CurriculumUnit
+from app.modules.department.models import Department
 from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.section_management.models import Section
 from app.modules.student.models import Student
@@ -63,4 +64,5 @@ __all__ = [
     "Curriculum",
     "CurriculumUnit",
     "AcademicSettings",
+    "Department",
 ]
