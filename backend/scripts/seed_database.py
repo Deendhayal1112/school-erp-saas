@@ -666,6 +666,54 @@ async def seed():
                 "module": "class_subject",
                 "desc": "Allows archiving class subject mappings",
             },
+            {
+                "code": "curriculum.create",
+                "name": "Create Curriculum",
+                "module": "curriculum",
+                "desc": "Allows creating curriculum templates",
+            },
+            {
+                "code": "curriculum.read",
+                "name": "Read Curriculum",
+                "module": "curriculum",
+                "desc": "Allows reading curriculum templates and details",
+            },
+            {
+                "code": "curriculum.update",
+                "name": "Update Curriculum",
+                "module": "curriculum",
+                "desc": "Allows updating curriculum details",
+            },
+            {
+                "code": "curriculum.delete",
+                "name": "Delete Curriculum",
+                "module": "curriculum",
+                "desc": "Allows deleting curriculum records",
+            },
+            {
+                "code": "curriculum.activate",
+                "name": "Activate Curriculum",
+                "module": "curriculum",
+                "desc": "Allows activating and deactivating curriculum roadmaps",
+            },
+            {
+                "code": "curriculum.lock",
+                "name": "Lock Curriculum",
+                "module": "curriculum",
+                "desc": "Allows locking and unlocking curriculum templates",
+            },
+            {
+                "code": "curriculum.archive",
+                "name": "Archive Curriculum",
+                "module": "curriculum",
+                "desc": "Allows archiving curriculum structures",
+            },
+            {
+                "code": "curriculum.unit.manage",
+                "name": "Manage Curriculum Units",
+                "module": "curriculum",
+                "desc": "Allows creating, updating, and deleting curriculum units",
+            },
         ]
 
         permissions_map = {}
