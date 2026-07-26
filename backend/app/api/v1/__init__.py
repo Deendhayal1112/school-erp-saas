@@ -8,6 +8,7 @@ from app.api.v1.auth.router import router as auth_router
 from app.api.v1.class_subject_mapping.router import router as class_subject_router
 from app.api.v1.curriculum.router import router as curriculum_router
 from app.api.v1.department.router import router as department_router
+from app.api.v1.designation.router import router as designation_router
 from app.api.v1.guardian.router import router as guardian_router
 from app.api.v1.section_management.router import router as section_router
 from app.api.v1.student.router import router as student_router
@@ -45,3 +46,6 @@ v1_router.include_router(curriculum_router)
 v1_router.include_router(academic_settings_router)
 v1_router.include_router(academic_dashboard_router)
 v1_router.include_router(department_router, prefix="/departments", tags=["Department"])
+v1_router.include_router(
+    designation_router, prefix="/designations", tags=["Designation"]
+)

@@ -816,6 +816,48 @@ async def seed():
                 "module": "department",
                 "desc": "Allows archiving departments",
             },
+            {
+                "code": "designation.create",
+                "name": "Create Designation",
+                "module": "designation",
+                "desc": "Allows creating designations",
+            },
+            {
+                "code": "designation.read",
+                "name": "Read Designation Details",
+                "module": "designation",
+                "desc": "Allows reading designation details",
+            },
+            {
+                "code": "designation.update",
+                "name": "Update Designation Details",
+                "module": "designation",
+                "desc": "Allows updating designation details",
+            },
+            {
+                "code": "designation.delete",
+                "name": "Delete Designation",
+                "module": "designation",
+                "desc": "Allows soft-deleting and restoring designations",
+            },
+            {
+                "code": "designation.activate",
+                "name": "Activate Designation",
+                "module": "designation",
+                "desc": "Allows activating and deactivating designations",
+            },
+            {
+                "code": "designation.lock",
+                "name": "Lock Designation",
+                "module": "designation",
+                "desc": "Allows locking and unlocking designations",
+            },
+            {
+                "code": "designation.archive",
+                "name": "Archive Designation",
+                "module": "designation",
+                "desc": "Allows archiving designations",
+            },
         ]
 
         permissions_map = {}
