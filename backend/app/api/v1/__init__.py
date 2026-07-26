@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.v1.academic_year.router import router as academic_year_router
 from app.api.v1.admission.router import router as admission_router
 from app.api.v1.auth.router import router as auth_router
+from app.api.v1.class_subject_mapping.router import router as class_subject_router
 from app.api.v1.guardian.router import router as guardian_router
 from app.api.v1.section_management.router import router as section_router
 from app.api.v1.student.router import router as student_router
@@ -35,3 +36,4 @@ v1_router.include_router(term_router)
 v1_router.include_router(section_router)
 v1_router.include_router(subject_router)
 v1_router.include_router(subject_group_router)
+v1_router.include_router(class_subject_router)

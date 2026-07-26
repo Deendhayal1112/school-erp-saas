@@ -11,6 +11,7 @@ from app.models.school import School
 from app.models.user import User
 from app.modules.academic_year.models import AcademicYear
 from app.modules.admission.models import Admission, AdmissionSequence, AdmissionTimeline
+from app.modules.class_subject_mapping.models import ClassSubject
 from app.modules.guardian.models import Guardian, StudentGuardian
 from app.modules.section_management.models import Section
 from app.modules.student.models import Student
@@ -56,4 +57,5 @@ __all__ = [
     "Subject",
     "SubjectGroup",
     "SubjectGroupMapping",
+    "ClassSubject",
 ]

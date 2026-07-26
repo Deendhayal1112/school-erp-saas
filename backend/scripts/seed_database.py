@@ -624,6 +624,48 @@ async def seed():
                 "module": "subject_group",
                 "desc": "Allows adding and removing subjects within a group",
             },
+            {
+                "code": "class_subject.create",
+                "name": "Create Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows creating class subject mappings",
+            },
+            {
+                "code": "class_subject.read",
+                "name": "Read Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows reading class subject mappings",
+            },
+            {
+                "code": "class_subject.update",
+                "name": "Update Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows updating class subject mappings",
+            },
+            {
+                "code": "class_subject.delete",
+                "name": "Delete Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows deleting class subject mappings",
+            },
+            {
+                "code": "class_subject.activate",
+                "name": "Activate Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows activating and deactivating class subject mappings",
+            },
+            {
+                "code": "class_subject.lock",
+                "name": "Lock Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows locking and unlocking class subject mappings",
+            },
+            {
+                "code": "class_subject.archive",
+                "name": "Archive Class Subject Mapping",
+                "module": "class_subject",
+                "desc": "Allows archiving class subject mappings",
+            },
         ]
 
         permissions_map = {}
