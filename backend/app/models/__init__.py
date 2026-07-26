@@ -17,6 +17,8 @@ from app.modules.student_assignment.models import StudentAcademicAssignment
 from app.modules.student_progression.models import StudentProgression
 from app.modules.academic_year.models import AcademicYear
 from app.modules.term.models import Term
+from app.models.class_model import SchoolClass
+from app.modules.section_management.models import Section
 
 __all__ = [
     "BaseEntity",
@@ -43,4 +45,6 @@ __all__ = [
     "StudentProgression",
     "AcademicYear",
     "Term",
+    "SchoolClass",
+    "Section",
 ]

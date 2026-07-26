@@ -11,6 +11,7 @@ from app.api.v1.student_progression.router import router as student_progression_
 from app.api.v1.student_dashboard.router import router as student_dashboard_router
 from app.api.v1.academic_year.router import router as academic_year_router
 from app.api.v1.term.router import router as term_router
+from app.api.v1.section_management.router import router as section_router
 from app.modules.auth.email.router import router as email_router
 from app.modules.auth.password.router import router as password_router
 
@@ -29,3 +30,4 @@ v1_router.include_router(student_progression_router)
 v1_router.include_router(student_dashboard_router)
 v1_router.include_router(academic_year_router)
 v1_router.include_router(term_router)
+v1_router.include_router(section_router)

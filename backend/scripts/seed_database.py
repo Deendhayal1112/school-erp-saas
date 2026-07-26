@@ -486,6 +486,54 @@ async def seed():
                 "module": "term",
                 "desc": "Allows setting default term flag",
             },
+            {
+                "code": "section.create",
+                "name": "Create Section",
+                "module": "section",
+                "desc": "Allows creating sections/classrooms",
+            },
+            {
+                "code": "section.read",
+                "name": "Read Section",
+                "module": "section",
+                "desc": "Allows reading sections/classrooms",
+            },
+            {
+                "code": "section.update",
+                "name": "Update Section",
+                "module": "section",
+                "desc": "Allows updating sections/classrooms",
+            },
+            {
+                "code": "section.delete",
+                "name": "Delete Section",
+                "module": "section",
+                "desc": "Allows deleting sections/classrooms",
+            },
+            {
+                "code": "section.activate",
+                "name": "Activate Section",
+                "module": "section",
+                "desc": "Allows activating and deactivating sections/classrooms",
+            },
+            {
+                "code": "section.lock",
+                "name": "Lock Section",
+                "module": "section",
+                "desc": "Allows locking and unlocking sections/classrooms",
+            },
+            {
+                "code": "section.archive",
+                "name": "Archive Section",
+                "module": "section",
+                "desc": "Allows archiving sections/classrooms",
+            },
+            {
+                "code": "section.default",
+                "name": "Set Default Section",
+                "module": "section",
+                "desc": "Allows setting default section flag within class context",
+            },
         ]
 
         permissions_map = {}
