@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from app.models.user import User
     from app.modules.department.models import Department
     from app.modules.designation.models import Designation
+    from app.modules.teacher.models import Teacher
 
 
 class Employee(BaseEntity):
@@ -147,3 +148,10 @@ class Employee(BaseEntity):
     designation: Mapped["Designation"] = relationship("Designation")
     creator: Mapped["User"] = relationship("User", foreign_keys=[created_by])
     updater: Mapped["User"] = relationship("User", foreign_keys=[updated_by])
+    teacher_profile: Mapped["Teacher"] = relationship(
+        "Teacher",
+        back_populates="employee",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="raise",
+    )

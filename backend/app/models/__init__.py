@@ -17,8 +17,28 @@ from app.modules.curriculum.models import Curriculum, CurriculumUnit
 from app.modules.department.models import Department
 from app.modules.designation.models import Designation
 from app.modules.employee.models import Employee
+from app.modules.employee_document.models import EmployeeDocument
+from app.modules.experience.models import Experience
 from app.modules.guardian.models import Guardian, StudentGuardian
+from app.modules.leave.models import (
+    HolidayCalendar,
+    LeaveApproval,
+    LeaveAttachment,
+    LeaveBalance,
+    LeavePolicy,
+    LeaveRequest,
+    LeaveType,
+)
+from app.modules.qualification.models import Qualification
 from app.modules.section_management.models import Section
+from app.modules.staff_attendance.models import (
+    AttendanceDevice,
+    AttendanceLog,
+    AttendancePolicy,
+    AttendanceRecord,
+    AttendanceRegularization,
+    AttendanceShift,
+)
 from app.modules.student.models import Student
 from app.modules.student_assignment.models import StudentAcademicAssignment
 from app.modules.student_documents.models import StudentDocument
@@ -30,6 +50,7 @@ from app.modules.student_medical.models import (
 from app.modules.student_progression.models import StudentProgression
 from app.modules.subject_group.models import SubjectGroup, SubjectGroupMapping
 from app.modules.subject_management.models import Subject
+from app.modules.teacher.models import Teacher
 from app.modules.term.models import Term
 
 __all__ = [
@@ -69,4 +90,21 @@ __all__ = [
     "Department",
     "Designation",
     "Employee",
+    "EmployeeDocument",
+    "Teacher",
+    "Qualification",
+    "Experience",
+    "LeaveType",
+    "LeavePolicy",
+    "LeaveBalance",
+    "LeaveRequest",
+    "LeaveApproval",
+    "LeaveAttachment",
+    "HolidayCalendar",
+    "AttendanceShift",
+    "AttendancePolicy",
+    "AttendanceRecord",
+    "AttendanceRegularization",
+    "AttendanceDevice",
+    "AttendanceLog",
 ]
