@@ -1,0 +1,28 @@
+from enum import Enum
+
+
+class DayOfWeek(str, Enum):
+    MONDAY = "MONDAY"
+    TUESDAY = "TUESDAY"
+    WEDNESDAY = "WEDNESDAY"
+    THURSDAY = "THURSDAY"
+    FRIDAY = "FRIDAY"
+    SATURDAY = "SATURDAY"
+    SUNDAY = "SUNDAY"
+
+
+class HolidayType(str, Enum):
+    PUBLIC_HOLIDAY = "PUBLIC_HOLIDAY"
+    REGIONAL_HOLIDAY = "REGIONAL_HOLIDAY"
+    SCHOOL_HOLIDAY = "SCHOOL_HOLIDAY"
+    FESTIVAL = "FESTIVAL"
+    EMERGENCY_CLOSURE = "EMERGENCY_CLOSURE"
+
+
+class CalendarEventType(str, Enum):
+    ACADEMIC = "ACADEMIC"
+    EXAM = "EXAM"
+    SPORTS = "SPORTS"
+    HOLIDAY = "HOLIDAY"
+    EVENT = "EVENT"
+    OTHER = "OTHER"

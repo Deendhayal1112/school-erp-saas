@@ -52,6 +52,56 @@ from app.modules.subject_group.models import SubjectGroup, SubjectGroupMapping
 from app.modules.subject_management.models import Subject
 from app.modules.teacher.models import Teacher
 from app.modules.term.models import Term
+from app.modules.academic_calendar.models import (
+    WorkingDay,
+    Holiday,
+    SpecialWorkingDay,
+    AcademicCalendar,
+)
+from app.modules.time_slot.models import (
+    TimeSlot,
+    Period,
+    BreakPeriod,
+)
+from app.modules.room.models import (
+    Building,
+    Floor,
+    Room,
+    RoomFacility,
+    RoomAllocationRule,
+)
+from app.modules.teacher_subject_allocation.models import (
+    TeacherSubjectAllocation,
+    TeacherWorkload,
+    SubjectQualification,
+)
+from app.modules.class_timetable.models import (
+    ClassTimetable,
+    ClassTimetableEntry,
+    RecurringSchedule,
+)
+from app.modules.teacher_timetable.models import (
+    TeacherTimetable,
+    TeacherTimetableEntry,
+    TeacherAvailability,
+)
+from app.modules.timetable_generator.models import (
+    GenerationJob,
+    GenerationRule,
+    GenerationResult,
+    GenerationLog,
+)
+from app.modules.timetable_conflict.models import (
+    ConflictRecord,
+    ConflictResolution,
+    ConflictLog,
+)
+from app.modules.timetable_adjustment.models import (
+    TimetableAdjustment,
+    TeacherSubstitution,
+    AdjustmentHistory,
+    SubstitutionHistory,
+)
 
 __all__ = [
     "BaseEntity",
@@ -107,4 +157,36 @@ __all__ = [
     "AttendanceRegularization",
     "AttendanceDevice",
     "AttendanceLog",
+    "WorkingDay",
+    "Holiday",
+    "SpecialWorkingDay",
+    "AcademicCalendar",
+    "TimeSlot",
+    "Period",
+    "BreakPeriod",
+    "Building",
+    "Floor",
+    "Room",
+    "RoomFacility",
+    "RoomAllocationRule",
+    "TeacherSubjectAllocation",
+    "TeacherWorkload",
+    "SubjectQualification",
+    "ClassTimetable",
+    "ClassTimetableEntry",
+    "RecurringSchedule",
+    "TeacherTimetable",
+    "TeacherTimetableEntry",
+    "TeacherAvailability",
+    "GenerationJob",
+    "GenerationRule",
+    "GenerationResult",
+    "GenerationLog",
+    "ConflictRecord",
+    "ConflictResolution",
+    "ConflictLog",
+    "TimetableAdjustment",
+    "TeacherSubstitution",
+    "AdjustmentHistory",
+    "SubstitutionHistory",
 ]
